@@ -1,4 +1,4 @@
 DMT
 ===
-
-document management tool
+Document Management Temple.
+Initial entry to the GitHub floodgate.
