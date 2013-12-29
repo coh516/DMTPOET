@@ -1,4 +1,5 @@
 DMT
 ===
 Document Management Temple.
-Initial entry to the GitHub floodgate.
+
+node dmt and open on localhost 6789 to test out 
