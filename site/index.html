@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+      <style>
+	  
+	      body {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select:none;
+        		margin: 0px;
+			padding: 0px;
+			/*background-color: black;*/
+      		}
+	.stagemenuUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+		background-color:yellow;
+	}
+	.stagemenuLI {
+		margin: 0px;
+		padding: 0px;
+		margin-left:10px;
+		list-style-type: none;
+		border: none; 
+	}
+	.dialogmenuUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+		background-color:orange;
+	}
+	.dialogmenuLI {
+		margin: 0px;
+		padding: 0px;
+		margin-left:10px;
+		list-style-type: none;
+		border: none; 
+	
+	}
+
+	.contextmenuUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+		background-color:yellow;
+	}
+	.contextmenuLI {
+		margin: 0px;
+		padding: 0px;
+		margin-left:10px;
+		list-style-type: none;
+		border: none; 
+	}
+	.ptrUL { 
+		margin: 0px;
+		border: none;
+		padding: 0px;
+	}
+	.ptrLI {
+		margin-left: 10px;
+		list-style-type: none;
+		border: none;
+		padding: 0px;
+	}
+	[connector] {
+		fill:"none";
+		stroke:"red";
+		stroke-width:"2";
+	}
+	[connector=unselected]{
+		stroke:"blue";
+	}
+	[ptrindex] { 
+		cursor:pointer;	
+		display:block;
+		width:10px;
+		height:10px;
+		border:1px solid red;
+		margin:1px;	
+	}
+
+	
+	[ptrindex=over] {
+		background-color:aqua;
+	}
+	[ptrindex=unselected] {
+		background-color: blue;
+	}
+	[ptrindex=selected] {
+		background-color: orange;
+	}
+	[ptrlabel] {
+		display:inline-block;
+		cursor:pointer;
+	}
+	
+	[ptrlabel=unselected] {
+		background-color: #cccccc;	
+	}
+	[ptrprogram=label] {
+		background-color: rgba(123, 222, 222, .5);
+	/*border:1px solid .. should be ptrlabel=program ;*/
+	}
+	[ptrprogram=section] {
+		background-color: rgba(84, 94, 178, .5);
+	}
+	[ptrroot=label] {
+		background-color: rgba(73, 08, 124, .5);
+	}
+	
+	[ptrroot=over] {
+		background-color: #fefdef;
+	}
+	[ptrroot=hidechildren] {
+		background-color: gray;
+	}
+	[contextmenulabel] {
+		cursor:pointer;
+		display:block;
+		background-color: yellow;
+	}
+	[contextmenulabel=over] {
+		background-color: pink;
+	}
+	[stagemenulabel] {
+		cursor:pointer;
+		display:block;
+		background-color: yellow;
+	}
+	[stagemenulabel=over] {
+		background-color: pink;
+	}
+	[dialogmenulabel] {
+		cursor:pointer;
+		display:block;
+		background-color: orange;
+	}
+
+	[dialogmenulabel=over] {
+		background-color: maroon;
+	}
+	
+	[dialogmenuindex] { 
+		cursor:pointer;	
+		display:block;
+		width:10px;
+		height:10px;
+		border:1px solid red;
+		margin:1px;	
+	}
+	
+	[dialogmenuindex=over] {
+		background-color:aqua;
+	}
+	[dialogmenuindex=unselected] {
+		background-color: blue;
+	}
+	[dialogmenuindex=selected] {
+		background-color: cyan;
+	} 
+
+
+
+	[gridtable =table] {
+		display:table;
+	}
+	[gridtable=row] {
+		display:table-row;
+	}
+	[gridtable=cell] {
+		display:table-cell;
+	}
+
+    </style>
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="graph.js"></script>
+    <script type="text/javascript" src="point.js"></script>
+    <script type="text/javascript" src="linkCurve.js"></script>
+    <script type="text/javascript" src="events.js"></script>
+    <script type="text/javascript" src="ptrRenderer.js"></script>
+    <script type="text/javascript" src="htmlRenderer.js"></script>
+    <script type="text/javascript" src="gfx.js"></script>
+    
+    <script type="text/javascript" src="ui.js"></script>       
+    <script type="text/javascript" src="contextmenu.js"></script>
+    <script type="text/javascript" src="launch.js"></script> 
+
+  </head>
+  <body onmousedown="return;return false;" onload="launch()"> </body>
+</html>
+

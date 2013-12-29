@@ -1,0 +1,10 @@
+function model() {
+
+}
+model.prototype = {
+	"addObject":function() {
+	},
+
+}
+
+
