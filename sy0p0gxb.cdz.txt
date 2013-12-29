@@ -1,0 +1,112 @@
+﻿cleaning up repo
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is behind 'origin/master' by 1 commit, and can be fast-forwarded.
+#   (use "git pull" to update your local branch)
+#
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	deleted:    site/.contextmenu.js.swp
+#	deleted:    site/.events.js.swp
+#	deleted:    site/.gfx.js.swj
+#	deleted:    site/.gfx.js.swk
+#	deleted:    site/.gfx.js.swl
+#	deleted:    site/.gfx.js.swm
+#	deleted:    site/.gfx.js.swn
+#	deleted:    site/.gfx.js.swo
+#	deleted:    site/.gfx.js.swp
+#	deleted:    site/.graph.js.svv
+#	deleted:    site/.graph.js.svw
+#	deleted:    site/.graph.js.svx
+#	deleted:    site/.graph.js.svy
+#	deleted:    site/.graph.js.svz
+#	deleted:    site/.graph.js.swa
+#	deleted:    site/.graph.js.swb
+#	deleted:    site/.graph.js.swc
+#	deleted:    site/.graph.js.swd
+#	deleted:    site/.graph.js.swe
+#	deleted:    site/.graph.js.swf
+#	deleted:    site/.graph.js.swg
+#	deleted:    site/.graph.js.swh
+#	deleted:    site/.graph.js.swi
+#	deleted:    site/.graph.js.swj
+#	deleted:    site/.graph.js.swk
+#	deleted:    site/.graph.js.swl
+#	deleted:    site/.graph.js.swm
+#	deleted:    site/.graph.js.swn
+#	deleted:    site/.graph.js.swo
+#	deleted:    site/.graph.js.swp
+#	deleted:    site/.htmlRenderer.js.swp
+#	deleted:    site/.index.html.swm
+#	deleted:    site/.index.html.swo
+#	deleted:    site/.index.html.swp
+#	deleted:    site/.kinetic.js.swo
+#	deleted:    site/.kinetic.js.swp
+#	deleted:    site/.launch.js.swo
+#	deleted:    site/.launch.js.swp
+#	deleted:    site/.linkCurve.js.swp
+#	deleted:    site/.makeundirected.js.svy
+#	deleted:    site/.makeundirected.js.swa
+#	deleted:    site/.makeundirected.js.swb
+#	deleted:    site/.makeundirected.js.swc
+#	deleted:    site/.makeundirected.js.swd
+#	deleted:    site/.makeundirected.js.swe
+#	deleted:    site/.makeundirected.js.swf
+#	deleted:    site/.makeundirected.js.swg
+#	deleted:    site/.makeundirected.js.swh
+#	deleted:    site/.makeundirected.js.swi
+#	deleted:    site/.makeundirected.js.swj
+#	deleted:    site/.makeundirected.js.swk
+#	deleted:    site/.makeundirected.js.swl
+#	deleted:    site/.makeundirected.js.swm
+#	deleted:    site/.makeundirected.js.swn
+#	deleted:    site/.makeundirected.js.swo
+#	deleted:    site/.makeundirected.js.swp
+#	deleted:    site/.modeler.js.swp
+#	deleted:    site/.nodeEditor.js.swi
+#	deleted:    site/.nodeEditor.js.swj
+#	deleted:    site/.nodeEditor.js.swk
+#	deleted:    site/.nodeEditor.js.swl
+#	deleted:    site/.nodeEditor.js.swm
+#	deleted:    site/.nodeEditor.js.swn
+#	deleted:    site/.nodeEditor.js.swo
+#	deleted:    site/.nodeEditor.js.swp
+#	deleted:    site/.point.js.swa
+#	deleted:    site/.point.js.swb
+#	deleted:    site/.point.js.swc
+#	deleted:    site/.point.js.swd
+#	deleted:    site/.point.js.swe
+#	deleted:    site/.point.js.swf
+#	deleted:    site/.point.js.swg
+#	deleted:    site/.point.js.swh
+#	deleted:    site/.point.js.swi
+#	deleted:    site/.point.js.swj
+#	deleted:    site/.point.js.swk
+#	deleted:    site/.point.js.swl
+#	deleted:    site/.point.js.swm
+#	deleted:    site/.point.js.swn
+#	deleted:    site/.point.js.swo
+#	deleted:    site/.point.js.swp
+#	deleted:    site/.renderJSON.js.swp
+#	deleted:    site/.ui.js.swo
+#	deleted:    site/.ui.js.swp
+#	deleted:    site/.utils.js.swb
+#	deleted:    site/.utils.js.swc
+#	deleted:    site/.utils.js.swd
+#	deleted:    site/.utils.js.swe
+#	deleted:    site/.utils.js.swf
+#	deleted:    site/.utils.js.swg
+#	deleted:    site/.utils.js.swh
+#	deleted:    site/.utils.js.swi
+#	deleted:    site/.utils.js.swj
+#	deleted:    site/.utils.js.swk
+#	deleted:    site/.utils.js.swl
+#	deleted:    site/.utils.js.swm
+#	deleted:    site/.utils.js.swn
+#	deleted:    site/.utils.js.swo
+#	deleted:    site/.utils.js.swp
+#	deleted:    site/.vectorGraph.js.swp
+#
+
