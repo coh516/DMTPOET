@@ -48,4 +48,4 @@ function main() {
 
 
 /* server started */  
-console.log('DMT listening on port 6789');
+console.log('DMT listening on port 9876');
