@@ -1,0 +1,49 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	deleted:    .gitignore
+#	deleted:    site/#Untitled-1#
+#	deleted:    site/#eval_wrap.js#
+#	deleted:    site/#neighborExampleA_works_simple.js#
+#	deleted:    site/#nodeEditor2.js#
+#	new file:   site/.contextmenu.js.swp
+#	new file:   site/.events.js.swp
+#	new file:   site/.gfx.js.swp
+#	new file:   site/.graph.js.swp
+#	new file:   site/.htmlrenderer.js.swp
+#	new file:   site/.launch.js.swp
+#	deleted:    site/Session.vim
+#	deleted:    site/cycles.js
+#	deleted:    site/dialog
+#	deleted:    site/dialog.js
+#	deleted:    site/events
+#	deleted:    site/events_old_stuff
+#	deleted:    site/index2.html
+#	deleted:    site/index3.html
+#	deleted:    site/kinetic - Copy.js
+#	deleted:    site/kinetic.js
+#	deleted:    site/makeundirected.js
+#	deleted:    site/modelRenderer.js
+#	deleted:    site/modeler
+#	deleted:    site/modeler.js
+#	deleted:    site/neighborExampleA_works_simple.js
+#	deleted:    site/neighbor_merge.js
+#	deleted:    site/nodeEditor.js
+#	deleted:    site/nodeEditor2.js
+#	deleted:    site/nodeEditor3.js
+#	deleted:    site/nodeEditor_mike.js
+#	deleted:    site/program.js
+#	deleted:    site/renametest.js
+#	deleted:    site/renderJSON.js
+#	deleted:    site/storage.js
+#	deleted:    site/ui_.js
+#	deleted:    site/utils
+#	deleted:    site/vectorGraph.js
+#	deleted:    site/yieldTypes.js
+#	deleted:    sy0p0gxb.cdz.txt
+#
+
