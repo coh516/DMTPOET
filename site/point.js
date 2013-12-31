@@ -38,7 +38,7 @@ function point(options){
 		mixin(pt.prototype, tpg.prototype);
 		pt.constructor = point.prototype.constructor
 
-		this.children[i] = new pt({"id":guid(), "parentId":this.id, "childNumber":i, "ptr":ptrs});
+		this.children[i] = new pt({"id":mkguid(), "parentId":this.id, "childNumber":i, "ptr":ptrs});
 		i++;
 	}
 }

@@ -160,7 +160,7 @@ contextMenu.traverseProgram = function() {
 	//var id = this.lastPtr[0];
 	
 	//traverseProgram(this.getLastPtr());
-	new point({"ptr":lastPtr, "childNumber":0, "id":guid()});
+	new point({"ptr":this.lastPtr, "childNumber":0, "id":mkguid()});
 
 	// maybe a method should be m
 

@@ -7,7 +7,6 @@ function testCase(uni) {
 	//{"UI":{"save/load dialogue":[{"row":{"label":[{"text":"save"}, {"events":"onClick"}]}}, {"row":{"label":[{"text":"load"}, {"events":"onClick"}]}}]}},
 	    		{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"save as"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}},
 	    	//	{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"load"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}},
-	  //  		{"DB":{"internals":{"dialogs":["name", "timestamp", "graph"]}}},
 	    		{"DB":{"internals":{"dialogs":["name", "timestamp", "graph"]}}},
 			["timeStamp"],
 			["serializeUniverse"]
