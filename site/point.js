@@ -25,7 +25,7 @@ function point(options){
 
 	this.superGroup = graph['..'](this.node.ptr);
 
-	this.setTypeNodes(ptr);
+	this.setTypeNodes(this.ptr);
 	var i =0;
 	this.variables = [];
 	for (ptrs in nextPtrs) {
@@ -769,6 +769,7 @@ var traverseProgram = function(ptr) {
 	pathsLookup = graph.prototype.getPaths(ptr);
 	//var p2 = copyArray(ptr);
 	var o = getObject(ptr, graphLookup);
+	var cap = [];
 	for (var i = 0; i < o.links.length; i++) {
 		var link = o.links[i];
 

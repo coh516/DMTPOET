@@ -29,7 +29,7 @@ function cloneObject(o) {
 
 
 function main() {
-	console.log("test...");
+//	console.log("test...");
 	var self = this;
 	if (this.get) {
 

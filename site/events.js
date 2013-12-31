@@ -7,7 +7,8 @@ at very least, bounding boxes need to be mantained from the graphics side
 // should have some addition methods....
 // shouldnt allow an icon to go negative
 // should get the max height/widhth of all Items
-
+//
+// need to break apart the event handlers from the actual eventing
 function withinRect(point, rect) {
 //	console.log("pointx:"+point.x+" pointy:"+point.y+" rectx:"+rect.x+" recty"+rect.y+"rectb"+rect.bottom);
 //	console.log("iswithin"+rect.right);
@@ -623,6 +624,7 @@ stageEventHandler.prototype.handleMouseClick = function(obj, e) {
 function contextEventHandler () {
 }
 // need to change the extend to object.create and remove the .prototype shit...
+ 
 contextEventHandler.prototype = Object.create(userEvents.prototype);
 
 contextEventHandler.prototype.handleMouseCanvasClick = function(obj, e) {
@@ -1018,7 +1020,6 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 			//	s2c.push(g2index);
 				console.log(s1c);
 				console.log(s2c);
-				console.log("---------------------ooo hootchie mommma --");
 				s1c.pop(); s2c.pop();
 				gfx.prototype.connect(s1c, s2c);
 

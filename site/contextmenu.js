@@ -159,7 +159,8 @@ contextMenu.setup = function() {
 contextMenu.traverseProgram = function() {
 	//var id = this.lastPtr[0];
 	
-	traverseProgram(this.getLastPtr());
+	//traverseProgram(this.getLastPtr());
+	new point({"ptr":lastPtr, "childNumber":0, "id":guid()});
 
 	// maybe a method should be m
 
