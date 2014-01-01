@@ -75,6 +75,7 @@ graph.prototype = {
 	//todo
 
 	// should use ptrLookup[ptr] to link to the objects to the prototype
+	// ptr's shouldn't really be arrays, they should be objects wrapped around a pointer object
 
 	"objects":{},  //["id"][id]["ptr"][ptr]["index"][index]["prop"]/["children"]/["parents"]
 	// get ptr
@@ -446,10 +447,8 @@ graph.prototype = {
 
 		//var initPtrString = initPtr.join();
 		//visits[initPtr] = true;
-		var paths = [];
-		var ptrz = {};
-		//visits[ptr] = true;
-		var pathList = {};
+		var pathList;
+
 		this.recurse = function(ptr, ptrGraph, visits) {
 			var o = getObject(ptr, graphLookup);
 			var v = false;
@@ -460,11 +459,12 @@ graph.prototype = {
 				ptrGraph[ptr.join()] = {};
 				visits[ptr.join()] = true;
 			}
-		
-
+			console.log("holy smokes!");	
+			console.log(o);
 			if (o.children)
 				for (var lpa = 0; lpa < o.children.length; lpa++) {
 					//alert("test....");
+					//console.log("lpa"+o);
 					var lpt = o.children[lpa];
 					var lpj = lpt.join();
 					//var lpt = lastPtr;
@@ -478,13 +478,14 @@ graph.prototype = {
 						//ca.push(copyArray(lpt));
 						if (!ptrGraph[lpj]) {
 							ptrGraph[lpj] = {};
-						//	pathList[lpj] = [];
-						//	pathsLookup[lpj] = []; //ptrList[lpj];
+							//	pathList[lpj] = [];
+							//	pathsLookup[lpj] = []; //ptrList[lpj];
 						}
 						if (!pathList[lpj])
 							pathList[lpj] = [];
 						pathList[lpj].push(ptrGraph[lpj]);
-						v = this(lpt, ptrGraph[lpj], cv)
+						console.log("pathlist"+pathList);
+						v = this.recurse(lpt, ptrGraph[lpj], cv)
 							//	if (v) return v;
 					}
 
@@ -512,7 +513,7 @@ graph.prototype = {
 							if (!pathList[lpj])
 							pathList[lpj] = [];
 						pathList[lpj].push(ptrGraph[lpj]);
-						v = this(lpt, ptrGraph[lpj], cv)
+						v = this.recurse(lpt, ptrGraph[lpj], cv)
 						//	if (v) return v;
 					}
 
@@ -520,9 +521,27 @@ graph.prototype = {
 				}
 			return v;
 		}
-		var m = {};
-		m[ptr.join] = {}
-		this.recurse(ptr, ptrz, m);
+		console.log("yip");
+		var paths = [];
+		var ptrz = {};
+		//visits[ptr] = true;
+		var pathList = {};
+
+		var ptr2 = copyArray(ptr);
+		ptr2.pop();
+		ptr2.push('index');
+		var po = getObject(ptr2, graphLookup);
+		var ptrGraph = {};
+		var visits = {};
+		console.log("--------------x");
+		console.log(po);
+		for (var i = 0; i < po.length; i++) {
+			var m = {};	
+			m[ptr.join] = {};
+			console.log(ptr2.concat([i]));
+			this.recurse(ptr2.concat([i]), ptrGraph, visits);
+		}
+		
 		return pathList;
 	},
 
@@ -992,7 +1011,7 @@ graph.prototype = {
 		var n = getObject(ptr, graphLookup);
 		var hier = [n.value];
 		var x = [];
-		while (n = graph['..'](n.ptr)) {
+		while (n = graph.prototype['..'](n.ptr)) {
 			var v = getObject(n.ptr, graphLookup).value;
 			x.push(v);
 		}
@@ -1002,7 +1021,7 @@ graph.prototype = {
 		var n = getObject(ptr, graphLookup);
 		var hier = [n.value];
 		var x = {};
-		while (n = graph['..'](n.ptr)) {
+		while (n = graph.prototype['..'](n.ptr)) {
 			var v = getObject(n.ptr, graphLookup).value;
 			x[v] = {};
 			x = x[v];
@@ -1011,10 +1030,10 @@ graph.prototype = {
 	},
 	"..":function(ptr) {
 		//ptrs objects should be cached with a ptrObject class ... 
-		var o = copyObject(ptr);
+		var o = copyArray(ptr);
 		if (o.length >=2) {
 			o.pop();o.pop();
-			return this.getObject(o, graphLookup);
+			return getObject(o, graphLookup);
 		} else return false;
 	},
 	"setXY":function(id, x,y) {

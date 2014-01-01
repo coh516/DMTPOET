@@ -20,10 +20,12 @@ function point(options){
 
 	this.node = getObject(this.ptr, graphLookup)
 
-
 	var nextPtrs = pathsLookup[this.ptr];
 
-	this.superGroup = graph['..'](this.node.ptr);
+	console.log(nextPtrs);
+	console.log("============cool beanz====================");
+
+	this.superGroup = graph.prototype['..'](this.node.ptr);
 
 	this.setTypeNodes(this.ptr);
 	var i =0;
@@ -766,7 +768,6 @@ DBClass.prototype = {
 var pathsLookup;
 var programs  = {"UI":UIClass, "DB":DBClass, "Universe":UniverseClass, "Date":DateClass};
 var traverseProgram = function(ptr) {
-	pathsLookup = graph.prototype.getPaths(ptr);
 	//var p2 = copyArray(ptr);
 	var o = getObject(ptr, graphLookup);
 	var cap = [];

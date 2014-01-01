@@ -160,7 +160,12 @@ contextMenu.traverseProgram = function() {
 	//var id = this.lastPtr[0];
 	
 	//traverseProgram(this.getLastPtr());
-	new point({"ptr":this.lastPtr, "childNumber":0, "id":mkguid()});
+//var ptr2 = graph.prototype['..'](ptr);
+	
+	var pathList = graph.prototype.getPaths(this.lastPtr);
+	console.log(pathList);
+	console.log("DOA");
+	//new point({"ptr":this.lastPtr, "childNumber":0, "id":mkguid()});
 
 	// maybe a method should be m
 
