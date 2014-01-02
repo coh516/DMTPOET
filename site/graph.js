@@ -443,83 +443,84 @@ graph.prototype = {
 			}
 		return v;		
 	},
+	// this should convert circular links to forward links in the process....
+	// goes forward by removing backlinks
+	// thank you michael weissbacher for showing me the best way to store this is as a 2d array
 	"getPaths":function(ptr) {
 
 		//var initPtrString = initPtr.join();
 		//visits[initPtr] = true;
-		var pathList;
+		var pathList = [];
+		var singleVisits = [];
+		var pathVisits = {};
 
-		this.recurse = function(ptr, ptrGraph, visits) {
+		this.recurse = function(ptr, visits) {
 			var o = getObject(ptr, graphLookup);
-			var v = false;
-			var g = false;
-			var vv = false;
-			for (b in visits) vv = true;
-			if (vv) {
-				ptrGraph[ptr.join()] = {};
-				visits[ptr.join()] = true;
-			}
-			console.log("holy smokes!");	
-			console.log(o);
-			if (o.children)
-				for (var lpa = 0; lpa < o.children.length; lpa++) {
-					//alert("test....");
+	
+			var x = ptr.join();	
+			var pl = [];
+			if (pathList[x]) 
+				pl = pathList[x];
+			else
+				pathList[x] = pl;
+			
+			//pathList[ptr] = [];
+			
+			var cp = [ 'children', 'parents' ];
+			for (var i =0; i < cp.length; i++) {
+				var cop = cp[i];
+				
+				for (var lpa = 0; lpa < o[cop].length; lpa++) {
+					console.log("test....children");
 					//console.log("lpa"+o);
-					var lpt = o.children[lpa];
+					var lpt = o[cop][lpa];
 					var lpj = lpt.join();
 					//var lpt = lastPtr;
 					//if (lpt)
 					//var lpt =  lpj == lastPtr.join();
 					//if (v) return v;
-					var cv = cloneObj(visits);
-					if (!cv[lpj]) {
-						//var ca = cloneObj(ptrList);
-						cv[lpj] = true;	
-						//ca.push(copyArray(lpt));
-						if (!ptrGraph[lpj]) {
-							ptrGraph[lpj] = {};
-							//	pathList[lpj] = [];
-							//	pathsLookup[lpj] = []; //ptrList[lpj];
+					console.log(visits);
+					var db = false;
+					for (var j=0; j < visits.length; j++) {
+						var v = visits[j];
+						if (lpj == v) {
+							console.log(ptr+" "+lpj+" "+v);
+							var db = true;
+							console.log("already visitted...");
+							break;
 						}
-						if (!pathList[lpj])
-							pathList[lpj] = [];
-						pathList[lpj].push(ptrGraph[lpj]);
-						console.log("pathlist"+pathList);
-						v = this.recurse(lpt, ptrGraph[lpj], cv)
-							//	if (v) return v;
 					}
+					if (db) continue;//{
+
+					var v2 = copyArray(visits);
+					v2.push(lpj);
+					//;
+					var val = getObject(lpt, graphLookup).gfx.graphptr.value;
+					var bad = false;
+					for (var k=0; k < pl.length; k++)
+						if (pl[k] == lpj)
+							bad = true;
+					if (!bad) 
+						pl.push(lpj);
+
+					//pl.push(val);
+					//	pl.push(copyArray(visits));
+					//if (!pathList[ptr]) pathList[ptr] = [];
+					//pathList[ptr].push(lpj);pathList[ptr].push(val);			
+					//	console.log("joining"+ptr.join()+" and "+lpj+" as "+JSON.stringify(ptrGraph[lpj]));
+					this.recurse(lpt, copyArray(v2))
+					//}
+							//	if (v) return v;
+					//}
 
 
 					//return v;	
 				}
-			if (o.parents)
-				for (var lpa = 0; lpa < o.parents.length; lpa++) {
-					//alert("test....");
-					//var lpt = lastPtr;
-					var lpt = o.parents[lpa];
-					var lpj = lpt.join();
-					//var lpt = lastPtr;
-					//if (lpt)
-					var cv = cloneObj(visits);
-					if (!cv[lpj]) {
-						//var ca = cloneObj(ptrList);
-						cv[lpj] = true;	
-						//ca.push(copyArray(lpt));
-						if (!ptrGraph[lpj]) {
-							ptrGraph[lpj] = {};
-							//pathList[lpj] = [];
-						//	pathsLookup[lpj] = []; //ptrList[lpj];
-						}
-							if (!pathList[lpj])
-							pathList[lpj] = [];
-						pathList[lpj].push(ptrGraph[lpj]);
-						v = this.recurse(lpt, ptrGraph[lpj], cv)
-						//	if (v) return v;
-					}
-
-					//return 	 v;
-				}
-			return v;
+				//if (db) break;
+			
+			}
+		
+		//	return v;
 		}
 		console.log("yip");
 		var paths = [];
@@ -538,8 +539,9 @@ graph.prototype = {
 		for (var i = 0; i < po.length; i++) {
 			var m = {};	
 			m[ptr.join] = {};
-			console.log(ptr2.concat([i]));
-			this.recurse(ptr2.concat([i]), ptrGraph, visits);
+			//console.log(ptr2.concat([i]));
+			var j = this.recurse(ptr2.concat([i]), [ptr2.concat([i]).join()]);
+			console.log(j);
 		}
 		
 		return pathList;
@@ -552,13 +554,16 @@ graph.prototype = {
 
 		c["parents"].push(n1);
 		p["children"].push(n2);
-
+		
+		/*
 		if(graph.prototype.isCircular(n1, n2, n2)) {
 			c["parents"].pop();
 			p["children"].pop();
+		//	alert("test...");
 			return false;
 		}
-
+		*/
+	//	alert("test..");
 	//	alert(graph.prototype.isCircular(n2, n1, n1, n2));
 		
 		

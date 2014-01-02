@@ -9,7 +9,10 @@ function testCase(uni) {
 	    	//	{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"load"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}},
 	    		{"DB":{"internals":{"dialogs":["name", "timestamp", "graph"]}}},
 			["timeStamp"],
-			["serializeUniverse"]
+			["serializeUniverse"],
+
+
+			["acid1"],["acid2"],["acid3"],["acid4"],["acid5"],["acid6"]
 
 	    ];
 	for (var i =0; i < jobjects.length; i++ ) {
@@ -37,6 +40,13 @@ function testCase(uni) {
 	gojs[0].moveTo(450, 20);
 	gojs[3].moveTo(200, 300);
 
+	gojs[4].moveTo(650, 500);
+	gojs[5].moveTo(580, 450);
+	gojs[6].moveTo(510, 480);
+	gojs[7].moveTo(510, 350);
+	gojs[8].moveTo(450, 350);
+	gojs[9].moveTo(450, 400);
+
 
 	var uiroot = [gids[0], 'item', 0, 'index', 0];
 	var uisub = [gids[0], 'item', 0, 'item', 0, 'item', 1, 'item', 2, 'item', 0, 'item', 0, 'index', 0];
@@ -51,6 +61,16 @@ function testCase(uni) {
 	var su = [gids[3], 'item', 0, 'index', 0];
 
 
+	var a1 = [gids[4], 'item', 0, 'index', 0];
+	var a2 = [gids[5], 'item', 0, 'index', 0];
+	var a3 = [gids[6], 'item', 0, 'index', 0];
+	var a4 = [gids[7], 'item', 0, 'index', 0];
+	var a5 = [gids[8], 'item', 0, 'index', 0];
+	var a6 = [gids[9], 'item', 0, 'index', 0];
+//	var a7 = [gids[10], 'item', 0, 'index', 0];
+
+
+
 	var o = getObject([gids[0], 'item', 0, 'item', 0], graphLookup);
 	o.layout = "grid";
 
@@ -62,6 +82,16 @@ function testCase(uni) {
 	gfx.prototype.connect(timestamp, dbtimestamp);
 	gfx.prototype.connect(uisub, su);
 	gfx.prototype.connect(su, dbgraph);
+
+	
+
+	gfx.prototype.connect(a1, a2);
+	gfx.prototype.connect(a2, a3);
+	gfx.prototype.connect(a2, a4);
+	gfx.prototype.connect(a4, a5);
+	gfx.prototype.connect(a3, a6);
+	gfx.prototype.connect(a3, a4);
+	
 
 }
 

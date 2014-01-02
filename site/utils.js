@@ -17,8 +17,10 @@ function o2s() {
 	return JSON.stringify ( [e.id , e.ptr , e.index] ); 
 }
 function copyArray(a) {
+	//return;
 	var g= [];
 	for (var i=0; i < a.length; i++) {
+	//	console.log("-----");
 		g.push(a[i]);
 	}
 	return g;

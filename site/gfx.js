@@ -375,7 +375,9 @@ gfx.prototype = {
 
 	"connect":function(c1, c2) {
 		//graph function provides direction (s2c,s1c) same thing
-		console.log("connecting..."+c1+" "+c2); 
+		var v1= getObject(c1,graphLookup).gfx.graphptr.value
+		var v2 =  getObject(c2,graphLookup).gfx.graphptr.value
+		console.log("connecting..."+c1+" "+v1+"  ..  "+c2+" "+v2); 
 		pt = graph.prototype.connect(c1, c2);
 		//this.drawLinks(c1, c2); // doesnt matter which one we give it
 		//this.rebuild();
