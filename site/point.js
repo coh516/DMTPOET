@@ -14,13 +14,14 @@ function point(options){
 	this.childNumber = options.childNumber;
 	this.id = options.id;
 	this.parentId = options.parentId;
+	this.pathList = options.pathList;
 
 	pointLookup[this.id] = this;
 
 
 	this.node = getObject(this.ptr, graphLookup)
 
-	var nextPtrs = pathsLookup[this.ptr];
+	var nextPtrs = this.pathList[this.ptr];
 
 	console.log(nextPtrs);
 	console.log("============cool beanz====================");
@@ -40,7 +41,7 @@ function point(options){
 		mixin(pt.prototype, tpg.prototype);
 		pt.constructor = point.prototype.constructor
 
-		this.children[i] = new pt({"id":mkguid(), "parentId":this.id, "childNumber":i, "ptr":ptrs});
+		this.children[i] = new pt({"id":mkguid(), "parentId":this.id, "childNumber":i, "ptr":ptrs, "pathList":this.pathList});
 		i++;
 	}
 }

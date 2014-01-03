@@ -447,12 +447,7 @@ graph.prototype = {
 	// goes forward by removing backlinks
 	// thank you michael weissbacher for showing me the best way to store this is as a 2d array
 	"getPaths":function(ptr) {
-
-		//var initPtrString = initPtr.join();
-		//visits[initPtr] = true;
-		var pathList = [];
-		var singleVisits = [];
-		var pathVisits = {};
+		var pathList = {};
 
 		this.recurse = function(ptr, visits) {
 			var o = getObject(ptr, graphLookup);
@@ -464,7 +459,6 @@ graph.prototype = {
 			else
 				pathList[x] = pl;
 			
-			//pathList[ptr] = [];
 			
 			var cp = [ 'children', 'parents' ];
 			for (var i =0; i < cp.length; i++) {
@@ -472,29 +466,20 @@ graph.prototype = {
 				
 				for (var lpa = 0; lpa < o[cop].length; lpa++) {
 					console.log("test....children");
-					//console.log("lpa"+o);
 					var lpt = o[cop][lpa];
 					var lpj = lpt.join();
-					//var lpt = lastPtr;
-					//if (lpt)
-					//var lpt =  lpj == lastPtr.join();
-					//if (v) return v;
-					console.log(visits);
 					var db = false;
 					for (var j=0; j < visits.length; j++) {
 						var v = visits[j];
 						if (lpj == v) {
-							console.log(ptr+" "+lpj+" "+v);
 							var db = true;
-							console.log("already visitted...");
 							break;
 						}
 					}
-					if (db) continue;//{
+					if (db) continue;
 
 					var v2 = copyArray(visits);
 					v2.push(lpj);
-					//;
 					var val = getObject(lpt, graphLookup).gfx.graphptr.value;
 					var bad = false;
 					for (var k=0; k < pl.length; k++)
@@ -503,43 +488,25 @@ graph.prototype = {
 					if (!bad) 
 						pl.push(lpj);
 
-					//pl.push(val);
-					//	pl.push(copyArray(visits));
-					//if (!pathList[ptr]) pathList[ptr] = [];
-					//pathList[ptr].push(lpj);pathList[ptr].push(val);			
-					//	console.log("joining"+ptr.join()+" and "+lpj+" as "+JSON.stringify(ptrGraph[lpj]));
 					this.recurse(lpt, copyArray(v2))
-					//}
-							//	if (v) return v;
-					//}
-
-
-					//return v;	
 				}
-				//if (db) break;
-			
 			}
 		
-		//	return v;
 		}
-		console.log("yip");
-		var paths = [];
-		var ptrz = {};
+		//var paths = [];
+		//var ptrz = {};
 		//visits[ptr] = true;
-		var pathList = {};
+		//var pathList = {};
 
 		var ptr2 = copyArray(ptr);
 		ptr2.pop();
 		ptr2.push('index');
 		var po = getObject(ptr2, graphLookup);
-		var ptrGraph = {};
-		var visits = {};
-		console.log("--------------x");
-		console.log(po);
+		//var ptrGraph = {};
+		//var visits = {};
 		for (var i = 0; i < po.length; i++) {
-			var m = {};	
-			m[ptr.join] = {};
-			//console.log(ptr2.concat([i]));
+			//var m = {};	
+			//m[ptr.join] = {};
 			var j = this.recurse(ptr2.concat([i]), [ptr2.concat([i]).join()]);
 			console.log(j);
 		}
