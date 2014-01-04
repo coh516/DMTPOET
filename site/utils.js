@@ -13,6 +13,25 @@ function s2o(o) {
     } 	
 }
 
+function postUp(data, callback, packet) {
+	this.callback = callback;
+	this.packet = packet;
+	this.request = new XMLHttpRequest();
+	this.request.onreadystatechange = function() {
+		if (request.readyState == 4) {
+			if (request.status == 200 || window.location.href.indexOf("http") == -1) {
+				callback(request.responseText,packet);
+			} else {
+				console.log("internal error");
+			}
+		}
+	}
+	this.request.open("POST", "post", true)
+	this.request.setRequestHeader("Content-type", "application/json")
+
+	this.request.send(data);
+}
+
 function o2s() {
 	return JSON.stringify ( [e.id , e.ptr , e.index] ); 
 }

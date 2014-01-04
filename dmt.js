@@ -27,6 +27,12 @@ function cloneObject(o) {
 	return JSON.parse(JSON.stringify(o));
 }
 
+/*
+function renderGraph(obj) {
+ .. not sure this is appropriate at this time... 
+
+}
+*/
 
 function main() {
 //	console.log("test...");
@@ -34,12 +40,25 @@ function main() {
 	if (this.get) {
 
 	//	console.log(this.request, this.response);
+	//	console.log(this.get);
+		/*
+		var srequest = this.request.substring(1);
+		for (var i = 0; i < evaluatedGraphs.length; i++) {
+			if (evaluatedGraphs[i]] == this.srequest
+				var ml = renderGraph(this.request.substring(1));
+				this.response.writeHead(200, {'Content-Type': 'text/html'});
+				this.response.write(ml);
+				this.response.end();
+		}else
+		// save this for a later date....
+		*/
 		setupFileServer(this.request, this.response);
 	}
 	else //{
 	if (this.post) {
 	//	try {
-			var data= JSON.parse(this.post['/post']);
+		var data= JSON.parse(this.post['/post']);
+		// create some type of renderId string, use that string then to wait for a get of that name
 		console.log(data);
 	//	}
 	}
