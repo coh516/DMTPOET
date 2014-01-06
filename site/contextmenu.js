@@ -161,11 +161,24 @@ contextMenu.traverseProgram = function() {
 	
 	//traverseProgram(this.getLastPtr());
 //var ptr2 = graph.prototype['..'](ptr);
-	
+		
 	var pathList = graph.prototype.getPaths(this.lastPtr);
+	
 	console.log(pathList);
 	console.log("DOA");
-	//new point({"ptr":this.lastPtr, "childNumber":0, "id":mkguid()});
+	console.log(this.lastPtr);
+	var ca = copyArray(this.lastPtr);
+	ca.pop();
+	var o = getObject(ca, graphLookup);
+	console.log(o);
+	for (var i = 0 ; i < o.index.length; i++) {
+		var ptr = ca.concat(['index', i]);
+		var pt = new point({"ptr":ptr, "childNumber":0, "id":mkguid(), "pathList":pathList});
+		console.log(pt.isMixedIn);
+		pt.evaluate();
+	}
+
+	//point.evaluate();
 
 	// maybe a method should be m
 

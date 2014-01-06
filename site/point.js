@@ -18,11 +18,13 @@ function point(options){
 
 	pointLookup[this.id] = this;
 
-
+	console.log(this.ptr);
+	console.log("-----------------------");
 	this.node = getObject(this.ptr, graphLookup)
 
 	var nextPtrs = this.pathList[this.ptr];
-
+	console.log(this.ptr);
+	console.log(this.pathList);
 	console.log(nextPtrs);
 	console.log("============cool beanz====================");
 
@@ -33,35 +35,48 @@ function point(options){
 	}
 	
 	
-
-	var p2 = copyArray(this.node.ptr);
+	
+	var p2 = copyArray(this.ptr);
 	p2.pop();p2.pop();
 	this.superGroup = getObject(p2, graphLookup);
 
+	this.label = this.superGroup.value;
 
 
-	//this.superGroup = graph.prototype['..'](this.node.ptr);
 
-	this.setTypeNodes(this.ptr);
-	var i =0;
 	this.variables = [];
 	
 	// if theres no parentId, assume this to be the initial point
+	this.children = [];
 
-	for (ptrs in nextPtrs) {
-		
-		//var tpg = programs[this.programName];
-		function pt() { };
 
-		pt.prototype = Object.create(point.prototype);
-		mixin(pt.prototype, programComponents.prototype);
-		mixin(pt.prototype, tpg.prototype);
-		pt.constructor = point.prototype.constructor
-
-		this.children[i] = new pt({"id":mkguid(), "parentId":this.id, "childNumber":i, "ptr":ptrs, "pathList":this.pathList, "origin":this.origin});
-		i++;
+	//var nodeTypes = {"program":programComponents.prototype, "value":valueComponents.prototype};
+	
+	if (this.superGroup.types)	
+	if (this.superGroup.types['program']) {
+		console.log(this.ptr);
+		this.isMixedIn = true;
+		mixin(programComponents.prototype, this);
+		//pt.constructor = point.prototype.constructor
 	}
 
+
+
+	for (var i =0 ; i < nextPtrs.length; i++) {
+		console.log("-----xxxx-----");	
+		//var tpg = programs[this.programName];
+		//function pt() { };
+
+		//pt.prototype = Object.create(point.prototype);
+	//	mixin(pt.prototype, programComponents.prototype);
+	//	mixin(pt.prototype, tpg.prototype);
+		//pt.constructor = point.prototype.constructor
+		//
+		
+		console.log(nextPtrs);	
+		this.children[i] = new point({"ptr":nextPtrs[i], "id":mkguid(), "parentId":this.id, "childNumber":i, "pathList":this.pathList, "origin":this.origin});
+		i++;
+	}
 
 }
 
@@ -69,7 +84,7 @@ function point(options){
 point.prototype.pointLookup = {};
 
 point.prototype = {
-	"getRootNode": {
+	"getRootNode": function(){
 		var rootPtr = [this.ptr[0], this.ptr[1], this.ptr[2]];
 	},
 
@@ -101,7 +116,9 @@ point.prototype = {
 	},
 	*/
 	"evaluate": function(){
-
+		//this.initPhrase();
+		console.log(this.superGroup);
+		this.evaluatePhrase();
 	},
 
 	"getPriorNode":function(){
@@ -154,7 +171,7 @@ point.prototype = {
 		}
 	},
 	*/
-
+	// more unneeded shit
 	"setTypeNodes":function() {
 		var id = this.ptr[0];
 		var ptr = this.ptr;
@@ -197,40 +214,71 @@ programComponents.prototype = {
 
 	"setsData":function() { (this.nextPoint.node.type['root'] || !this.nextPoint.children) },
 
-	"setPhraseDelimiters":function() {
+	"evaluatePhrase":function() {
 		//var p = this.priorNode;
+		//alert("test...");
 		var nodes=[];
 		//while (p) {
 		var phrases = this.phrases = [];
 		//var phrases = this.phrases;
-		var traversals = 0;
-
-		function recurse(p, rootItem) {
-			if (p.node.type['root'] || p.children.length == 0) {
+		var hasTraversed = false
+		var traversedNodes = {};
+		var nextPhrases = [];
+		var completed = false;
+		var iterations = 0;
+		function recurse(p, rootPhrase) {
+			if (traversedNodes[p]){
+				traversals--;
+			}else traversedNodes[p] = true;
+			if (p.node.types)	
+			if (p.node.types['root'] || p.children.length == 0 || !hasTraversed) {
 				p.phraseBegin = true
 				var rootItem = p;
+				if (hasTraversed)
 				pointLookup[p.parentId].phraseEnd = true;
-				traversals--;
-				if (traversals == 0) {
-					//process next phrase
+				//if (rootPhrase) { 
+				if (hasTraversed) {
+					traversals--;
+			        	rootPhrase.nextPhrases.push(p.id);
+			
+					if (traversals == 0) {
+						// iterations > 0 and also next childrent arent all roots ..
+						// if there's just one item in the linkage, this strategy will break
+						// rootPhrase.renderPhrase({"});
+						completed = true;
+						//rootPhrase.nextPhrases = nextPhrases
+					}
 				}
+					//process next phrase
+				//}
 
 			}
-
+			if (!completed)
 			for (var i =0 ; i < p.children.length; i++) {
-				if (i > 0) 
-					var traversals++
-				this.recurse(p.children[i], p)
+				if (i > 0) { 
+					traversals++
+					hasTraversed = true;
+					//for (var g in this) console.log(g);
+					this.recurse(p.children[i], p)
+				}
 			}
 		}
 		this.endPoints = [];
 		//this.phraseBegin = true;
-		this.recurse(this, this);
-		return lastItems;
+		recurse(this, this);
+		this.renderPhrase();
+		//return lastItems;
 		//return phrases;
 	},
+	"renderPhrase":function() {
+		var proto = programs[this.label].prototype
+		mixin(proto, this);
+		this.evaluateNode();
 
+		//this.evaluateNode();
 
+	},
+	/*
 	"processPhrase":function(pb) {
 		
 		var brk = false;
@@ -257,6 +305,7 @@ programComponents.prototype = {
 		}
 		pb.levels = levels;
 	}
+	*/
 
 
 
@@ -282,15 +331,17 @@ UIClass.prototype = {
 
 
 	"evaluateNode":function(pcj) {
-		var hier = graph.getValuePtr(this.nodePtr);
+		var hier = graph.prototype.getValueOrder(this.nodePtr);
 		var hl = hier.length-1;
-		if (this.node[types]["root"]) {
+		if (this.node.types)
+		if (this.node['types']["root"]) {
 	//	if (hier[hl] == "UI") {
-			if (this.phraseBegin)
-				ptrProgs[this.id] = new UIProgram(this.id, graph(graphLookup[this.node.ptr[0]]).toJSON());
+		//	if (this.phraseBegin)
+		//		this.ptrProgs[this.id] = new UIProgram(this.id, graph(graphLookup[this.node.ptr[0]]).toJSON());
 		}
 		// check namespace
-		if (contains(hier, {'contains':{'vals':['row'], 'contains':{'vals':['label', 'dropdown', 'button']}}})) {
+		if (contains(hier, {'row':{'label':[{'text':'save as'}, {'inputbox':'text'}, {'button':'type'}]}})) {
+		//if (contains(hier, {'contains':{'vals':['row'], 'contains':{'vals':['label', 'inputbox', 'button']}}})) {
 			if (this.superGroup.value == 'text') {
 				if (!this.phraseEnd) {
 					

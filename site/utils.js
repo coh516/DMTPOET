@@ -99,10 +99,10 @@ function getPos(e) {
 }
 
 function mixin(from, to) {
-	var oc = Object.create(from)
-	for (var g in oc) {
+	//var oc = Object.create(from)
+	for (var g in from) {
 	//	if (to[g] == undefined)
-			to[g] = oc[g];
+			to[g] = from[g];
 	}
 }
 
@@ -153,7 +153,8 @@ function obj2ptr(item, gid, id, il) {
 		}
 	}
 }
-function _contains(a,i,k,v) {
+/*
+function _contains(list,group,i,v) {
 
 	for (i; i < i < a.length; i++) {
 		for (var b in k) {
@@ -174,8 +175,51 @@ function _contains(a,i,k,v) {
 	}
 	return -1;
 }
-function contains(a,k) {
-	_contains(a, 0, k, []);
+*/
+
+function _contains(list,group) {
+	var hasMatched = false;
+	var success = false;
+	var mi = 0;
+	var matchItem = list[mi];
+	var items = [];
+	this._recurse = function(group) {
+		for (key in group) {
+			var kg = group[key];
+			if (Array.isArray(kg)) {
+				this._recurse(kg);	
+			}else
+			if ( typeof kg == 'object' ) {
+				if (key == matchItem) {
+					items.push(key);
+					mi++;
+					hasMatched = true;
+					this._recurse(kg);
+				}
+			}else
+			if ( typeof group == 'string' ) {
+				if (group == matchItem) {
+				items.push(group);
+				success = true;
+			}				
+			}else
+			if (!hasMatched) {
+				if (mi == list.length)
+					return;
+				mi++;
+				this._recurse(group);		
+			}	
+		}
+	}
+	this._recurse(group);
+	if (success)
+		return items;
+	else return false;
+}
+
+
+function contains(list,group) {
+	_contains(list, group, i, []);
 }
 
 function arrayHas(a, v) {

@@ -14,8 +14,19 @@
 		margin: 0px;
 		border: none;
 		background-color:yellow;
+		list-style-type: none;
+		
 	}
 	.stagemenuLI {
+		margin: 0px;
+		padding: 0px;
+		margin-left:10px;
+		list-style-type: none;
+		border: none; 
+	}
+	/* shouldn't need to be here.. theres no links! */
+	
+	.stagemenuLinksLI {
 		margin: 0px;
 		padding: 0px;
 		margin-left:10px;
@@ -27,6 +38,8 @@
 		margin: 0px;
 		border: none;
 		background-color:orange;
+		list-style-type: none;
+		
 	}
 	.dialogmenuLI {
 		margin: 0px;
@@ -36,14 +49,27 @@
 		border: none; 
 	
 	}
-
+	/* shouldn't need to be here.. theres no links! */
+	
+	.dialogmenuLinksLI {
+		margin: 0px;
+		padding: 0px;
+		margin-left:10px;
+		list-style-type: none;
+		border: none; 
+	}	
+	
 	.contextmenuUL {
 		padding: 0px;	
 		margin: 0px;
 		border: none;
 		background-color:yellow;
+		list-style-type: none;
+		
 	}
-	.contextmenuLI {
+	/* shouldn't need to be here.. theres no links! */
+	
+	.contextmenuLinksLI {
 		margin: 0px;
 		padding: 0px;
 		margin-left:10px;
@@ -54,12 +80,21 @@
 		margin: 0px;
 		border: none;
 		padding: 0px;
+		list-style-type: none;
+		
 	}
 	.ptrLI {
 		margin-left: 10px;
 		list-style-type: none;
 		border: none;
 		padding: 0px;
+	}
+	.ptrLinksLI {
+		margin-left: 10px;
+		list-style-type: none;
+		border: none;
+		padding: 0px;
+		line-height: 0px;
 	}
 	[connector] {
 		fill:"none";
@@ -71,11 +106,32 @@
 	}
 	[ptrindex] { 
 		cursor:pointer;	
-		display:block;
+		display:inline-block;
 		width:10px;
 		height:10px;
 		border:1px solid red;
 		margin:1px;	
+	}
+
+	/* uneeded.. but left in*/
+
+	[ptrindexOptions=over] {
+		background-color:aqua;
+	}
+	[ptrindexOptions=unselected] {
+		background-color: brown;
+	}
+	[ptrindexOptions=selected] {
+		background-color: orange;
+	}
+	[ptrindexOptions] { 
+		cursor:pointer;	
+		display:inline-block;
+		width:5px;
+		height:10px;
+		border:1px solid ;
+		margin:1px;	
+		color:green;
 	}
 
 	
@@ -88,6 +144,9 @@
 	[ptrindex=selected] {
 		background-color: orange;
 	}
+
+
+
 	[ptrlabel] {
 		display:inline-block;
 		cursor:pointer;

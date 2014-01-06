@@ -315,40 +315,56 @@ htmlRenderer.prototype = {
 			else links = tlg.index.length;
 		} else links = 1;
 		var tof; // = layout;
-	
+		
+		// should have something like 'usesPtrLinks' .. uggh .. dirty code.
 		for (var i = links-1; i >=0; i--) {// links; i++) {
+			//if (!tlg.index) return;
 			if (!tlg.index)
 				graphLookup[id].addIndex(ptra);
 
 			else if (!tlg.index[i])
 				graphLookup[id].addIndex(ptra);
 			//alert('etst');
+			
 			var li =  document.createElement("li");	
-			li.setAttribute("class", type+"LI");
+			li.setAttribute("class", type+"LinksLI");
 
 			if (x == 0) li.style.marginLeft = "0px"; // calculate indent from small box
 
-			var c = document.createElement("div");
+			// if needed to create an options for the index, use this..
+			// although -- the line-renderer code needs to change first cuz it's too hard to select stuff
+			//   this option should come in later, as well, the ability to declare delimiters explicitely 
+			//
+			/*
+			var c = document.createElement("span");
 			//	console.log("yooo");	
-			c.setAttribute(type+"index", "unselected");
+			c.setAttribute(type+"indexOptions", "unselected");
+			
 			// if the css attribute doesnt exist, we should assume
 			// that this whole case doesnt apply.......
 			li.appendChild(c);
+			*/
+			var d = document.createElement("span");
+			//	console.log("yooo");	
+			d.setAttribute(type+"index", "unselected")
+			li.appendChild(d);
+
+
 			el.appendChild(li);
 			//console.log(li);
-			var cw = c.offsetWidth;
-			var ch = c.offsetHeight;
+			var cw = d.offsetWidth;
+			var ch = d.offsetHeight;
 			//var ow = ow ? ow : x*cw;
 			//var ptr = ptra.join();
 			var ptr = copyArray(ptra);
 			var ptrs = ptr.join();
-			var pos = getElPos(c);
+			var pos = getElPos(d);
 			//		console.log(pos);
 			//		use rational index positions instead 
 			var ll = i;
 			ptr = ptr.concat(["index", ll, "gfx"]);
 			//	console.log("posss-----------------------------------");
-			var o = {"type":"index", "index":i, "height":ch, "width":cw, "x":pos.x, "y":pos.y, "z":zi, "right": cw+pos.x, "bottom":ch+pos.y, "graphptr":{"id":id,  'value':tlg["value"], "index":i}, "ptr":ptr, "div":c}
+			var o = {"type":"index", "index":i, "height":ch, "width":cw, "x":pos.x, "y":pos.y, "z":zi, "right": cw+pos.x, "bottom":ch+pos.y, "graphptr":{"id":id,  'value':tlg["value"], "index":i}, "ptr":ptr, "div":d}
 			rect.y+=ch;
 			//	console.log(ptra);
 		//	console.log(tlg['index']);

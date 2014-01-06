@@ -486,7 +486,7 @@ graph.prototype = {
 						if (pl[k] == lpj)
 							bad = true;
 					if (!bad) 
-						pl.push(lpj);
+						pl.push(copyArray(lpt));
 
 					this.recurse(lpt, copyArray(v2))
 				}
@@ -979,12 +979,14 @@ graph.prototype = {
 		}
 		return x;
 	},
-	"getValuePtr":function(ptr) {
+	"getValueOrder":function(ptr) {
 		var n = getObject(ptr, graphLookup);
 		var hier = [n.value];
 		var x = [];
-		while (n = graph.prototype['..'](n.ptr)) {
-			var v = getObject(n.ptr, graphLookup).value;
+		var p2 = copyArray(ptr);
+		while (p2.length > 0) {
+			p2.pop();p2.pop();
+			var v = getObject(p2, graphLookup).value;
 			x.push(v);
 		}
 		return x.reverse();
