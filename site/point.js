@@ -52,14 +52,11 @@ function point(options){
 
 	//var nodeTypes = {"program":programComponents.prototype, "value":valueComponents.prototype};
 	
-	if (this.superGroup.types)	
-	if (this.superGroup.types['program']) {
-		console.log(this.ptr);
-		this.isMixedIn = true;
-		mixin(programComponents.prototype, this);
-		//pt.constructor = point.prototype.constructor
-	}
-
+	var pp = this.ptr;
+	var a1 = getObject([pp[0], pp[1], pp[2]], graphLookup);
+	nodeName = a1.value;
+	if (a1.types['program'])
+		this.programName = nodeName;
 
 
 	for (var i =0 ; i < nextPtrs.length; i++) {
@@ -84,6 +81,17 @@ function point(options){
 point.prototype.pointLookup = {};
 
 point.prototype = {
+
+	"setBeginPhrase": function() {
+		//if (this.superGroup.types)	
+		//	if (this.superGroup.types['program']) {
+		this.phraseBegin = true;
+		console.log(this.ptr);
+		//this.isMixedIn = true;
+		mixin(Phrase.prototype, this);
+		//pt.constructor = point.prototype.constructor
+	}
+
 	"getRootNode": function(){
 		var rootPtr = [this.ptr[0], this.ptr[1], this.ptr[2]];
 	},
@@ -118,7 +126,7 @@ point.prototype = {
 	"evaluate": function(){
 		//this.initPhrase();
 		console.log(this.superGroup);
-		this.evaluatePhrase();
+		//this.evaluatePhrase();
 	},
 
 	"getPriorNode":function(){
@@ -205,16 +213,17 @@ point.prototype = {
 
 }
 
-function programComponents() { 
+function Phrase() { 
 
 }
 
-programComponents.prototype = {
+Phrase.prototype = {
 
 
 	"setsData":function() { (this.nextPoint.node.type['root'] || !this.nextPoint.children) },
-
+	//rootPhrase
 	"evaluatePhrase":function() {
+		this.programWaits = {};
 		//var p = this.priorNode;
 		//alert("test...");
 		var nodes=[];
@@ -226,13 +235,25 @@ programComponents.prototype = {
 		var nextPhrases = [];
 		var completed = false;
 		var iterations = 0;
+		rootPhrase = this;
 		function recurse(p, rootPhrase) {
 			if (traversedNodes[p]){
 				traversals--;
 			}else traversedNodes[p] = true;
+
+
+			
+			if (p.programName) {
+				var programNodeId = p.node.ptr[0];
+				if (!rootPhrase.programNames[p.programName]);
+					rootPhrase.programNames[p.programName] = [];	
+				rootPhrase.programNames[p.programName].push(this.id);
+			}
+
 			if (p.node.types)	
 			if (p.node.types['root'] || p.children.length == 0 || !hasTraversed) {
-				p.phraseBegin = true
+				//p.phraseBegin = true
+				p.setBeginPhrase();
 				var rootItem = p;
 				if (hasTraversed)
 				pointLookup[p.parentId].phraseEnd = true;
@@ -252,7 +273,7 @@ programComponents.prototype = {
 					//process next phrase
 				//}
 
-			}
+			} 
 			if (!completed)
 			for (var i =0 ; i < p.children.length; i++) {
 				if (i > 0) { 
@@ -271,10 +292,16 @@ programComponents.prototype = {
 		//return phrases;
 	},
 	"renderPhrase":function() {
-		var proto = programs[this.label].prototype
-		mixin(proto, this);
-		this.evaluateNode();
+;
+		this.recurse = function(point) {
+			point.evaluateNode();
+			for (var c in point.children) {
+				point.children[c].evaluateNode();
 
+			}
+		}
+		this.recurse(point);
+		
 		//this.evaluateNode();
 
 	},
@@ -332,6 +359,15 @@ UIClass.prototype = {
 
 	"evaluateNode":function(pcj) {
 		var hier = graph.prototype.getValueOrder(this.nodePtr);
+		console.log("hier: "+hier);
+		var x = contains(hier, {'row':{'label':[{'text':'save as'}, {'inputbox':'text'}, {'button':'type'}]}});
+
+		console.log("x:"+x);
+
+		return;
+
+
+
 		var hl = hier.length-1;
 		if (this.node.types)
 		if (this.node['types']["root"]) {

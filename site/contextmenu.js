@@ -174,8 +174,9 @@ contextMenu.traverseProgram = function() {
 	for (var i = 0 ; i < o.index.length; i++) {
 		var ptr = ca.concat(['index', i]);
 		var pt = new point({"ptr":ptr, "childNumber":0, "id":mkguid(), "pathList":pathList});
+		pt.setBeginPhrase();
 		console.log(pt.isMixedIn);
-		pt.evaluate();
+		pt.evaluatePhrase();
 	}
 
 	//point.evaluate();

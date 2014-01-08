@@ -219,7 +219,7 @@ function _contains(list,group) {
 
 
 function contains(list,group) {
-	_contains(list, group, i, []);
+	_contains(list, group);
 }
 
 function arrayHas(a, v) {
