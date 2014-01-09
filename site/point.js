@@ -90,7 +90,7 @@ point.prototype = {
 		//this.isMixedIn = true;
 		mixin(Phrase.prototype, this);
 		//pt.constructor = point.prototype.constructor
-	}
+	},
 
 	"getRootNode": function(){
 		var rootPtr = [this.ptr[0], this.ptr[1], this.ptr[2]];
@@ -213,8 +213,9 @@ point.prototype = {
 
 }
 
-function Phrase() { 
-
+function Phrase(pt) { 
+	this.rootPoint = pt;
+	this.evaluatePhrase();
 }
 
 Phrase.prototype = {
@@ -223,77 +224,72 @@ Phrase.prototype = {
 	"setsData":function() { (this.nextPoint.node.type['root'] || !this.nextPoint.children) },
 	//rootPhrase
 	"evaluatePhrase":function() {
-		this.programWaits = {};
-		//var p = this.priorNode;
-		//alert("test...");
-		var nodes=[];
-		//while (p) {
-		var phrases = this.phrases = [];
-		//var phrases = this.phrases;
-		var hasTraversed = false
-		var traversedNodes = {};
-		var nextPhrases = [];
-		var completed = false;
-		var iterations = 0;
-		rootPhrase = this;
-		function recurse(p, rootPhrase) {
-			if (traversedNodes[p]){
-				traversals--;
-			}else traversedNodes[p] = true;
+
+		this.hasTraversed = false
+	
+		//rootPhrase = this;
 
 
+		function recurse(p) {
+			if (this.traversedNodes[p]){
+				this.traversals--;
+			}else this.traversedNodes[p] = true;
 			
 			if (p.programName) {
 				var programNodeId = p.node.ptr[0];
-				if (!rootPhrase.programNames[p.programName]);
-					rootPhrase.programNames[p.programName] = [];	
-				rootPhrase.programNames[p.programName].push(this.id);
+				if (!this.programVars[programNodeId])
+					this.programVars[programNodeId] = [];
+				this.programVars[programNodeId].push(p.id);
 			}
 
 			if (p.node.types)	
-			if (p.node.types['root'] || p.children.length == 0 || !hasTraversed) {
+			if ((p.node.types['root'] || p.children.length == 0) && !hasTraversed) {
 				//p.phraseBegin = true
 				p.setBeginPhrase();
-				var rootItem = p;
-				if (hasTraversed)
-				pointLookup[p.parentId].phraseEnd = true;
+				//var rootItem = p;
+
+				// not sure about this .. because the phrase might be part of a greater phrase....
+				// need to play around with this 
+				if (this.hasTraversed)
+					pointLookup[p.parentId].phraseEnd = true;
 				//if (rootPhrase) { 
-				if (hasTraversed) {
-					traversals--;
-			        	rootPhrase.nextPhrases.push(p.id);
+				if (this.hasTraversed) {
+					this.traversals--;
+			        	this.rootPhrase.nextPhrases.push(p.id);
 			
-					if (traversals == 0) {
+					if (this.traversals == 0) {
 						// iterations > 0 and also next childrent arent all roots ..
 						// if there's just one item in the linkage, this strategy will break
 						// rootPhrase.renderPhrase({"});
-						completed = true;
+						this.completed = true;
 						//rootPhrase.nextPhrases = nextPhrases
 					}
+
+					// need to re-evaluate the phrase if the phrase hasn't completed
 				}
-					//process next phrase
-				//}
+					
+				
 
 			} 
-			if (!completed)
+			if (!this.completed)
 			for (var i =0 ; i < p.children.length; i++) {
 				if (i > 0) { 
-					traversals++
-					hasTraversed = true;
+					this.traversals++
+					this.hasTraversed = true;
 					//for (var g in this) console.log(g);
 					this.recurse(p.children[i], p)
 				}
 			}
 		}
-		this.endPoints = [];
-		//this.phraseBegin = true;
-		recurse(this, this);
-		this.renderPhrase();
-		//return lastItems;
-		//return phrases;
+	
+		this.recurse(this, this);
+		//this.renderPhrase();
+
 	},
 	"renderPhrase":function() {
-;
-		this.recurse = function(point) {
+		var point = this.rootPoint;
+		this.recurse = function() {
+
 			point.evaluateNode();
 			for (var c in point.children) {
 				point.children[c].evaluateNode();
