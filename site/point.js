@@ -213,17 +213,25 @@ point.prototype = {
 
 }
 
-function Phrase(pt) { 
+function System(pt) { 
 	this.rootPoint = pt;
-	this.evaluatePhrase();
+//	pt.setBeginPhrase();
+	//this.evaluatePhrase();
+	this.traversedNodes = {};
+	pt.nextPhrases = [];
+	//pt.phraseBegin = true;
+	//this.evaluatePhrase();
+	//console.log(this.ptr);
+	//this.isMixedIn = true;
+	//mixin(Phrase.prototype, this);
 }
 
-Phrase.prototype = {
+System.prototype = {
 
 
 	"setsData":function() { (this.nextPoint.node.type['root'] || !this.nextPoint.children) },
 	//rootPhrase
-	"evaluatePhrase":function() {
+	"evaluate":function() {
 
 		this.hasTraversed = false
 	
@@ -241,21 +249,23 @@ Phrase.prototype = {
 					this.programVars[programNodeId] = [];
 				this.programVars[programNodeId].push(p.id);
 			}
+			if (p.node.types['root']){
+				p.phraseBegin = true;
+			}
 
-			if (p.node.types)	
+			if (p.node.types)
 			if ((p.node.types['root'] || p.children.length == 0) && !hasTraversed) {
 				//p.phraseBegin = true
 				p.setBeginPhrase();
 				//var rootItem = p;
-
 				// not sure about this .. because the phrase might be part of a greater phrase....
 				// need to play around with this 
-				if (this.hasTraversed)
-					pointLookup[p.parentId].phraseEnd = true;
-				//if (rootPhrase) { 
 				if (this.hasTraversed) {
+					pointLookup[p.parentId].phraseEnd = true;
+					//if (rootPhrase) { 
+					//if (this.hasTraversed) {
 					this.traversals--;
-			        	this.rootPhrase.nextPhrases.push(p.id);
+			        	this.nextPhrases.push(p.id);
 			
 					if (this.traversals == 0) {
 						// iterations > 0 and also next childrent arent all roots ..
@@ -263,18 +273,16 @@ Phrase.prototype = {
 						// rootPhrase.renderPhrase({"});
 						this.completed = true;
 						//rootPhrase.nextPhrases = nextPhrases
+					}else {
+						p.nextPhrase.push(new Phrase(pt));
 					}
-
 					// need to re-evaluate the phrase if the phrase hasn't completed
 				}
-					
-				
-
 			} 
 			if (!this.completed)
 			for (var i =0 ; i < p.children.length; i++) {
 				if (i > 0) { 
-					this.traversals++
+					this.traversals++;
 					this.hasTraversed = true;
 					//for (var g in this) console.log(g);
 					this.recurse(p.children[i], p)
@@ -282,17 +290,19 @@ Phrase.prototype = {
 			}
 		}
 	
-		this.recurse(this, this);
+		recurse(this);
 		//this.renderPhrase();
 
 	},
-	"renderPhrase":function() {
+	
+	"render":function() {
 		var point = this.rootPoint;
 		this.recurse = function() {
 
 			point.evaluateNode();
 			for (var c in point.children) {
-				point.children[c].evaluateNode();
+				var pc = point.children[c];
+				pc.evaluateNode();
 
 			}
 		}
@@ -300,7 +310,13 @@ Phrase.prototype = {
 		
 		//this.evaluateNode();
 
-	},
+	}
+}
+function Phrase() { 
+
+}
+Phrase.prototype = {
+
 	/*
 	"processPhrase":function(pb) {
 		
