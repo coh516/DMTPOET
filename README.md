@@ -8,4 +8,4 @@ As of Jan 2, 2004, The two stage document graph model is completed.
 
 From here, the next task is to render the phrase model. 
 
-... working out the sibling callback events..
+... working out the sibling callback events and rendering plugins
