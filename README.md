@@ -1,6 +1,6 @@
-DMT POET
+Document Management Template POET
 ===
-Document Management Templater
+
 
 node dmt and open on localhost 6789 to test out ... 
 
