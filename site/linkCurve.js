@@ -1,10 +1,3 @@
-zIndex = {};
-zIndex["ptr"] = 100;
-zIndex["svg"] = 1000;
-zIndex["stagemenu"] = 10000;
-zIndex["contextmenu"] = 10000;
-zIndex["dialogmenu"] = 150;
-
 
 // need to form a strategy to manage the zindex properly.....
 

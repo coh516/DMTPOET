@@ -5,12 +5,14 @@
 // there needs to a way of caching the ptr subnodes
 //
 var pointLookup = {}
+var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass};
 
 function point(options){ 
 
 	this.nodePtr = copyArray(ptr);
 	this.nodePtr.pop();this.nodePtr.pop();
 	this.ptr = options.ptr;
+	this.ptrId = ptr[0];
 	this.childNumber = options.childNumber;
 	this.id = options.id;
 	this.parentId = options.parentId;
@@ -51,22 +53,37 @@ function point(options){
 
 
 	//var nodeTypes = {"program":programComponents.prototype, "value":valueComponents.prototype};
-	
-	var pp = this.ptr;
+
+	var pp = copyArray(this.ptr);
 	var a1 = getObject([pp[0], pp[1], pp[2]], graphLookup);
-	nodeName = a1.value;
-	if (a1.types['program'])
-		this.programName = nodeName;
+	this.programName = a1.value;
 
+	var tpg = programs[this.programName];
+	mixin(this.prototype, tpg.prototype)	
+	
+	//var a1 = getObject([pp[0], pp[1], pp[2]], graphLookup);
+	//nodeName = a1.value;
+	pp.pop();
+	pp.pop();
+	while (pp.length > 0 ) {
+		var ppo = getObject(pp, graphLookup);
+		if (ppo.types['program']) {
+				this.programVariable = ppo;
+				break;
+		}
+		ppo.pop();
+		ppo.pop();
+	}
+;
+	
+	//function pt() { };
 
+	//pt.prototype = Object.create(point.prototype);
+	//mixin(pt.prototype, programComponents.prototype);
+	
 	for (var i =0 ; i < nextPtrs.length; i++) {
 		console.log("-----xxxx-----");	
-		//var tpg = programs[this.programName];
-		//function pt() { };
-
-		//pt.prototype = Object.create(point.prototype);
-	//	mixin(pt.prototype, programComponents.prototype);
-	//	mixin(pt.prototype, tpg.prototype);
+;
 		//pt.constructor = point.prototype.constructor
 		//
 		
@@ -145,8 +162,18 @@ point.prototype = {
 		else return undefined;
 	},
 		
-	"getJSON":function() {
-		return graphLookup[this.id].toJSON(this.ptr);
+
+	"getNextChild":function() {
+		if (!this.curChild) this.curChild = 0;
+		else this.curChild++;
+		return this.children[this.curChild];
+
+	},
+	"getPriorChild":function() {
+		if (this.curChild > 0)
+			return this.children[--this.curChild];
+		else return false; // maybe throw error in the future
+		
 	},
 
 	/*
@@ -210,6 +237,30 @@ point.prototype = {
 			}
 		}
 	},
+	"obj2JSON":function() {
+		return graph.prototype.toJSON(this.ptr[0]);
+
+	},
+	"step":function() {
+		var rootPoint = pointLookup[this.rootPointID];
+		
+		if (this.programVariable) {
+
+			if (!rootPoint.traversedProgs)				
+				rootPoint.traversedVars[this.programVariable] =  rootPoint['programVariables'][this.programVariable].length;
+			else 
+				rootPoint.traversedVars[this.programVariable]--;
+
+			if (rootPoint.traversedVars[this.programVariable] == 0)
+				var pv = rootPoint['programVariables'][this.programVariable];
+			for (var i =0; i < pv.length; i++) {
+				pointLookup[pv[i]]
+				this.evaluate();
+			}
+
+		}
+		else this.evaluate();	
+	}
 
 }
 
@@ -219,13 +270,19 @@ function System(pt) {
 	//this.evaluatePhrase();
 	this.traversedNodes = {};
 	pt.nextPhrases = [];
+	//this.endPhrases = [];
 	//pt.phraseBegin = true;
 	//this.evaluatePhrase();
 	//console.log(this.ptr);
 	//this.isMixedIn = true;
 	//mixin(Phrase.prototype, this);
+	this.endPhrases = [];
+	this.beginPhrases = [];
+//	this.phrases = [];
+// 	need to build a phrase hash...
 }
 
+//class named after Vivek's famous quote "the only good system is a sound system" ;
 System.prototype = {
 
 
@@ -238,19 +295,39 @@ System.prototype = {
 		//rootPhrase = this;
 
 
-		function recurse(p) {
+		function recurse(p, pr) {
 			if (this.traversedNodes[p]){
 				this.traversals--;
 			}else this.traversedNodes[p] = true;
 			
-			if (p.programName) {
-				var programNodeId = p.node.ptr[0];
-				if (!this.programVars[programNodeId])
-					this.programVars[programNodeId] = [];
-				this.programVars[programNodeId].push(p.id);
-			}
-			if (p.node.types['root']){
+
+			rootPoint = pointLookup[pr];
+
+
+			//if (p.programName) {
+				//var pnp = copyArray(p.node.ptr);
+				//pnp.pop();
+				//var programNodeId = pnp
+				//need to climb up to find program node
+				//.. a program node needs variables to conclude before executing
+				//
+				
+				if (rootPoint.programVariable)
+				if (!rootPoint.programVars[rootPoint.programVariable])
+					rootPoint.programVars[rootPoint.programVariable] = [];
+				rootPoint.programVars[rootPoint.programVariable].push(p.id);
+			//}
+			//
+			
+			//p.rootPhrase = pr;
+			p.rootPointID = pr;
+			if (p.node.types['root']) {
+				//rootPoint.evprogs = [];
+				p.traversedVars = {};				
+				//new Phrase(pointLookup[pr.id]
 				p.phraseBegin = true;
+				var opr = pr;
+				pr = p.id;
 			}
 
 			if (p.node.types)
@@ -262,8 +339,14 @@ System.prototype = {
 				// need to play around with this 
 				if (this.hasTraversed) {
 					pointLookup[p.parentId].phraseEnd = true;
+					
+					//this.endPhrases.push(p.parentId);
+					//this.beginPhrases.push(p.id);
+					//phrases[p.id] 
+					//p.id;
 					//if (rootPhrase) { 
 					//if (this.hasTraversed) {
+					
 					this.traversals--;
 			        	this.nextPhrases.push(p.id);
 			
@@ -273,9 +356,9 @@ System.prototype = {
 						// rootPhrase.renderPhrase({"});
 						this.completed = true;
 						//rootPhrase.nextPhrases = nextPhrases
-					}else {
-						p.nextPhrase.push(new Phrase(pt));
-					}
+					}//else {
+					//	p.nextPhrase.push(new Phrase(pt));
+					//}
 					// need to re-evaluate the phrase if the phrase hasn't completed
 				}
 			} 
@@ -285,7 +368,9 @@ System.prototype = {
 					this.traversals++;
 					this.hasTraversed = true;
 					//for (var g in this) console.log(g);
-					this.recurse(p.children[i], p)
+					//
+
+					this.recurse(p.children[i], pr)
 				}
 			}
 		}
@@ -294,66 +379,41 @@ System.prototype = {
 		//this.renderPhrase();
 
 	},
-	
-	"render":function() {
-		var point = this.rootPoint;
-		this.recurse = function() {
-
-			point.evaluateNode();
+	// should be in a phrase class....
+	// not sure the best way to organize this right now 
+	// will refactor later when i figure out a better way to manage the phrases
+	"render":function(pt) {
+		//var pt = this.rootPoint;
+		//
+		//
+		pt.evaluate();
+		/*
+		this.recurse = function(point) {
+			//point.evaluateNode();
 			for (var c in point.children) {
 				var pc = point.children[c];
 				pc.evaluateNode();
+				if (!pc.phraseEnd)
+					this.recurse(point);
+				else {
+					//not sure
 
+				}
 			}
 		}
-		this.recurse(point);
+		*/
+	//	point.evaluateNode();		
+	//	this.recurse(pt);
 		
 		//this.evaluateNode();
 
 	}
 }
-function Phrase() { 
-
-}
-Phrase.prototype = {
-
-	/*
-	"processPhrase":function(pb) {
-		
-		var brk = false;
-		var levels = {};
-		function recurse(item) {
-			if (item.phraseEnd)
-				brk = true;
-			if (brk) return;
-
-			for (var child in item.children) {
-				var pc = child.node.ptr;
-				pc.pop();pc.pop();
-				var pcj = pc.join();
-				var co = child.phraseBeginPoint;
-				if (arrayHas(co.levels[pcj], child.id)) {
-					co.levelCount[pcj]++;
-				}
-				
-				if (co.levelCount[pcj] == co.levels[pcj].length) {
-					child.evaluateNode(pcj);
-				}
-				// might need some more work on other various types of node configuration that require waiting
-			}
-		}
-		pb.levels = levels;
-	}
-	*/
-
-
-
-
-}
 
 
 // Template much include onFunction and onParameter
-function UIClass() {};
+function UIClass() {
+};
 
 //  UIClass.prototype = Object.create(baseProgram.prototype);
 
@@ -369,84 +429,164 @@ UIClass.prototype = {
 	},
 
 
-	"evaluateNode":function(pcj) {
+
+	"evaluate":function() {
+
+	//	this.
+
+
+		//var pa = copyArray(this.ptr); //.pop().
+		//pa.pop(); pa.pop();
+		if (!this.phraseBegin) { 
+			var pi = pointLookup[this.parentId]
+			
+			var rootPoint = pointLookup[this.rootNodeId];
+			switch ( pa.renderedUI.type ) {
+
+				case "button":
+					pa.renderedUI.domNode.onClick = function() {
+						for(var i =0 ; i < this.children.length; i++) {
+							this.children[i].evaluate();			
+							//if (this.children[i].programName == "UI")
+							//node.onClick = UI.prototype.execute(this.children);
+						}
+					}
+					break;
+				case "input":
+
+					break;
+				
+
+
+			}
+
+			if (pa.renderedUI.type == "button") {
+				pa.renderedUI.domNode.onClick = function() {
+					for(var i =0 ; i < this.children.length; i++) {
+						this.children[i].evaluate();			
+						//if (this.children[i].programName == "UI")
+						//node.onClick = UI.prototype.execute(this.children);
+					}
+				}
+			} else {
+				for(var i =0 ; i < this.children.length; i++) {
+					this.children[i].evaluate();			
+					//if (this.children[i].programName == "UI")
+					//node.onClick = UI.prototype.execute(this.children);
+				}
+			}
+		}
+	
+
+	},
+	// this is a much better way of rendering rather than htmlrenderer
+	"createDom":function() {
+		// need to create a seperate dom renderer plugin for this..
+		//this.namespace = this.obj2JSON();
+		this.tablenode = document.createElement("div");
+
+		this.tablenode.setAttribute("class", "UIRootTable");
+		//var dialogs = getObjs(this.namespace, "dialog");
+		var ar = graph.prototype.getPtrValue(this.ptr, 'dialog');
+		for (var i=0; i < ar.length; i++) 
+			evaluateDialog(ar[i]);
+
+	},
+
+	"evaluateDialog":function(dialogPtr) {
+		var view = graph.prototype.getPtrValue(dialogPtr, "view");
+		var grid = graph.prototype.getPtrValue(view, "grid");
+		
+		if (grid) {
+			var rows = graph.prototype.getPtrValue(dialogPtr, "row");
+			var rowNode = document.createElement("div");
+			this.tablenode.addChild(rownode);
+			rowNode.setAttribute("class", "UItableRow");
+			this.evaluateRows(rows, rowNode);
+		}
+	},
+	"evaluateRows":function(rows, rowNode) {
+		//this.tableRow
+		for (var i=0; i < rows['item'].length; i++) {
+			var item = rows['item'][i].value;
+			var rowNode = document.createElement("ul");
+			rowNode.setAttribute("class", "UIULCell");
+			//var ul = document.createElement("ul");
+			
+			var li = document.createElement("li");
+			li.setAttribute("class", "UILICell");
+			rowNode.appendChild(li);
+			this.drawELement(item, rowNode, li, ptrObject)
+			//li.innerText = row[items];
+		}
+		var c = this.getNextChild();
+		c.evaluate();
+	},
+
+	"drawElements":function(item, node, li, ptrObject) {
+		ptrObject.renderedUI.item = item;
+		switch(item) {
+			case 'label':
+				var val = graph.prototype.getPtrValue(item, "text");
+				//var text = row[items]['text']
+				li.innerText = val;
+				ptrObject.renderedUI = {};
+				ptrObject.renderedUI.domNode = li;
+			break;
+			case 'inputbox':
+				var ib = document.createElement("input");
+				li.appendChild(ib);
+				ib.setAttribute("class", "UIInputCell");
+				ptrObject.renderedUI = {};
+				ptrObject.renderedUI.domNode = ib;
+				ptrObject.renderedUI.type = "text";
+				
+			break;
+			case 'button':
+				var val = graph.prototype.getPtrValue(item, "text");			
+				li.innerText = text;
+				ptrObject.renderedUI = {};
+				ptrObject.renderedUI.domNode = li;
+				ptrObject.renderedUI.type = "onSubmit";
+				//this.point
+				//getObject(item, graphLookup);
+
+			break;
+		}
+
+	},
+
+
+	/*
 		var hier = graph.prototype.getValueOrder(this.nodePtr);
 		console.log("hier: "+hier);
-		var x = contains(hier, {'row':{'label':[{'text':'save as'}, {'inputbox':'text'}, {'button':'type'}]}});
 
-		console.log("x:"+x);
-
-		return;
-
-
-
-		var hl = hier.length-1;
-		if (this.node.types)
-		if (this.node['types']["root"]) {
-	//	if (hier[hl] == "UI") {
-		//	if (this.phraseBegin)
-		//		this.ptrProgs[this.id] = new UIProgram(this.id, graph(graphLookup[this.node.ptr[0]]).toJSON());
+		var view = graph.prototype.getLoc(this.node.ptr, ['dialog', 'view']);
+		if (view) {
+			if (graph.prototype.getLoc(view, ['grid']))
+				this.renderGrid();
+			if (graph.prototype.getLoc(view, ['list']))
+				this.renderList();
 		}
-		// check namespace
-		if (contains(hier, {'row':{'label':[{'text':'save as'}, {'inputbox':'text'}, {'button':'type'}]}})) {
-		//if (contains(hier, {'contains':{'vals':['row'], 'contains':{'vals':['label', 'inputbox', 'button']}}})) {
-			if (this.superGroup.value == 'text') {
-				if (!this.phraseEnd) {
-					
-					var ptr = this.node.ptr;
-					//var o = getObject(ptr,this.uiprog);
-					//o.callback = UI.dispatchValue;
-					//this.uiprog.setEvent(
-					//
-					//
-					//
-					switch (this.superGroup.value) {
-						case "text":
-							this.variable = this.node.ptr;
-							break;
-						case "type":
-							this.variable = this.node.ptr;
-							break;
-					}
-	
-					/*
 
-					if (this.superGroup.value == 'text') {
-						//this.getLastValue();b
-						//var a = copyArray(this.node.ptr);
-						this.variable = this.node.ptr
-					}
-					if (this.sueprGroup.value == 'type') {
+	},
+	*/
+	"renderGrid":function() {
 
-					}
-					*/
-				}
-				if (this.phraseEnd) {
-					var ptr = this.node.ptr;
 
-					if (this.superGroup.value == 'text') {
-						//this.getLastValue();b
-						//var a = copyArray(this.node.ptr);
-						var o = getObject(this.node.ptr, graphLookup);
-						ptrProgs[this.id].copyChild(this.node.ptr);
-					}
-				}
-			}
 
-			if (this.superGroup.value == 'type' && !this.phraseEnd) {
-				if (this.node.value == "onSubmit") {
-					//var o = getObject(p2, graphLookup);
-					//for serialization concerns might need to turn the joins into jsonifieds 
-					var prog = ptrProgs[this.id];
-					a[0] = prog.gid;
-					var btn = getObject(a, graphLookup);
-					ptrProgs[this.id].setEvent("handleMouseClick", 'exact', a, this.mouseClickCallback);
+		var cellnode = document.creatElement("div");
+		cellnode.setAttribute("class", "tableCell");
 
-					//o.registerEvents('callback'); // i'd like it i
-				}
-				//uiObject
-			}
-		}
+		document.body.appendChild(tablenode);
+		tablenode.style.zIndex = zIndex.renderedApps;
+
+		var row = graph.prototype.getLoc(this.node.ptr, ['dialog', 'row'])
+
+
+
+
+
 	},
 
 	"drawUI":function() {
@@ -467,11 +607,16 @@ function DateClass() {
 }
 
 DateClass.prototype = {
-	"getIsoDate":function(point, callback) {
-		this.direction = this.inheritDirection(); //"push";
+	"timeStamp":function(point, callback) {
+		//this.direction = this.inheritDirection(); //"push";
 		//;// point.nextPoint;// = "set"; // setting data dispatches data to be set by another function
-		this.iterValue = {"program":{"Numbers":new Date().toString()}}
-		this.onCondition();
+		this.iterValue = new Date().toString();
+		//this.onCondition();
+	
+		//onComplete
+		for (var i =0; i < this.children.length; i++) {
+			this.children[i].step();
+		}
 	}
 }
 
@@ -483,7 +628,11 @@ UniverseClass.prototype =  {
 		this.direction = this.inheritDirection();
 		this.value = {"serializedPtrGraph":{"serializedStuff":"codeNotComplete"}}
 		this.onCondition();
-	}
+	//}
+		for (var i =0; i < this.children.length; i++) {
+			this.children[i].step();
+		}
+}
 }
 
 
@@ -534,7 +683,7 @@ DBClass.prototype = {
 	"getVariable":function() {	
 	},
 	*/
-
+	/*
 	"evaluateNode":function(pcj) {
 		var p = pointLookup[this.phraseBeginPoint];
 		//var pp 
@@ -571,25 +720,18 @@ DBClass.prototype = {
 				}
 			}
 		}
-		dbLayer.query(nsc);
 
-		
+	
+	},
+	*/
 
-		//p.levels--;
+	"evaluate":function() {
+		if ((this.ptr.length-2/2) == 3) {
 
-		//if (p.levels == 0)
-		//	getDBItem();
-
-
-
-		// search the tree upward to find the common tree
-		/*
-		if (!this.phraseEnd) {
 			
 
 		}
-		*/
-	
+
 	},
 	"onIterationComplete":function() {
 		if (this.hasContext()) {
@@ -606,7 +748,6 @@ DBClass.prototype = {
 }
 
 var pathsLookup;
-var programs  = {"UI":UIClass, "DB":DBClass, "Universe":UniverseClass, "Date":DateClass};
 var traverseProgram = function(ptr) {
 	//var p2 = copyArray(ptr);
 	var o = getObject(ptr, graphLookup);

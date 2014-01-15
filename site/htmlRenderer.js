@@ -459,6 +459,7 @@ htmlRenderer.prototype = {
 
 
 	"moveGfx":function(id) {
+		console.log(id);
 		var t = graphLookup[id].loc;
 		var canvas = graphics[id].el;
 		//console.log("moving...."+this.id);

@@ -8,6 +8,20 @@ Copywrite 2013, 4thTemple.com, FourthTemple.com
 // let's start by polluting the global scope more
 
 //var bigAssCanvas = 
+//
+//
+
+// this needs to be done a bit better...
+//
+zIndex = {};
+zIndex["ptr"] = 100;
+zIndex["svg"] = 1000;
+zIndex["stagemenu"] = 10000;
+zIndex["contextmenu"] = 10000;
+zIndex["dialogmenu"] = 150
+zIndex["renderedApps"] = 12000
+
+
 var graphics = graphLookup; // probably this should be a subset from gfxLookup // this is the completed image  
 var gfxLookup = {}; // object references by id
 var events = {}
@@ -19,11 +33,14 @@ gfxCounter = {};
 
 
 
-function gfx(uid, id) {
+function gfx(uid, id, renderer) {
 	//alert("test....");
 	this.gid= id;
 	this.id = id;
 	this.uid = uid;
+
+	if (!renderer)
+		this.renderer = htmlRenderer.prototype;
 	// should get rid of this reference
 	this.model = graphLookup[id];
 	//var id = gid;
@@ -190,9 +207,10 @@ gfx.prototype = {
 		//this.mkIndexedModel();
 		//var pts = htmlRenderer.prototype.putToScreen.bind({id:this.id}); // after images made, put to screen
 		graphics = graphLookup;
-		htmlRenderer.prototype.setElement(this.uid, this.id);
-		htmlRenderer.prototype.mkPtrImgs(this.id);
-		this.renderer = htmlRenderer.prototype;
+		this.renderer.setElement(this.uid, this.id);
+		this.renderer.mkPtrImgs(this.id);
+		this.hasBeenBuilt = true;
+		//this.renderer = htmlRenderer.prototype;
 		//this.drawAll();
 		//this.putToScreen();
 	},
@@ -209,7 +227,7 @@ gfx.prototype = {
 
 		snapSpace.prototype.updateSnapObject(this.gid, "graphLookup");
 
-		htmlRenderer.prototype.reindex(this.id);
+		this.renderer.reindex(this.id);
 		
 		// reindex all the index points (after deletion)
 		// reindex the curveLookup table also
@@ -295,7 +313,7 @@ gfx.prototype = {
 			if (z > gfx.prototype.lastz && graphLookup[this.id].indexPtr)
 				gfx.prototype.lastz = z;
 		} 
-		if (this.renderer)
+		if (this.hasBeenBuilt)
 			this.renderer.moveGfx(this.id);
 
 		//linkCurve.prototype.drawCurves(c1);

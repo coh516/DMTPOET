@@ -275,4 +275,95 @@
 	"getNextNodesWith":function(testFunction) {
 		
 	},
+
+
+
+/*
+function _contains(list,group,i,v) {
+
+	for (i; i < i < a.length; i++) {
+		for (var b in k) {
+			if (b == 'vals') {
+				for (var p=0; p < k['vals'].length; p++) {
+					if (k['vals'][p] == a[i]) {
+						if (k['contains']){
+							_contains(a, i, k['contains']);
+							v.push(a[i]);
+						}
+						else return v;
+					}
+				}
+			}
+			//var m = k[j]
+			//if (a[i] == k[j]) return {'value':k[j], 'index':i};
+		}
+	}
+	return -1;
+}
+*/
+/*
+function _contains(haystack,group) {
+	var hasMatched = false;
+	var success = false;
+	var mi = 0;
+	var matchItem = list[mi];
+	var items = [];
+	this._recurse = function(haystack, group, matchItem) {
+		for (var item in haystack) {
+			var hi = haystack[item];
+			if (Array.isArray(hi)) {
+				this._recurse(hi, group, matchItem);
+			}else
+			if (typeof item == 'object') {
+				matchItem = hi;
+
+			}else 
+			if (typeof haystack[item] == 'string') {
+				matchItem = haystack[item];
+			}
+				
+
+
+
+				for (key in group) {
+					var kg = group[key];
+					//if (Array.isArray(kg)) {
+					//	this._recurse(kg);	
+					//}else
+					if ( typeof kg == 'object' ) {
+						if (key == matchItem) {
+							items.push(key);
+							mi++;
+							hasMatched = true;
+
+						}
+					}else
+						if ( typeof group == 'string' ) {
+							if (group == matchItem) {
+								items.push(group);
+								success = true;
+							}				
+						}else
+							if (!hasMatched) {
+								if (mi == list.length)
+									return;
+								mi++;
+								this._recurse(group);		
+							}	
+				}
+			}
+		}
+	}
+	this._recurse(haystack, group);
+	if (success)
+		return items; // items_as_ptr;
+	else return false;
+}
+
+
+function contains(haystack,group) {
+	_contains(haystack, group);
+}
+*/
+
 	*/

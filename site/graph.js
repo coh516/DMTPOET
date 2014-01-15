@@ -70,6 +70,11 @@ function graph(uuid) {
 
 
 var lit = [];
+// this class obviosly needs some refactoring ... 
+// the ptr nodes should be a class of their own....
+// uuid'd with a lookup ..
+//
+
 graph.prototype = {
 	
 	//todo
@@ -1047,7 +1052,42 @@ graph.prototype = {
 		// cut label items out
 		// create new ones
 		
+	},
+	"getPtrValue":function(ptr, val) {
+		var obj = this.getObject(ptr, graphLookup);
+		var ar = [];
+		for (var i = 0; obj['item'].length; i++) {
+			if (obj['item'][i].value == 'val')
+				ar.push(obj['item'][i]);
+
+		}
+		return ar;
+
 	}
+	/*
+	"getLoc":function(ptr, ar) {
+		var o = getObject(ptr, graphLookup);
+		//var item = o['item'];
+		var oi = 0;
+		var finished= false;
+		this.recurse = function(item) {
+			for (var i = 0; i < item.length; i++) {
+				if (item[i].value == ar[oi]) {
+					oi++;
+					if (ar.length == oi-1) {
+						finished = item.ptr;
+						return;
+					}
+					this.recurse(item[i]['item']);
+				}
+				if (oi ==0)
+				this.recurse(item[i]['item']);
+			}
+		}
+		this.recurse(o['item']);
+		return finished;
+	}
+	*/
 		// reduce the actualy child/parent hash now
 }
 

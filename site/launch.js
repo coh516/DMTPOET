@@ -1,4 +1,9 @@
 
+
+// this test case is really wrong
+// the ui builder really should be consisting of node partial templates that loop into a UI
+
+
 function testCase(uni) {
 	var gids = []; 
 	var gojs = [];

@@ -482,13 +482,13 @@ saveMenu = Object.create(dialog.prototype);
 
 saveMenu.setup = function(lastMenu) {
 
-	var o = this.buildMenu( {"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"save as"}]}, {"inputbox":[{"text":"kkk"}]}, {"button":[{"onSubmit":"kkk"}]}]}, {"row":[{"dropdown":"values"}, {"xxx":"xxx"}, {"button":"button"}]}]}});
+	var o = this.buildMenu({"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"save as"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}});
 
 	// should be new point([o.gid]['item'][0]) .. that's not done yet
 	//var ptr = [[o.gid]['item'][0]];
 	graphLookup[o.gid]['item'][0]['item'][0].layout = "grid";
 
-	graphLookup[o.gid].switchType([[o.gid],['item'],[0], ['item'], [0]], "program");
+	//graphLookup[o.gid].switchType([[o.gid],['item'],[0], ['item'], [0]], "program");
 	
 	var g = gfxLookup[o.gid].rebuild();
 }
