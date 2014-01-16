@@ -364,6 +364,146 @@ function _contains(haystack,group) {
 function contains(haystack,group) {
 	_contains(haystack, group);
 }
+
+var pathsLookup;
+var traverseProgram = function(ptr) {
+	//var p2 = copyArray(ptr);
+	var o = getObject(ptr, graphLookup);
+	var cap = [];
+	for (var i = 0; i < o.links.length; i++) {
+		var link = o.links[i];
+
+
+		cap.concat(link.children.concat(link.parents));
+	}
+
+	for (var i = 0; i < cap.length; i++) {
+			var ctop = cap.gfx.bottom + cap.gfx.height;
+			cap.push({'y':ctop, 'obj':cap[i]});
+			//	o.gfx
+			//	need to re-index the 'gfx' component
+			//	it makes no sense as it currently is set
+			//	the 'label' gfx shouldn't be mixed with the index gfx
+	}
+	cap.sort(function (a, b) {
+		return (a.y <b.y)
+	})
+	
+	return cap;
+}
+
+
+function getSubNodes(ptr) {
+	return new selectInternodeDescendants(ptr).descendants;
+	//return links;
+}
+
+function sortNodeLinks(items) {
+
+	for (var i = 0; i < cap.length; i++) {
+			var ctop = cap.gfx.bottom + cap.gfx.height;
+			cap.push({'y':ctop, 'obj':cap[i]});
+			//	o.gfx
+			//	need to re-index the 'gfx' component
+			//	it makes no sense as it currently is set
+			//	the 'label' gfx shouldn't be mixed with the index gfx
+	}
+	cap.sort(function (a, b) {
+		return (a.y < b.y)
+	})
+	var cappy = [];
+	for (var i = 0; i < cap.length; i++) {
+		cappy.push(cap[i].obj);
+	}
+	return cappy;
+}
+
+
+function selectInternodeDescendants(ptr) {
+	this.descendants = [];
+	graph.prototype.recurseItems(selectInternodeDescendants.prototype.getNextChild());
+	
+}
+
+
+selectInternodeDescendants.prototype.getNextChild = function(ptr, obj) {
+	for (var i = obj.index; i >=0 ;i--) {
+		var link = obj[i];
+		//if (link.parents[0].length || link.children[0].length)
+			this.descendants.push(obj[i].children.concat(obj[i].parents));
+		//return ptr;
+	}
+}
+
+
+
+function getNextLinks(ptr, priorPtr) {
+	this.ptr = ptr;
+	var o = getObject (this.ptr, graphLookup);
+	var cap = [];
+
+
+	var a = o.children.concat(o.parents);
+
+	for (var i = 0; i < o.length; i++) {
+		
+		if (a[i] != ptr) { 
+			var o = getObject(a[i], graphLookup);
+			var ctop = o.gfx.bottom + o.gfx.height;
+			cap.push({'y':ctop, 'obj':o});
+			//	o.gfx
+			//	need to re-index the 'gfx' component
+			//	it makes no sense as it currently is set
+			//	the 'label' gfx shouldn't be mixed with the index gfx
+		}
+	}
+
+	cap.sort(function (a, b) {
+		return (a.gfx.y > b.gfx.y)
+	})
+	capy = [];
+	var ly = cap[0].y;
+	nc = [];
+	for (var i = 0; i < cap.length; cap++) {
+
+		var ct = capy[cap[i].y];
+
+		if (ct === undefined) {
+			capy[cap[i].y] = [cap[i].obj]
+		}else capy[cap[i].y].push(cap[i].obj);
+
+		if (ly != cap[i]) {
+			capy[ly].sort(function(a,b) {
+				return ( a.z > b.z );
+			})
+			nc.concat(capy[ly])	
+		}
+		ly = cap[i].y;
+		// = cap[i];
+	}
+
+	return nc;
+}
+
+
+
+/*
+ * the point should make the decision
+var traverseProgramCallback = function(p) {
+	var g = p.children;
+	for (var i =0; i < p.children.length; p++)  {//while (p.hasNextPoint) {
+		var p = point[i];
+		//while (p.hasNextSibling) {
+		//	d = point.nextSibling();
+		traverseProgram(p);
+	}
+}
+*/
+/*V
+point(thisPtr, lastPtr, sp, lastSp, lastLastPtr, lastLastSp) {
+	
+
+}
 */
 
-	*/
+

@@ -449,7 +449,7 @@ dialog.prototype = Object.create(menuHandler);
 dialog.prototype.addGrid = function(type, loc) {
 }
 
-dialog.prototype.buildMenu = function(obj, ptr) {
+dialog.prototype.buildUI = function(obj, ptr) {
 
 	var json = obj;
 	
@@ -482,7 +482,7 @@ saveMenu = Object.create(dialog.prototype);
 
 saveMenu.setup = function(lastMenu) {
 
-	var o = this.buildMenu({"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"save as"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}});
+	var o = this.buildUI({"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"save as"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}});
 
 	// should be new point([o.gid]['item'][0]) .. that's not done yet
 	//var ptr = [[o.gid]['item'][0]];
