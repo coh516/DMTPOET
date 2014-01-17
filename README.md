@@ -1,4 +1,4 @@
-Document Management Templater POET
+Document Management Template POET
 ===
 
 
