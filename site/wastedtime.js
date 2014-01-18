@@ -504,6 +504,65 @@ point(thisPtr, lastPtr, sp, lastSp, lastLastPtr, lastLastSp) {
 	
 
 }
+
+	// this was most likely a bad idea
+	// to the wasted time file we go...
+	
+	"refactorRoot":function(ptr, realParent, f) {
+		var o = getObject(ptr, graphLookup);
+		//make all parents children
+		//
+		//
+		if (!realParent) {
+			while(o.parents.length) {
+				// there might be a case where 2 root nodes connect. not allow it
+				o.children.push(o.parents.pop());
+			}
+		}else {
+		//	console.log("this is the fucking o of ptr: "+ptr.join());
+		//	console.log(o);
+			var olmo = o.parents.length-1;
+			for (var i = olmo; i >=0; i--) {
+				if (o.parents[i].join() != realParent.join()) {
+					
+					curveLookup[o.parents[i].join()][ptr].delete();
+						
+					o.children.push(copyArray(o.parents[i]));
+					
+				}
+			}
+			
+			if (!o.parents.length) {
+				var ocl = o.children.length;
+				for (var i = o.children.length-1; i >=0; i--) {
+					if (o.children[i].join() == realParent.join()) {
+						o.children.splice(i, 1);
+						break;
+					}
+					//o.children.pop()
+				}
+			}
+			
+			o.parents[0] = copyArray(realParent);
+		}
+
+		// get children 
+		for (var i=0; i < o.children.length; i++) {
+
+//			var c = getObject(o.children[i], graphLookup);
+			if (realParent) {
+				if (o.children[i].join() != realParent.join())
+					this.refactorRoot(o.children[i], ptr);
+			}
+			else this.refactorRoot(o.children[i], ptr);
+			
+			//for (var j=0; j < p.parents.length; j++) {
+			//	this.refactorRoot(o.children[i], );
+			}
+			
+		}
+	},
+
 */
 
 

@@ -88,8 +88,11 @@ function point(options){
 		//
 		
 		console.log(nextPtrs);	
-		this.children[i] = new point({"ptr":nextPtrs[i], "id":mkguid(), "parentId":this.id, "childNumber":i, "pathList":this.pathList, "origin":this.origin});
-		i++;
+		var cid = mkguid();
+		pointLookup[cid] = new point({"ptr":nextPtrs[i], "id":cid(), "parentId":this.id, "childNumber":i, "pathList":this.pathList, "origin":this.origin});
+		this.children[i] = cid;
+		pointLookup[cid].childNumber i;
+		//i++;
 	}
 
 }
@@ -531,8 +534,7 @@ UIClass.prototype = {
 				ib.setAttribute("class", "UIInputCell");
 				ptrObject.renderedUI = {};
 				ptrObject.renderedUI.domNode = ib;
-				ptrObject.renderedUI.type = "text";
-				
+				ptrObject.renderedUI.type = "text";	
 			break;
 			case 'button':
 				var val = graph.prototype.getPtrValue(item, "text");			
@@ -545,7 +547,6 @@ UIClass.prototype = {
 
 			break;
 		}
-
 	},
 
 
@@ -597,7 +598,7 @@ UniverseClass.prototype =  {
 	}
 }
 
-
+generating a renderable document
 /*
 function getNextContext = { } 
 
@@ -670,16 +671,27 @@ DBClass.prototype = {
 	*/
 
 	"evaluate":function(points) {
+		var obj = {};
 		for (var i =0; i < points.length; i++) {
 			var pt = points[i];
 			var po = getObject(pt.ptr);
+			
 			dbName = ptr.ptr[pt.ptr[0][pt.ptr[1]][pt.ptr[2]];
+			obj[dbName] = {}
 			collectionName =  ptr.ptr[pt.ptr[0][pt.ptr[1]][pt.ptr[2]][pt.ptr[3]][pt.ptr[4]][pt.ptr[5]];
+			if (!obj[dbName][collectionName]) obj[dbName][collectionName] = {};
+			objName =  ptr.ptr[pt.ptr[0][pt.ptr[1]][pt.ptr[2]][pt.ptr[3]][pt.ptr[4]][pt.ptr[5]][pt.ptr[6]][pt.ptr[7]]
+			if (!obj[dbName][collectionName][objName]) obj[dbName][collectionName][objName] = [];
+			//should look back ....
+			obj[dbName][collectionName][objName].push(parentLookup[this.parentId].value);
 			// should be good for now ...
 			pt.node.database = pointLookup[this.parentId].value;
-
-		
 		}
+	//	for (var o in obj) {
+		console.log("here we go...");
+		postUp({"storeData":obj});
+	//		dal.saveData(obj[o]);
+	//	}
 
 
 		/*

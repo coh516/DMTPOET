@@ -1,5 +1,5 @@
 /*
-(c) 2004 -> 2013, 4thTemple
+(c) 2004 -> 2014, 4thTemple
 Seth Tenenbaum
 development
 */
@@ -542,6 +542,7 @@ graph.prototype = {
 
 		return {"p":n1, "c":n2};
 	},
+	//wasted time.. awaiting cleanup
 	"getParentNode":function(ptr) {
 		var cptr = copyArray(ptr);
 
@@ -558,62 +559,7 @@ graph.prototype = {
 	},
 	
 
-	// this was most likely a bad idea
 
-	"refactorRoot":function(ptr, realParent, f) {
-		var o = getObject(ptr, graphLookup);
-		//make all parents children
-		//
-		//
-		if (!realParent) {
-			while(o.parents.length) {
-				// there might be a case where 2 root nodes connect. not allow it
-				o.children.push(o.parents.pop());
-			}
-		}else {
-		//	console.log("this is the fucking o of ptr: "+ptr.join());
-		//	console.log(o);
-			var olmo = o.parents.length-1;
-			for (var i = olmo; i >=0; i--) {
-				if (o.parents[i].join() != realParent.join()) {
-					
-					curveLookup[o.parents[i].join()][ptr].delete();
-						
-					o.children.push(copyArray(o.parents[i]));
-					
-				}
-			}
-			
-			if (!o.parents.length) {
-				var ocl = o.children.length;
-				for (var i = o.children.length-1; i >=0; i--) {
-					if (o.children[i].join() == realParent.join()) {
-						o.children.splice(i, 1);
-						break;
-					}
-					//o.children.pop()
-				}
-			}
-			
-			o.parents[0] = copyArray(realParent);
-		}
-
-		// get children 
-		for (var i=0; i < o.children.length; i++) {
-
-//			var c = getObject(o.children[i], graphLookup);
-			if (realParent) {
-				if (o.children[i].join() != realParent.join())
-					this.refactorRoot(o.children[i], ptr);
-			}
-			else this.refactorRoot(o.children[i], ptr);
-			/*
-			for (var j=0; j < p.parents.length; j++) {
-				this.refactorRoot(o.children[i], );
-			}
-			*/
-		}
-	},
 	// helper functions should be mixed in at add item
 	"iterateChildren":function() {
 
@@ -925,19 +871,6 @@ graph.prototype = {
 	},
 
 
-
-	"setPtrProp":function(ptr, prop, val) {
-		this["ptr"][ptr]["props"][prop] = val;
-	},
-	"setIndexProp":function(ptr, index, prop, val) {
-		this["ptr"][ptr]["index"][index]["props"][prop] = val;
-	},
-	"getPtrProp":function(ptr) {
-		return this["ptr"][ptr]["props"];
-	},
-	"getIndexProp":function(ptr, index) {
-		return this["ptr"][ptr]["index"][index];
-	},
 	"showAll":function(id) {
 		var ptr = this["ptr"];
 		var pl = ptr.length;
@@ -946,6 +879,9 @@ graph.prototype = {
 			ptr["props"]["visible"] = true;
 		}
 	},
+	// most of this code has no real purpose...
+	// most of what i code gets thrown out
+	// trial, error, re-engineer
 	"getItemArray":function(ptr, type) {
 		var n = getObject(ptr, graphLookup);
 		var hier = [n.type];

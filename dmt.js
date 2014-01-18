@@ -1,9 +1,11 @@
 var http = require('http'),
     session = require('sesh'),
     url = require("url"),
-    //dal = require("../data_access_layer/dal"),
+    dal = require("./dal"),
     static = require('node-static'),
-    //mongo = require('../data_access_layer/node_modules/mongodb'),
+    
+    //mongo = require('mongodb'),
+    
     utils = require('./site/utils')
 
 	
@@ -23,9 +25,7 @@ function setupFileServer(request, response) {
         }).resume();
 }
 
-function cloneObject(o) {
-	return JSON.parse(JSON.stringify(o));
-}
+
 
 /*
 function renderGraph(obj) {
@@ -33,6 +33,19 @@ function renderGraph(obj) {
 
 }
 */
+
+function storeData(data) {
+	for (var db in data['storeData']) {
+		var dbo = {};
+		dbo['db'] = db;
+		for (var collection in db) {
+			dbo['collection'] = collection;
+			dbo['document'] = db['collection'];
+		}
+		dal.storeData(data);	
+	}
+}
+
 
 function main() {
 //	console.log("test...");
@@ -58,6 +71,14 @@ function main() {
 	if (this.post) {
 	//	try {
 		var data= JSON.parse(this.post['/post']);
+		// most likely will change
+		if (data['storeData']) {
+			console.log(JSON.stringify(data));
+			storeData(data);
+		}
+		if (data['getData']) {
+
+		}
 		// create some type of renderId string, use that string then to wait for a get of that name
 		console.log(data);
 	//	}
@@ -67,4 +88,4 @@ function main() {
 
 
 /* server started */  
-console.log('DMT listening on port 6789');
+console.log('DMT POET listening on port 6789');
