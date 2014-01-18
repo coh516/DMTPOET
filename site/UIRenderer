@@ -1,0 +1,82 @@
+function uiRenderer() {
+
+}
+
+uiRenderer.prototype =  {
+	"createDom":function() {
+		// need to create a seperate dom renderer plugin for this..
+		//this.namespace = this.obj2JSON();
+		this.tablenode = document.createElement("div");
+
+		this.tablenode.setAttribute("class", "UIRootTable");
+		//var dialogs = getObjs(this.namespace, "dialog");
+		var ar = graph.prototype.getPtrValue(this.ptr, 'dialog');
+		for (var i=0; i < ar.length; i++) 
+			evaluateDialog(ar[i]);
+
+	},
+
+	"evaluateDialog":function(dialogPtr) {
+		var view = graph.prototype.getPtrValue(dialogPtr, "view");
+		var grid = graph.prototype.getPtrValue(view, "grid");
+		
+		if (grid) {
+			var rows = graph.prototype.getPtrValue(dialogPtr, "row");
+			var rowNode = document.createElement("div");
+			this.tablenode.addChild(rownode);
+			rowNode.setAttribute("class", "UItableRow");
+			this.evaluateRows(rows, rowNode);
+		}
+	},
+	"evaluateRows":function(rows, rowNode) {
+		//this.tableRow
+		for (var i=0; i < rows['item'].length; i++) {
+			var item = rows['item'][i].value;
+			var rowNode = document.createElement("ul");
+			rowNode.setAttribute("class", "UIULCell");
+			//var ul = document.createElement("ul");
+			
+			var li = document.createElement("li");
+			li.setAttribute("class", "UILICell");
+			rowNode.appendChild(li);
+			this.drawELement(item, rowNode, li)
+			//li.innerText = row[items];
+		}
+		var c = this.getNextChild();
+		c.evaluate();
+	},
+
+	"drawElements":function(item, node, li) {
+		switch(item) {
+			case 'label':
+				var val = graph.prototype.getPtrValue(item, "text");
+				//var text = row[items]['text']
+				li.innerText = val;
+				item.renderedUI = {};
+				item.renderedUI.domNode = li;
+			break;
+			case 'inputbox':
+				var ib = document.createElement("input");
+				li.appendChild(ib);
+				ib.setAttribute("class", "UIInputCell");
+				item.renderedUI = {};
+				item.renderedUI.domNode = ib;
+			break;
+			case 'button":
+				var val = graph.prototype.getPtrValue(item, "text");			
+				li.innerText = text;
+				item.renderedUI = {};
+				item.renderedUI.domNode = li;
+				//this.point
+				//getObject(item, graphLookup);
+
+			break;
+		}
+
+	}
+
+}
+
+
+
+
