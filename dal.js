@@ -59,7 +59,6 @@ exports.storeData = function(e, cb) {
     var client = new MongoClient(new Server(mongoip, 27017))
 
     
-
     var doInsert = function (err, collection) {
     	   // console.log(err);
             collection.insert(e['document'], function(err, docs) {
