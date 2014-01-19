@@ -172,12 +172,16 @@ contextMenu.traverseProgram = function() {
 	var o = getObject(ca, graphLookup);
 	console.log(o);
 	for (var i = 0 ; i < o.index.length; i++) {
-		var ptr = ca.concat(['index', i]);
-		var pt = new point({"ptr":ptr, "childNumber":0, "id":mkguid(), "pathList":pathList});
+	//	var ptr = ca.concat(['index', i]);
+	//	var pt = new point({"ptr":ptr, "childNumber":0, "id":mkguid(), "pathList":pathList});
 		//pt.setBeginPhrase();
 		console.log(pt.isMixedIn);
-		var sys = new System(pt);
-		sys.evaluate();
+		var ptr = copyArray(o[i]);
+		//ptr[i].pop(); ptr[i].pop();
+		//var o = getObject(ptr, graphLookup);
+		if (!o[i].types['root']) o[i].types['root'] = true;
+		var sys = new System(o[i], pathList);
+		sys.begin();
 		//pt.evaluatePhrase();
 	}
 

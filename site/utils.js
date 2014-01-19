@@ -88,7 +88,7 @@ function getObject(ptrList, o, debug) {
 
 function getPos(e) { 
 	if (!document.body) return;
-	return {x:e.clientX+document.body.scrollLeft, y:e.clientY+document.body.scrollTop}
+	return {x:e.clientX+document.documentElement.scrollLeft, y:e.clientY+document.documentElement.scrollTop}
 	/*
 	var pos = {};
 	pos.x = e.hasOwnProperty('offsetX') ? e.offsetX : e.layerX;
