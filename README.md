@@ -1,6 +1,6 @@
 Document Management Template POET
 ===
-Modular graph linked node decision tree editor for  synthesizing complex documents.  
+Modular linked node decision graph tree editor for  synthesizing complex documents.  
 
 Testing
 ===
