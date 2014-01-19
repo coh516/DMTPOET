@@ -10,7 +10,8 @@ node dmt
 ```
 and open on localhost 6789 to test out ... 
 
-
+Status
+===
 
 As of Jan 2, 2004, The two stage document graph model is completed.  
 
