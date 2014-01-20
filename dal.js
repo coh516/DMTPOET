@@ -7,8 +7,6 @@ var
     Db = require('mongodb').Db,
     Server = require('mongodb').Server;
     mongoip = "127.0.0.1",
-    mongodbname = "cases", // was: legalengine
-    mongodbkeys = "legalEngineKeys",
     mongoport = 27017,
     serveroptions = {w : 1},
  
