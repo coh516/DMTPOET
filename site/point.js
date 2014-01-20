@@ -21,15 +21,7 @@ function Point(options){
 	pointLookup[this.id] = this;
 //	pointLookup[parentId] = this;
 	
-
-	console.log(this.ptr);
-	console.log("-----------------------");
-//	this.node = getObject(this.ptr, graphLookup)
-
-	//this.nextPtrs = this.pathList[this.ptr];
-	console.log(this.ptr);
-	console.log(this.pathList);
-	console.log(nextPtrs);
+;
 	console.log("============cool beanz====================");
 
 	
@@ -69,37 +61,18 @@ function Point(options){
 	pp.pop();
 
 	// in the future, program variables should automatically be detected by seperate linkage patch
+	//
+//	this.programVars = {};
 	while (pp.length > 0 ) {
 		var ppo = getObject(pp, graphLookup);
 		if (ppo.hasOwnProperty('types'))
 		if (ppo.types['program']) {
-				this.programVariable = ppo;
+				this.programVars = ppo;
 				break;
 		}
 		pp.pop();
 		pp.pop();
 	}
-
-	
-	//function pt() { };
-
-	//pt.prototype = Object.create(point.prototype);
-	//mixin(pt.prototype, programComponents.prototype);
-	/*
-	for (var i =0 ; i < nextPtrs.length; i++) {
-		console.log("-----xxxx-----");	
-
-		//pt.constructor = point.prototype.constructor
-		//
-		
-		console.log(nextPtrs);	
-		var cid = mkguid();
-		pointLookup[cid] = new point({"ptr":nextPtrs[i], "id":cid, "parentId":this.id, "childNumber":i, "pathList":this.pathList, "origin":this.origin});
-		this.children[i] = cid;
-		pointLookup[cid].childNumber;
-		//i++;
-	}
-	*/
 
 }
 
@@ -107,16 +80,14 @@ function Point(options){
 Point.prototype.pointLookup = {};
 
 Point.prototype = {
-	get superNode() { return graphLookup(this.superGroup, graphLooup) },
+	get superNode() { return getObject(this.superGroup, graphLookup) },
 
 	"setBeginPhrase": function() {
-		//if (this.superGroup.types)	
-		//	if (this.superGroup.types['program']) {
+
 		this.phraseBegin = true;
 		console.log(this.ptr);
-		//this.isMixedIn = true;
-		mixin(Phrase.prototype, this);
-		//pt.constructor = point.prototype.constructor
+		this.phraseVars = {};
+		//mixin(Phrase.prototype, this);
 	},
 
 	"getRootNode": function(){
@@ -152,12 +123,13 @@ Point.prototype = {
 		return this.pathList[this.ptr]
 	},
 	*/
+	/*
 	"evaluate": function(){
 		//this.initPhrase();
 		console.log(this.superGroup);
-		//this.evaluatePhrase();
+		this.evaluatePhrase();
 	},
-
+	*/
 	"getPriorNode":function(){
 		return pointLookup[this.parentId];
 	},
@@ -188,69 +160,7 @@ Point.prototype = {
 		
 	},
 
-	/*
-	"setProgramNodes":function() {
-		var id = this.ptr[0];
-		var ptr = this.ptr;
-		this.isProgram = false;
-		if (this.node.types)
-			if (this.node.types['program']) {
-				this.programName = this.node.value;
-				this.isProgram = true;
-			}
 
-		var a = copyArray(ptr);
-		var c = [];
-
-		this.parentProgramNames = [];
-		while (a.length > 2) {
-			a.pop(); a.pop();
-			var o = getObject(a, graphLookup);
-
-			if (o.types['program']) {
-				if (o.value != this.progs[this.progs.length-1]) {
-					this.parentProgramNames.push(this.node.value);
-					this.programName = o.node.value; //.push(o);
-					this.isParam = true;
-					//break;
-				}
-			}
-		}
-	},
-	
-	// more unneeded shit
-	"setTypeNodes":function() {
-		var id = this.ptr[0];
-		var ptr = this.ptr;
-		this.isProgram = false;
-		var thisNode = getObject(this.ptr, graphLookup);
-		if (thisNode.types)
-			if (thisNode.types['root']) {
-				this.rootName = thisNode.value;
-				this.isRoot = true;
-				//this.isProgram = true;
-			}
-
-		var a = copyArray(ptr);
-		var c = [];
-
-		this.programs = [];
-		while (a.length > 2) {
-			//a.pop(); a.pop();
-			var o = getObject(a, graphLookup);
-
-			if (o.types['root']) {
-				//if (o.value != this.progs[this.progs.length-1]) {
-				this.rootName = o.node.value; //.push(o);
-					//break;
-				//}
-			}
-			if (o.types['program']) {
-				this.programs.push(thisNode.value);
-			}
-		}
-	},
-	*/
 	"obj2JSON":function() {
 		return graph.prototype.toJSON(this.ptr[0]);
 
@@ -270,16 +180,16 @@ Point.prototype = {
 	"step":function() {
 		var rootPoint = pointLookup[this.rootPointID];
 		
-		if (this.programVariable) {
+		if (this.programVar) {
 
-			if (!rootPoint.traversedVars.programVariable)			
-				rootPoint.traversedVars[this.programVariable] =  rootPoint['programVariables'][this.programVariable].length;
+			if (!rootPoint.phraseVars.programVar)			
+				rootPoint.phraseVars[this.programVar] =  rootPoint.phraseVars[this.programVar].length;
 			else 
-				rootPoint.traversedVars[this.programVariable]--;
+				rootPoint.phraseVars[this.programVar]--;
 
-			if (rootPoint.traversedVars[this.programVariable] == 0) {
-				var pv = rootPoint['programVariables'][this.programVariable];
-				this.evaluate( rootPoint['programVariables'][this.programVariable]);
+			if (rootPoint.phraseVars[this.programVar] == 0) {
+				var pv = rootPoint['phraseVars'][this.programVar];
+				this.evaluate( rootPoint['phraseVars'][this.programVar]);
 			}
 
 		}
@@ -292,16 +202,11 @@ systemLookup = {};
 function System(ptr, pathList) { 
 	this.pathList = pathList;
 	this.rootPtr = ptr;
+//	//alert(this.rootPtr);
 //	pt.setBeginPhrase();
 	//this.evaluatePhrase();
 	this.traversedNodes = {};
 	pt.nextPhrases = [];
-	//this.endPhrases = [];
-	//pt.phraseBegin = true;
-	//this.evaluatePhrase();
-	//console.log(this.ptr);
-	//this.isMixedIn = true;
-	//mixin(Phrase.prototype, this);
 	this.endPhrases = [];
 	this.beginPhrases = [];
 	this.id = mkguid();
@@ -324,88 +229,49 @@ System.prototype = {
 		var pathList = this.pathList;
 		var parents = {};
 
-		var recurse = function(p, pr) {
+		var recurse = function(pID, rpID) {
 
-			console.log(p+"<<<");
-		//	if (this.hasTraversed) // not sure if i could just check p and pr
-		//	if (this.traversedNodes[p]) {
-		//		this.traversals--;
-		//	}else this.traversedNodes[p] = true;
 
-			console.log(pointLookup);
-			console.log("======================oooo");
-			console.log(pr);
-			var rootPoint = pointLookup[pr];
+			var rootPoint = pointLookup[rpID];
 
-			var po = pointLookup[p];
-			console.log(po);
-			po.rootPointID = pr;
-			//var ponode = getObject(po.ptr, graphLookup);
+			var po = pointLookup[pID];
+			po.rootPointID = rpID;
+			var ponode = po.superNode; //getObject(po.ptr, graphLookup);
+				
+			// this might need to be stored in a phraseLookup[rootPointID]
+			//if (rootPoint.programVars)
+		//	if (!rootPoint.phraseVars)
+		//		rootPoint.phraseVars
+
+			if (po.programVar)
+			if (!rootPoint.phraseVars[po.programVar]) {
+				rootPoint.phraseVars[po.programVar] = [];
+				rootPoint.phraseVars[po.programVar].push(pId);
+			}
 			
 			if (ponode.types)
 			if (ponode.types['root']) {
-				//rootPoint.evprogs = [];
-				po.traversedVars = {};				
-				//new Phrase(pointLookup[pr.id]
-				po.phraseBegin = true;
-				var opr = pr;
-				pr = p.id;
-			}
-			if (!rootPoint.programVars[rootPoint.programVariable])
-				rootPoint.programVars[rootPoint.programVariable] = [];
-				rootPoint.programVars[rootPoint.programVariable].push(p);
 
-			if (ponode.types)
-			if (ponode.types['root'] || po.children.length == 0) {
-				//p.phraseBegin = true
 				po.setBeginPhrase();
-				//var rootItem = p;
-				// not sure about this .. because the phrase might be part of a greater phrase....
-				// need to play around with this 
-			//	if (this.hasTraversed) {
-				if (po.parentId) 
-					pointLookup[po.parentId].phraseEnd = true;
-					
-					//this.endPhrases.push(p.parentId);
-					//this.beginPhrases.push(p.id);
-					//phrases[p.id] 
-					//p.id;
-					//if (rootPhrase) { 
-					//if (this.hasTraversed) {
-					
-				//	this.traversals--;
-			        	this.nextPhrases.push(p.id);
-			
-					//if (this.traversals == 0) {
-						// iterations > 0 and also next childrent arent all roots ..
-						// if there's just one item in the linkage, this strategy will break
-						// rootPhrase.renderPhrase({"});
-					//	this.completed = true;
-						//rootPhrase.nextPhrases = nextPhrases
-					//}//else {
-					//	p.nextPhrase.push(new Phrase(pt));
-					//}
-					// need to re-evaluate the phrase if the phrase hasn't completed
-			//	}
-			} 
-			// this might be needed if phrases were cutup in this pre-render phase
-			//if (po.children.length > 0)
-			//	parents[po.id] == po.children.length;
+				rpID = ponode.id;
+				var isRoot = true;
+			}
+
 		
 
+			if (isRoot || po.children.length == 0 && rpID != pID) {
+				{
+					if (po.parentId)
+						pointLookup[po.parentId].phraseEnd = true;
+				}
+			} 
+			
+
 			for (var i =0 ; i < pathList[po.ptr].length; i++) {
-				console.log("-----xxxx-----");	
+	
+				var np = new Point({"ptr":pathList[po.ptr][i], "parentId":this.id, "childNumber":i});
+				recurse(np.id, rpID);
 
-				//pt.constructor = point.prototype.constructor
-				//
-
-				console.log(nextPtrs);	
-				var np = new point({"ptr":pathList[po.ptr][i], "parentId":this.id, "childNumber":i});
-				recurse(np.id, rp);
-
-				//po.children[i] = cid;
-				//pointLookup[cid].childNumber;
-				//i++;
 			}
 			/*
 
@@ -429,10 +295,13 @@ System.prototype = {
 			*/	
 
 		}
-		this.rootPoint = new Point({"ptr":ptr, "childNumber":0, "pathList":pathList});
+;
+		this.rootPoint = new Point({"ptr":this.rootPtr, "childNumber":0, "pathList":pathList});
 	
-		recurse(this.rootPoint, this.rootPoint);
+		recurse(this.rootPoint.id, this.rootPoint.id);
+		console.log("-----------------------evaluting");
 		this.rootPoint.evaluate();
+
 		//this.renderPhrase();
 
 	},
@@ -617,25 +486,6 @@ UniverseClass.prototype =  {
 	}
 }
 
-//generating a renderable document
-/*
-function getNextContext = { } 
-
-getNextContext.prototype = {
-
-	"getNextContext":function() { 
-		this.recurse = function(point) {
-			for (var i = 0; i < point.children.length; i ++) {
-				var o = point.children[i];
-				if (o.isContext) {
-					o.isContext = true;
-				}else this(o);
-			}
-		}
-
-	}
-}
-*/
 
 
 function DBClass() {

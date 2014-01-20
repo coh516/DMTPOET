@@ -170,20 +170,30 @@ contextMenu.traverseProgram = function() {
 	var ca = copyArray(this.lastPtr);
 	ca.pop();
 	var o = getObject(ca, graphLookup);
+	var delRoot = false;
+
+	// do this a bit cleaner for deliniating phrases
+	if (!o.types) {
+		o.types = {"root":true};
+		delRoot = true;
+	}
+	if (!o.types.root) {
+		o.types.root = true;
+		delRoot = true;
+	}
+
 	console.log(o);
+//	return;
 	for (var i = 0 ; i < o.index.length; i++) {
-	//	var ptr = ca.concat(['index', i]);
-	//	var pt = new point({"ptr":ptr, "childNumber":0, "id":mkguid(), "pathList":pathList});
-		//pt.setBeginPhrase();
-		console.log(pt.isMixedIn);
-		var ptr = copyArray(o[i]);
-		//ptr[i].pop(); ptr[i].pop();
-		//var o = getObject(ptr, graphLookup);
-		if (!o[i].types['root']) o[i].types['root'] = true;
-		var sys = new System(o[i], pathList);
+	//	alert(o.ptr.join());
+		var oc = copyArray(o.ptr);
+		oc = oc.concat(['index', i]);
+		
+		var sys = new System(oc, pathList);
 		sys.begin();
 		//pt.evaluatePhrase();
 	}
+	if (delRoot) delete o.types.root;
 
 	//point.evaluate();
 
