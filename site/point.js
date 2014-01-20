@@ -53,7 +53,7 @@ function Point(options){
 	this.programName = a1.value;
 
 	var tpg = programs[this.programName];
-	mixin(this.prototype, tpg.prototype)	
+	mixin(tpg.prototype, this)	
 	
 	//var a1 = getObject([pp[0], pp[1], pp[2]], graphLookup);
 	//nodeName = a1.value;
@@ -295,12 +295,13 @@ System.prototype = {
 			*/	
 
 		}
-;
+
 		this.rootPoint = new Point({"ptr":this.rootPtr, "childNumber":0, "pathList":pathList});
 	
 		recurse(this.rootPoint.id, this.rootPoint.id);
 		console.log("-----------------------evaluting");
-		this.rootPoint.evaluate();
+//		this.rootPoint.evaluate();
+		console.log(this.rootPoint);
 
 		//this.renderPhrase();
 
