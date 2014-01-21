@@ -1,6 +1,6 @@
 Document Management Template POET
 ===
-Linked document graph framework for managing complex texmplates modularly, with visual editor.
+Linked document graph framework for managing complex texmplates modularly, with visual path editor.
 
 Testing
 ===
