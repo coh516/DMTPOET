@@ -2,6 +2,8 @@ function uiRenderer(ptr) {
 	
 }
 
+// need to align the css params with this...
+
 uiRenderer.prototype =  {
 	"setElement":function(uid, id) {
 		
@@ -11,7 +13,7 @@ uiRenderer.prototype =  {
 		}
 		var el = graphics[id].el; // this may or may not be the best way of doing it.. it might actually be faster to rerender the bounded elements
 		var uid = graphLookup[id].universeid;
-	//	console.log(uid
+		//	console.log(uid
 		var type = models[uid].type;
 		el.width = 400;
 		el.height = 400;
@@ -36,7 +38,7 @@ uiRenderer.prototype =  {
 			el.style.display = "none"
 		if(appendEl)
 			document.body.appendChild(el);
-	//	alert('test');
+		//	alert('test');
 	},
 	"build":function() {
 	},
@@ -86,72 +88,67 @@ uiRenderer.prototype =  {
 	"createDom":function() {
 		// need to create a seperate dom renderer plugin for this..
 		//this.namespace = this.obj2JSON();
-		this.tablenode = document.createElement("div");
-
-		this.tablenode.setAttribute("class", "UIRootTable");
+		this.tableNode = document.createElement("div");
+		document.body.appendChild(this.tableNode);
+		this.tableNode.setAttribute("class", "UIRootTable");
 		//var dialogs = getObjs(this.namespace, "dialog");
-		var ar = graph.prototype.getPtrValue(this.ptr, 'dialog');
+		console.log(this.ptr);
+
+		var ar = graph.prototype.getPtrValue(this.superGroup, 'dialog');
+
+		this.tableNode.style.position = "absolute";
+		this.tableNode.style.zIndex = "20000";
+
+		//this.bringToTop();
+		
+
 		for (var i=0; i < ar.length; i++) 
-			evaluateDialog(ar[i]);
+			this.evaluateDialog(ar[i]);
 
 	},
 
 	"evaluateDialog":function(dialogPtr) {
 		var view = graph.prototype.getPtrValue(dialogPtr, "view");
-		var grid = graph.prototype.getPtrValue(view, "grid");
-		
+		console.log("debugging....");
+		console.log(view);
+		var grid = graph.prototype.getPtrValue(view[0], "grid");
+		console.log("...");
+
+
 		if (grid) {
 			var rows = graph.prototype.getPtrValue(dialogPtr, "row");
 			var rowNode = document.createElement("div");
-			this.tablenode.addChild(rownode);
+			this.tableNode.appendChild(rowNode);
 			rowNode.setAttribute("class", "UItableRow");
 			this.evaluateRows(rows, rowNode);
 		}
 	},
 	"evaluateRows":function(rows, rowNode) {
 		//this.tableRow
-		for (var i=0; i < rows['item'].length; i++) {
-			var item = rows['item'][i].value;
-			var rowNode = document.createElement("ul");
-			rowNode.setAttribute("class", "UIULCell");
-			//var ul = document.createElement("ul");
-			
-			var li = document.createElement("li");
-			li.setAttribute("class", "UILICell");
-			rowNode.appendChild(li);
-			this.drawELement(item, rowNode, li)
-			//li.innerText = row[items];
-		}
-		var c = this.getNextChild();
-		c.evaluate();
-	},
+		console.log("-------------#######-=-----------");
+		console.log(rows);
+	//	var row = rows[i];
+		for (var i =0 ; i < rows.length; i++) {
+			var row = getObject(rows[i], graphLookup);
+			console.log(row);
+			console.log("---------------");	
+			for (var j=0; j < row['item'].length; j++) {
+				var rowItem = row['item'][j];
+				console.log(rowItem);
+				var item = rowItem.value;
+				var rowNode = document.createElement("ul");
+				rowNode.setAttribute("class", "UIULCell");
+				//var ul = document.createElement("ul");
 
-	"drawElements":function(item, node, li) {
-		switch(item) {
-			case 'label':
-				var val = graph.prototype.getPtrValue(item, "text");
-				//var text = row[items]['text']
-				li.innerText = val;
-				item.renderedUI = {};
-				item.renderedUI.domNode = li;
-			break;
-			case 'inputbox':
-				var ib = document.createElement("input");
-				li.appendChild(ib);
-				ib.setAttribute("class", "UIInputCell");
-				item.renderedUI = {};
-				item.renderedUI.domNode = ib;
-			break;
-			case 'button':
-				var val = graph.prototype.getPtrValue(item, "text");			
-				li.innerText = text;
-				item.renderedUI = {};
-				item.renderedUI.domNode = li;
-				//this.point
-				//getObject(item, graphLookup);
-
-			break;
+				var li = document.createElement("li");
+				li.setAttribute("class", "UILICell");
+				rowNode.appendChild(li);
+				this.drawElement(item, rowNode, li, rowItem)
+					//li.innerText = row[items];
+			}
 		}
+		
+
 	}
 }
 
