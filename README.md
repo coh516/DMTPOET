@@ -1,6 +1,6 @@
 Document Management Template POET
 ===
-Modular linked node decision tree path editer for synthesizing complex documents graphically.  
+Linked tree node graph path framework for synthesizing complex documents modularly, with graphical user interface editor.
 
 Testing
 ===
