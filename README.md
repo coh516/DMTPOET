@@ -1,6 +1,6 @@
 Document Management Template POET
 ===
-Linked tree node framework for synthesizing complex documents modularly, with graphical user interface editor.
+Linked document node framework for synthesizing complex content modularly, with graphical user interface editor.
 
 Testing
 ===
