@@ -74,8 +74,8 @@ function getObject(ptrList, o, debug) {
 		console.log(o[pi]);
 		}
 		if (o[pi] === undefined) {
-			console.log("pi: "+pi);
-			console.log(ptrList);
+		//	console.log("pi: "+pi);
+		//	console.log(ptrList);
 			throw('match object error with '+ptrList.join());
 			//console.log("OH SHIT! NO!!!!");	
 			return z;

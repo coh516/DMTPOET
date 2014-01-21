@@ -29,7 +29,10 @@ function Point(options){
 	if (!this.parentId) {
 		this.origin = this.id;
 	}
-	
+
+	var pl = pointLookup[this.parentId];
+	if (pl)
+	pl.children[this.childNumber] = this.id;
 	
 	
 	var p2 = copyArray(this.ptr);
@@ -150,12 +153,12 @@ Point.prototype = {
 	"getNextChild":function() {
 		if (!this.curChild) this.curChild = 0;
 		else this.curChild++;
-		return this.children[this.curChild];
+		return pointLookup[this.children[this.curChild]];
 
 	},
 	"getPriorChild":function() {
 		if (this.curChild > 0)
-			return this.children[--this.curChild];
+			return pointLookup[this.children[--this.curChild]];
 		else return false; // maybe throw error in the future
 		
 	},
@@ -268,8 +271,10 @@ System.prototype = {
 			
 
 			for (var i =0 ; i < pathList[po.ptr].length; i++) {
-	
-				var np = new Point({"ptr":pathList[po.ptr][i], "parentId":this.id, "childNumber":i});
+				
+				var np = new Point({"ptr":pathList[po.ptr][i], "parentId":pID, "childNumber":i});
+				//console.log(.children);
+				//console.log("^%%^^^%%%^^%%%%%^");
 				recurse(np.id, rpID);
 
 			}
@@ -302,7 +307,7 @@ System.prototype = {
 		console.log("-----------------------evaluting");
 //		this.rootPoint.evaluate();
 		console.log(this.rootPoint);
-
+		this.rootPoint.evaluate();
 		//this.renderPhrase();
 
 	},
@@ -331,13 +336,15 @@ UIClass.prototype = {
 	// this needs to be moved to the UIRenderer class....
 	"evaluate":function() {
 
-		//this.
-		//var pa = copyArray(this.ptr); //.pop().
-		//pa.pop(); pa.pop();
+;
+		// only at the phrase begin stage should this ever draw a ui
 		if (!this.phraseBegin) { 
 			var pi = pointLookup[this.parentId]
-			var pa = getObject(this.ptr, graphLookup);
+			var pa = getObject(this.superGroup, graphLookup);
 			var rootPoint = pointLookup[this.rootNodeId];
+			console.log("------");
+			console.log(pa);
+			
 			switch ( pa.renderedUI.type ) {
 				case "button":
 					pa.renderedUI.domNode.onClick = this._next.bind(this.id);
@@ -346,13 +353,19 @@ UIClass.prototype = {
 					this.value = pa.renderUI.domNode.value;
 					break;
 			}
-			
+			var c = this.getNextChild();
+			//	alert("evaluaiting..");
+			console.log(c);
+			c.evaluate()
+
 //				for(var i =0 ; i < this.children.length; i++) {
 //				this.children[i].evaluate();			
 //				//if (this.children[i].programName == "UI")
 //				//node.onClick = UI.prototype.execute(this.children);
 //			}
-		}else createDom();
+		}else {
+			this.createDom();
+		}
 	
 
 	},
@@ -360,75 +373,89 @@ UIClass.prototype = {
 	"createDom":function() {
 		// need to create a seperate dom renderer plugin for this..
 		//this.namespace = this.obj2JSON();
-		this.tablenode = document.createElement("div");
+		this.tableNode = document.createElement("div");
 		document.body.appendChild(this.tableNode);
-		this.tablenode.setAttribute("class", "UIRootTable");
+		this.tableNode.setAttribute("class", "UIRootTable");
 		//var dialogs = getObjs(this.namespace, "dialog");
-		var ar = graph.prototype.getPtrValue(this.ptr, 'dialog');
+		console.log(this.ptr);
 
-		ar.style.position = "absolute";
-		ar.style.zIndex = "20000";
+		var ar = graph.prototype.getPtrValue(this.superGroup, 'dialog');
+
+		this.tableNode.style.position = "absolute";
+		this.tableNode.style.zIndex = "20000";
 
 		//this.bringToTop();
 		
 
 		for (var i=0; i < ar.length; i++) 
-			evaluateDialog(ar[i]);
+			this.evaluateDialog(ar[i]);
 
 	},
 
 	"evaluateDialog":function(dialogPtr) {
 		var view = graph.prototype.getPtrValue(dialogPtr, "view");
-		var grid = graph.prototype.getPtrValue(view, "grid");
-		
+		console.log("debugging....");
+		console.log(view);
+		var grid = graph.prototype.getPtrValue(view[0], "grid");
+		console.log("...");
+
+
 		if (grid) {
 			var rows = graph.prototype.getPtrValue(dialogPtr, "row");
 			var rowNode = document.createElement("div");
-			this.tablenode.addChild(rownode);
+			this.tableNode.appendChild(rowNode);
 			rowNode.setAttribute("class", "UItableRow");
 			this.evaluateRows(rows, rowNode);
 		}
 	},
 	"evaluateRows":function(rows, rowNode) {
 		//this.tableRow
-		for (var i=0; i < rows['item'].length; i++) {
-			var item = rows['item'][i].value;
-			var rowNode = document.createElement("ul");
-			rowNode.setAttribute("class", "UIULCell");
-			//var ul = document.createElement("ul");
-			
-			var li = document.createElement("li");
-			li.setAttribute("class", "UILICell");
-			rowNode.appendChild(li);
-			this.drawELement(item, rowNode, li, ptrObject)
-			//li.innerText = row[items];
+		console.log("-------------#######-=-----------");
+		console.log(rows);
+	//	var row = rows[i];
+		for (var i =0 ; i < rows.length; i++) {
+			var row = getObject(rows[i], graphLookup);
+			console.log(row);
+			console.log("---------------");	
+			for (var j=0; j < row['item'].length; j++) {
+				var rowItem = row['item'][j];
+				console.log(rowItem);
+				var item = rowItem.value;
+				var rowNode = document.createElement("ul");
+				rowNode.setAttribute("class", "UIULCell");
+				//var ul = document.createElement("ul");
+
+				var li = document.createElement("li");
+				li.setAttribute("class", "UILICell");
+				rowNode.appendChild(li);
+				this.drawElement(item, rowNode, li, rowItem)
+					//li.innerText = row[items];
+			}
 		}
-		var c = this.getNextChild();
-		c.evaluate();
+		
+
 	},
 
-	"drawElements":function(item, node, li, ptrObject) {
-		ptrObject.renderedUI.item = item;
+	"drawElement":function(item, node, li, ptrObject) {
+		ptrObject.renderedUI = {};
+		//ptrObject.renderedUI.item = item;
 		switch(item) {
 			case 'label':
-				var val = graph.prototype.getPtrValue(item, "text");
+				var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");
 				//var text = row[items]['text']
 				li.innerText = val;
-				ptrObject.renderedUI = {};
 				ptrObject.renderedUI.domNode = li;
 			break;
 			case 'inputbox':
 				var ib = document.createElement("input");
 				li.appendChild(ib);
 				ib.setAttribute("class", "UIInputCell");
-				ptrObject.renderedUI = {};
 				ptrObject.renderedUI.domNode = ib;
 				ptrObject.renderedUI.type = "text";
 			break;
 			case 'button':
-				var val = graph.prototype.getPtrValue(item, "text");			
-				li.innerText = text;
-				ptrObject.renderedUI = {};
+				var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");			
+				li.innerText = 'text';
 				ptrObject.renderedUI.domNode = li;
 				ptrObject.renderedUI.type = "onSubmit";
 				//this.point

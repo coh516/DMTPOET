@@ -990,11 +990,14 @@ graph.prototype = {
 		
 	},
 	"getPtrValue":function(ptr, val) {
-		var obj = this.getObject(ptr, graphLookup);
+		var obj = getObject(ptr, graphLookup);
 		var ar = [];
-		for (var i = 0; obj['item'].length; i++) {
-			if (obj['item'][i].value == 'val')
-				ar.push(obj['item'][i]);
+		console.log("#####");
+		console.log(ptr);
+		for (var i = 0; i < obj['item'].length; i++) {
+			console.log(obj['item'][i]);
+			if (obj['item'][i].value == val)
+				ar.push(obj['item'][i].ptr);
 
 		}
 		return ar;
