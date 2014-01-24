@@ -1,44 +1,61 @@
-function uiRenderer(ptr) {
+function UIRenderer(ptr) {
 	
 }
 
 // need to align the css params with this...
+// this is meant to eventually replace html renderer
+// or rather, make a new htmlRenderer a base class and then put this ontop of it
+// renderElement...... 
 
-uiRenderer.prototype =  {
-	"setElement":function(uid, id) {
-		
-		if (!graphLookup[id].el) {
-			graphLookup[id].el = document.createElement("ul"); //global canvas object
+UIRenderer.prototype =  {
+	"setElement":function(gfxRoot) {
+		var ptrRoot = gfxRoot.rootPtr;
+		//var go = getObject(ptrRoot, graphLookup);
+		// needs to be referenced by id...
+		if (!gfxRoot.el) {
+			gfxRoot.el = document.createElement("ul"); //primary internal node
 			var appendEl = true;
 		}
-		var el = graphics[id].el; // this may or may not be the best way of doing it.. it might actually be faster to rerender the bounded elements
-		var uid = graphLookup[id].universeid;
-		//	console.log(uid
-		var type = models[uid].type;
+		var el = gfxRoot.el; // this may or may not be the best way of doing it.. it might actually be faster to rerender the bounded elements
+		//var uid = graphLookup[id].universeid;
+	//	console.log(uid
+		var type = type; //models[uid].type;
 		el.width = 400;
 		el.height = 400;
 		el.style.position = "absolute";
 		el.setAttribute("class", type+"UL");
 		// = {"position":"absolute", "left":0, "top":0};
-		var model = graphLookup[id];
+	//	var model = graphLookup[ptr[0]];
 
+
+		// should be gfxTypeLookup[lastz+1];
+		// should be in gfx
+		
 		var lz = gfx.prototype.lastz+1;
 		if (!lz) lz = 0;
 
-		if (!model.loc) {
-			model.loc = {"x":0, "y":0, "z":lz};
-		} else if (!model.loc.z)  
-			model.loc.z = lz;
 		
-		gfx.prototype.lastz = model.loc.z;
-		el.style.zIndex = model.loc.z;//ng;
+		if (!gfxRoot.loc) {
+			gfxRoot.loc = {"x":0, "y":0, "z":lz};
+		} else if (!gfxRoot.loc.z)  
+			gfxRoot.loc.z = lz;
+		
+
+		gfx.prototype.lastz = gfxRoot.loc.z;
+		
+
+
+		// might not be correct
+		el.style.zIndex = gfxRoot.z; // should be set prior to calling this function
 		//this.zIndex = ng;
 		//var model = graphLookup[id];
-		if (model["hidden"])
+		if (gfxRoot["hidden"]) {
 			el.style.display = "none"
-		if(appendEl)
-			document.body.appendChild(el);
-		//	alert('test');
+		}
+		if(appendEl) {
+//			console.log(id);
+			gfxRoot['baseElement'].appendChild(el);
+		}
 	},
 	"build":function() {
 	},
@@ -47,8 +64,8 @@ uiRenderer.prototype =  {
 	"reindex":function() {
 
 	},
-	"mkPtrImgs":function() {
-		this.createDom();
+	"mkPtrImgs":function(gfxRoot) {
+		this.createDom(gfxRoot);
 	},
 	"hide":function() {
 	},
@@ -85,17 +102,28 @@ uiRenderer.prototype =  {
 
 		// move canvas element
 	}, 
-	"createDom":function() {
+	// should require index then .......
+	"createDom":function(gfxRoot) {
+		//console.log(gfxRoot);
+		var ptr = gfxRoot.rootPtr;
 		// need to create a seperate dom renderer plugin for this..
 		//this.namespace = this.obj2JSON();
 		this.tableNode = document.createElement("div");
 		document.body.appendChild(this.tableNode);
 		this.tableNode.setAttribute("class", "UIRootTable");
 		//var dialogs = getObjs(this.namespace, "dialog");
-		console.log(this.ptr);
+		//console.log(this.ptr);
 
-		var ar = graph.prototype.getPtrValue(this.superGroup, 'dialog');
-
+		// store references in idLookup of id... 
+		
+	     	// ptr
+		//
+		// if this is not an indexed element, ... dont need the superGruop
+		var ca = copyArray(gfxRoot.rootPtr);
+		if (ptr[ptr.length-2] == 'index') { ca.pop(); ca.pop(); }
+		var ar = graph.prototype.getPtrValue(ca, 'dialog');
+		
+                //objref
 		this.tableNode.style.position = "absolute";
 		this.tableNode.style.zIndex = "20000";
 
@@ -144,11 +172,31 @@ uiRenderer.prototype =  {
 				li.setAttribute("class", "UILICell");
 				rowNode.appendChild(li);
 				this.drawElement(item, rowNode, li, rowItem)
+				
 					//li.innerText = row[items];
 			}
 		}
-		
-
+	},
+	"moveGfx":function(gfxRoot) {
+//		console.log(id);
+		var t = gfxRoot.loc;
+		var canvas = gfxRoot.el;
+		//console.log("moving...."+this.id);
+		canvas.style.top = t.y+"px";
+		canvas.style.left = t.x+"px";
+		canvas.style.zIndex = t.z;
+		//alert("tst...");
+		//console.log(t.z);
+	},
+	"hide":function(gfxRoot) {
+		// graphics / models/graph ....  => graphLookup
+		// gfxLookup =>gfx+models link... 
+		var t = gfxRoot.hidden = true;
+		var c = gfxRoot.el.style.display = "none";
+	},
+	"show":function(gfxRoot) {
+		var t = gfxRoot.hidden = false;
+		var c = gfxRoot.el.style.display = "";
 	}
 }
 

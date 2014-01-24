@@ -4,19 +4,19 @@
 // should really be menuHandler.prototype.init etc.... and copy the Object.create to the prototype there
 var menuHandler = {
 
-	"init":function(json, uniName, postMix) {
+	"init":function(json, uniName) {
 		//alert(evt);
-		var o = this.setupPtrs(json, uniName, postMix);
+		var o = this.setupPtrs(json, uniName);
 		this.uni = o.uni;
 		this.gid = o.gid;
 		//events[o.uni] = this;
 		//alert("xxx");
 		return {"uni":this.uni, "gid":this.gid};
 	},
-	"setupPtrs":function(json, uniName, postMix) {
+	"setupPtrs":function(json, uniName) {
 		//var o = init();
 		this.uniName = uniName;
-		var uni = new universe(uniName);
+		var uni = new universe();
 
 		var gid = uni.addGraph();
 
@@ -28,14 +28,14 @@ var menuHandler = {
 		//alert(gfx)
 		//
 		//
-		if (postMix)
-			postMix(uni, gid);
-		// 
 
-		var g= new gfx(uni.id, gid);
+		// need to figure how to connect the nodes and execute the point.....
+
+		var g= new gfx(uniName, gid, UIRenderer, document.body);
 	//	g.moveTo(0,100, 100);//gfxLookup[gid].topz+1);
 		g.build();
 		g.hide();
+		this.cssType = g.type
 		//console.log(g);
 		if (zIndex[uniName] === undefined)
 			alert("xxxx");
@@ -55,7 +55,7 @@ var menuHandler = {
 		return a;
 	},
 
-	"showMenu":function (e, ptr) {
+	"showMenu":function (e, gfxObj) {
 		if (gfx.prototype.isRenaming) return;
 		var id = this.gid;
 		//console.log(id + " <<< yo");
@@ -64,8 +64,9 @@ var menuHandler = {
 		//if (gfx.prototype.isRenaming) return;
 		//console.log("<SLKFJSDLF" + this.lastPtr);
 		//if (this.lastPtr) console.log(this.lastPtr);
-	
-		this.lastPtr = ptr;
+		this.cssType = gfxObj.cssType;
+		this.lastGfx = gfxObj;
+		this.lastPtr = gfxObj.ptr;
 		
 		//console.log("cleo the cat");
 		var gph = models[this.uni]["graph"][this.gid];
@@ -345,7 +346,7 @@ contextMenu.setNodeType = function(type) {
 	
 	// this should be in the renderer (call re-render)
 	// should be re-render node without rebuilding the entire tree
-	var csstype = models[graphLookup[id].universeid].type;
+	var csstype = this.cssType; //models[graphLookup[id].universeid].type;
 	//csstype+="UL";
 	var t = o.types[type];
 	o.gfx.div.setAttribute(csstype+type, t ? "label": false);
@@ -366,7 +367,7 @@ contextMenu.setRootNode = function() {
 	o.root = o.root ? false : true;//; // == "root" ? "" : "root";
 	//o.type = "root";
 	
-	var csstype = models[graphLookup[id].universeid].type;
+	var csstype = this.cssType; //models[graphLookup[id].universeid].type;
 	//csstype+="UL";
 	console.log(o);
 	o.el.setAttribute(csstype+"root", o.root);

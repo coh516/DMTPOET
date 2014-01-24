@@ -35,7 +35,7 @@ snapSpace.prototype = {
 	// expects a group (array) of objects' bounding boxes.........
 	// needs to point to the gfx portion
 	// bound a different object other than 'graphics' ... 'graphics' should be parameterized 
-	"regObject":function(ptr, objName) { // using bounding box from the gfx renderer
+	"regObject":function(ptr, objName, eventObject) { // using bounding box from the gfx renderer
 
 
 		// it would be smarter to just store references to the ptr and object lookup names
@@ -82,7 +82,7 @@ snapSpace.prototype = {
 				snaps.push(snap);
 			}
 		}
-		
+		events[ptr.join()] = eventObject;
 		if (!lookup[id].snaps) lookup[id].snaps = [];
 		lookup[id].snaps.push(snaps);
 		//console
@@ -253,7 +253,7 @@ snapSpace.prototype = {
 		for (var g in grid.movers)  {
 			var gmg = grid.movers[g];
 			
-			var uid = lookups[gmg.lookupName][gmg.rect.ptr[0]].universeid
+			//var uid = lookups[gmg.lookupName][gmg.rect.ptr[0]].universeid
 			var evt = events[gmg.rect.ptr];
 			if (!evt)
 				evt = events[uid]
@@ -480,12 +480,16 @@ userEvents.prototype = {
 	"handleMouseEnter":function(obj, e) {
 		//console.log(gfx);
 		var id = obj.rect.ptr[0];
-		var lookup = lookups[obj.lookupName];
-		var mlu = models[lookup[id].universeid];
+		//var lookup = lookups[obj.lookupName];
+		//var mlu = models[lookup[id].universeid];
+
+		var csstype = obj.rect.cssType
+/*
 		if (mlu)
 			var csstype = mlu.type;
 		else 
 			var csstype = obj.lookupName;
+*/
 	//	var type= ptr.ptr[ptr.ptr.length-2];
 		//console.log(gfx);
 		//console.log("*********");
@@ -530,7 +534,7 @@ userEvents.prototype = {
 		//console.log("testing mouse out from this shit..");
 		//console.log(gfx);
 		var id = obj.rect.ptr[0];
-		var csstype = models[graphLookup[id].universeid].type;
+		var csstype = obj.type;
 		var type= obj.rect.type;
 		//console.log(obj);
 		//console.log("*******^^^^********");	
@@ -1044,7 +1048,7 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 			}
 		}
 		if (obj.rect.type == "label") {
-			contextMenu.showMenu(e, obj.rect.ptr);
+			contextMenu.showMenu(e, obj.rect);
 		}
 	
 		
@@ -1126,15 +1130,9 @@ var nodeEvents = new moveHandler(new nodeEventHandler);
 
 
 function getCSS(gfx) {
-	var id = gfx.rect.ptr[0]
-	var csstype = models[graphLookup[id].universeid].type;
-	//	var type= ptr.ptr[ptr.ptr.length-2];
-//	console.log(ptr);
-	//console.log("*********");
-	var p = getObject(gfx.rect.ptr, graphics);	
-	//console.log(p);
 	var type = gfx.rect.type
-	return csstype+type;
+
+	return gfx.rect.cssType+type;
 }
 
 function getGraph(ptr) {

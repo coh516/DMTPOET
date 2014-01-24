@@ -12,11 +12,13 @@ var lookups = {};
 var ptrLookup = {};
 lookups["graphLookup"] = graphLookup;
 
+//setPtrIndex should create an 'indexedGraph'
+
 function universe(type) {
 	this.id = mkguid();
-	models[this.id] = {"graph":{}, "type":type};
-	if (!universes[type]) universes[type] = [];
-	universes[type].push(this);
+	models[this.id] = {"graph":{}};//, "type":type};
+	//if (!universes[type]) universes[type] = [];
+	//universes[type].push(this);
 }
 universe.prototype = {
 	"addGraph":function(JSON) { 

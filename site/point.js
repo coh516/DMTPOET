@@ -314,13 +314,12 @@ System.prototype = {
 
 }
 
-
 // Template much include onFunction and onParameter
 function UIClass() {
 };
 
 //  UIClass.prototype = Object.create(baseProgram.prototype);
-
+// use the UI class fro UIRenderer ..
 UIClass.prototype = {
 	"getNameSpace":function() {
 		//need to look back to find 'grid' location
@@ -344,7 +343,7 @@ UIClass.prototype = {
 			var rootPoint = pointLookup[this.rootNodeId];
 			console.log("------");
 			console.log(pa);
-			
+				
 			switch ( pa.renderedUI.type ) {
 				case "button":
 					pa.renderedUI.domNode.onClick = this._next.bind(this.id);
@@ -358,12 +357,10 @@ UIClass.prototype = {
 			console.log(c);
 			c.evaluate()
 
-//				for(var i =0 ; i < this.children.length; i++) {
-//				this.children[i].evaluate();			
-//				//if (this.children[i].programName == "UI")
-//				//node.onClick = UI.prototype.execute(this.children);
+
 //			}
-		}else {
+		}else { // imply  {"GFX":{"renderer":"WindowManager"}}
+			// for the most part, this should work...
 			this.createDom();
 		}
 	

@@ -5,7 +5,7 @@
 // the ui builder really should be consisting of node partial templates that loop into a UI
 
 
-function testCase(uni) {
+function testCase(uni, gEl) {
 	var gids = []; 
 	var gojs = [];
 
@@ -35,7 +35,7 @@ function testCase(uni) {
 	//	universes['ptr', uni.id, 
 		graphLookup[gids[i]].setFromJSON(json);
 	
-		var gf = new gfx(uni.id, gids[i]);
+		var gf = new gfx(uni.id, gids[i], htmlRenderer, gEl);
 		gf.moveTo(i*100, i*10);
 		
 		//gf.setXYZ();
@@ -109,7 +109,7 @@ function launch() {
 //	console.log = function() { };
 	//test//
 
-	var uni = new universe("ptr");
+	var uni = new universe();
 //	models[uni.id].type = "ptr";
 // **todo**
 //
@@ -117,16 +117,18 @@ function launch() {
 //
 //
 //
+	// maybe the window manager should return the universe id
+	var wh = new WindowManager();
 	contextMenu.setup();
 	stageMenu.setup();
-	saveMenu.setup();	
+	saveMenu.setup();
 
 	linkCurve.prototype.setup();
 
-	events[uni.id] = nodeEvents; // should be instance of obj handle
+//	events[uni.id] = nodeEvents; // should be instance of obj handle
 	// universes["type"]["events"] 
 	//
-	testCase(uni);
+	testCase(wh.uni, wh.element);
 
 }
 
