@@ -1,5 +1,4 @@
 /*
-
 Copywrite 2013, 4thTemple.com, FourthTemple.com
 2013 Seth Tenenbaum
 */
@@ -35,7 +34,7 @@ gfxCounter = {};
 // need to update it...
 
 //used to be gfx(objType, id....
-function gfx(type, ptr, renderer, baseElement) {
+function gfx(type, ptr, renderer) {
 //alert("test....");
 	//this.gid= id;
 	//this.id = id;
@@ -71,18 +70,18 @@ function gfx(type, ptr, renderer, baseElement) {
 	o.gfx = {};
 	o.gfx[this.id] = {};
 
-	
+	var baseElement = document.body;	
 	//if (!baseElement) {
 		o.gfx[this.id] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
 	//}
-//	else
+//	elsekr
 //	o.baseElement = baseElement;
 //	build();
 	this.gfxPtr = ptr.concat(['gfx', this.id]);
-	if (!gfx.prototype.setted) {
+	if (!gfx.prototype.setted) 
 		this.setupNodeEvents();
 	gfx.prototype.setted = true;
-	}
+
 }
 
 

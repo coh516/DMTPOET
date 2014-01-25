@@ -35,7 +35,7 @@ snapSpace.prototype = {
 	// expects a group (array) of objects' bounding boxes.........
 	// needs to point to the gfx portion
 	// bound a different object other than 'graphics' ... 'graphics' should be parameterized 
-	"regObject":function(ptr, objName, eventObject) { // using bounding box from the gfx renderer
+	"regObject":function(ptr, objName, eventObject, refinementFunction) { // using bounding box from the gfx renderer
 
 
 		// it would be smarter to just store references to the ptr and object lookup names
@@ -43,6 +43,7 @@ snapSpace.prototype = {
 		// needs to be fixed.......... 
 
 		var lookup = lookups[objName]
+		console.log(ptr);
 		var rect = getObject(ptr, lookup);
 		if (objName == "curveLookup") {		
 			console.log("ptr:"+ptr+" "+objName);

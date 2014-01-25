@@ -24,7 +24,10 @@ WindowManager.prototype = {
 		// this might need some refactoring down the road...
 		//
 		// the gfx phase should be a node which gets directed from the Point phase.....
-		var gf = new gfx("WindowManager", [gid], UIRenderer, document.body);
+		//
+		//
+		// this _really_ should automatically generate a modular point structure 
+		var gf = new gfx("WindowManager", [gid], UIRenderer);
 		gf.build();
 		gf.moveTo(0, 0);
 		

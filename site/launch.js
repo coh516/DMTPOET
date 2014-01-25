@@ -35,7 +35,7 @@ function testCase(uni, gEl) {
 	//	universes['ptr', uni.id, 
 		graphLookup[gids[i]].setFromJSON(json);
 	
-		var gf = new gfx(uni.id, gids[i], htmlRenderer, gEl);
+		var gf = new gfx("ptr", [gids[i]], htmlRenderer);
 		gf.moveTo(i*100, i*10);
 		
 		//gf.setXYZ();

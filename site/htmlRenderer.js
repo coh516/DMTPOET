@@ -13,11 +13,11 @@ htmlRenderer.prototype = {
 		var go = getObject(ptrRoot, graphLookup);
 		// this seems illogical
 		// references should be in gfx folder... 
-		if (!go.el) {
-			go.el = document.createElement("ul"); //primary internal node
+		if (!gfxRoot.el) {
+			gfxRoot.el = document.createElement("ul"); //primary internal node
 			var appendEl = true;
 		}
-		var el = go.el; // this may or may not be the best way of doing it.. it might actually be faster to rerender the bounded elements
+		var el = gfxRoot.el; // this may or may not be the best way of doing it.. it might actually be faster to rerender the bounded elements
 		//var uid = graphLookup[id].universeid;
 	//	console.log(uid
 		var type = type; //models[uid].type;
@@ -50,11 +50,11 @@ htmlRenderer.prototype = {
 		el.style.zIndex = gfxRoot.z; // should be set prior to calling this function
 		//this.zIndex = ng;
 		//var model = graphLookup[id];
-		if (model["hidden"]) {
-			el.style.display = "none"
+		if (gfxRoot["hidden"]) {
+			gfxRoot.el.style.display = "none"
 		}
 		if(appendEl) {
-			console.log(id);
+		//	console.log(id);
 			gfxRoot['baseElement'].appendChild(el);
 		}
 			// primary external node
@@ -98,8 +98,8 @@ htmlRenderer.prototype = {
 		//
 		// graphics id should not be the same as ptr id ... must fix
 		//
-		graphics[id].el.innerHTML = "";
-		htmlRenderer.prototype.recursePtrImgs(gfxId, ptrRootItemArray, 0, Object.create(rect), cb, ptrRootItemArray);
+		gfxRoot.el.innerHTML = "";
+		htmlRenderer.prototype.recursePtrImgs(gfxRoot, ptrRootItemArray, 0, Object.create(rect), cb, ptrRootItemArray);
 		//var ma = Object.getOwnPropertyNames(tl);
 		//},
 	},
@@ -134,9 +134,10 @@ htmlRenderer.prototype = {
 		var count = 0;
 		var tl = getObject(tla, graphLookup);
 		var tll = tl.length;
-		var gfxRoot = getObject(ogPtr, graphLookup);
+		//var gfxRoot = getObject(ogPtr, graphLookup);
 	//	gfxLookup[id].cnt;
-		var el = graphics[id].el
+		console.log(gfxRoot);
+		var el = gfxRoot.el
 		el.style.top = gfxRoot.loc.y+"px";
 		el.style.left = gfxRoot.loc.x+"px";
 
@@ -149,7 +150,7 @@ htmlRenderer.prototype = {
 			//if (!ok)
 			// rl is really confusing, "rect" should be nested inside the cta+["item"];
 			//
- 			var rl = htmlRenderer.prototype.mkPtrImg(id, cta, x, y, rect, cb, ogPtr);
+ 			var rl = htmlRenderer.prototype.mkPtrImg(tla[0], cta, x, y, rect, cb, gfxRoot);
 		
 			//fix me
 			//var s = getObject(ar, graphics);
@@ -159,7 +160,7 @@ htmlRenderer.prototype = {
 			if (tlg["item"] && !hide) {
 			//	ar2.push("item");
 				cta.push("item");
-			 	htmlRenderer.prototype.recursePtrImgs(id, cta, x+1, rl, cb, gfxRoot)
+			 	htmlRenderer.prototype.recursePtrImgs(gfxRoot, cta, x+1, rl, cb)
 			}
 		}
 		delete el;
@@ -235,7 +236,8 @@ htmlRenderer.prototype = {
 		var images = [];
 		var pptr = copyArray(ptra);
 		pptr.pop();pptr.pop();
-		var el = getObject(pptr, graphLookup).el;
+		console.log(pptr);
+		var el = getObject(pptr, graphLookup)['gfx'][gfxRoot.gfxId].el;
 	//	console.log(pptr+"   << pptr");
 		var cta = copyArray(ptra);
 		
@@ -329,8 +331,8 @@ htmlRenderer.prototype = {
 		}
 		tlg.gfx = [];
 
-		var loc = graphLookup[ptra[0]].loc;
-		var zi = graphLookup[ptra[0]].loc.z;
+		var loc = gfxRoot.loc;
+		var zi = gfxRoot.loc.z;
 		if (zi == undefined || zi == NaN) {   
 			var zi = gfx.prototype.topz+1;
 			if ( zi == undefined || zi != NaN) {
@@ -406,11 +408,12 @@ htmlRenderer.prototype = {
 			//	console.log(ptra);
 		//	console.log(tlg['index']);
 		//	console.log("------------------ll:  "+ll);
+			if (!tlg['index'][ll]["gfx"]) tlg['index'][ll]['gfx'] = {};
 			tlg['index'][ll]["gfx"][gfxRoot.gfxId] = o;
 			//	console.log(graphics);
 			//console.log("-_________________________ptr");
 			//console.log(ptr);	
-			snapSpace.prototype.regObject(ptr, "graphLookup", nodeEvents, function(ptr) { /*refineTestRect*/ });
+			snapSpace.prototype.regObject(ptr, "graphLookup", nodeEvents);
 			//	console.log(tlg);
 			//grid.regObject(ptrs);
 			//	buffer.fillRect(0,i*10, 10, 10);
@@ -451,7 +454,7 @@ htmlRenderer.prototype = {
 		var loh = label.offsetHeight;
 		var low = label.offsetWidth;
 		var ptr= copyArray(ptra);
-		ptr = ptr.concat(["gfx"][gfxRoot.gfxId]);
+		ptr = ptr.concat(["gfx", gfxRoot.gfxId]);
 		var ptrs = ptra.join();
 		var pos = getElPos(label);
 		var ps = [];
@@ -459,7 +462,7 @@ htmlRenderer.prototype = {
 			ps.push[ptr[i]];
 		}
 		var o = {"visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptr, "div":label, "ptrString":ps.join()};
-		tlg["gfx"]= o;
+		tlg["gfx"][gfxRoot.gfxId] = o;
 		rect.y+=loh;
 
 
@@ -468,9 +471,12 @@ htmlRenderer.prototype = {
 		
 	
 		var csstype = gfxRoot.type;
-
-		tlg["el"] = li;
-		snapSpace.prototype.regObject(ptr, "graphLookup");
+		if (!tlg['gfx']) tlg['gfx'] = {};
+		if (!tlg['gfx'][gfxRoot.gfxId]) tlg['gfx'][gfxRoot.gfxId] = {};
+		tlg["gfx"][gfxRoot.gfxId]["el"] = li;
+		console.log(ptr);
+		console.log(gfxRoot);
+		snapSpace.prototype.regObject(ptr, "graphLookup", nodeEvents);
 		//console.log(tlg);	
 		//not sure where else to put it at the moment
 		if (tlg.types) {

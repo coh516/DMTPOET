@@ -31,7 +31,7 @@ var menuHandler = {
 
 		// need to figure how to connect the nodes and execute the point.....
 
-		var g= new gfx(uniName, gid, UIRenderer, document.body);
+		var g= new gfx(uniName, [gid], htmlRenderer);
 	//	g.moveTo(0,100, 100);//gfxLookup[gid].topz+1);
 		g.build();
 		g.hide();
@@ -40,7 +40,7 @@ var menuHandler = {
 		if (zIndex[uniName] === undefined)
 			alert("xxxx");
 
-		graphLookup[gid].el.style.zIndex = 10000;
+		g.rootGfxObj.el.style.zIndex = 10000;
 		//zIndex[uniName]+1; 
 
 		return {"gid":gid, "uni":uni.id}
@@ -505,7 +505,7 @@ saveMenu.setup = function(lastMenu) {
 
 	//graphLookup[o.gid].switchType([[o.gid],['item'],[0], ['item'], [0]], "program");
 	
-	var g = gfxLookup[o.gid].rebuild();
+	//var g = gfxLookup[o.gid].rebuild();
 }
 //saveMenu.setup();
 
