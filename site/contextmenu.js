@@ -7,7 +7,7 @@ var menuHandler = {
 	"init":function(json, uniName) {
 		//alert(evt);
 		var o = this.setupPtrs(json, uniName);
-		this.uni = o.uni;
+	//	this.uni = o.uni;
 		this.gid = o.gid;
 		//events[o.uni] = this;
 		//alert("xxx");
@@ -15,24 +15,27 @@ var menuHandler = {
 	},
 	"setupPtrs":function(json, uniName) {
 		//var o = init();
+		//
 		this.uniName = uniName;
-		var uni = new universe();
+		//var uni = new universe();
 
-		var gid = uni.addGraph();
+		var graph = new Graph();//uni.addGraph();
 
- 		this.uni =uni;
+ 		//this.uni =uni;
 
-		this.gid = gid;
 		
-		graphLookup[gid].setFromJSON(json);
+		graph.setFromJSON(json);
 		//alert(gfx)
 		//
 		//
 
 		// need to figure how to connect the nodes and execute the point.....
+		this.gid = graph.id;
 
-		var g= new gfx(uniName, [gid], htmlRenderer);
+		var g= new Gfx({"type":uniName, "ptr":[this.gid], "renderer":htmlRenderer}); 
+		//g.create(graph.id);  //uniName, [gid], htmlRenderer);
 	//	g.moveTo(0,100, 100);//gfxLookup[gid].topz+1);
+		console.log(g);
 		g.build();
 		g.hide();
 		this.cssType = g.type
@@ -43,7 +46,7 @@ var menuHandler = {
 		g.rootGfxObj.el.style.zIndex = 10000;
 		//zIndex[uniName]+1; 
 
-		return {"gid":gid, "uni":uni.id}
+		return {"gid":this.gid}
 	},
 	"getObj":function() {
 		//var gp = contextHandler.prototype;
@@ -161,9 +164,9 @@ contextMenu.traverseProgram = function() {
 	//var id = this.lastPtr[0];
 	
 	//traverseProgram(this.getLastPtr());
-//var ptr2 = graph.prototype['..'](ptr);
+//var ptr2 = Graph.prototype['..'](ptr);
 		
-	var pathList = graph.prototype.getPaths(this.lastPtr);
+	var pathList = Graph.prototype.getPaths(this.lastPtr);
 	
 	console.log(pathList);
 	console.log("DOA");
@@ -436,17 +439,18 @@ stageMenu.manageScreenClick = function(e) {
 }
 
 stageMenu.mkNewNode = function(e) {
-	var pid = universes["ptr"][0];
-	var gid = pid.addGraph();
+//	var pid = universes["ptr"][0];
+	var graph = new Graph();// pid.addGraph();
 	var json = ['acid'];
-	graphLookup[gid].setFromJSON(json, true);
+	graph.setFromJSON(json, true);
 	//graphLookup[gid].indexPtr = true;
-	var gf = new gfx(pid, gid);
+	var pg = mkPtrGfx({"id":graph.id}); 
+	//pg.create(graph.id); //pid, gid);
 	var p = getPos(e);
-	gf.moveTo(p.x, p.y);
+	pg.moveTo(p.x, p.y);
 	//gf.setXYZ();
 	//gf.build();
-	gf.build();
+	pg.build();
 	events[pid] = nodeEvents;
 }
 

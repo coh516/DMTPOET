@@ -1,18 +1,13 @@
-function ptrGfx = {}
+function PtrGfx()  {}
 
+PtrGfx.prototype = Object.create(Gfx.prototype);
 
-ptrGfx.prototype = Object.create(gfx.prototype);
-
-ptrGfx.prototype.create = function(id) {
-	this.init("ptr", [id], htmlRenderer);
-}
-
-ptrGfx.prototype.connect = function(c1, c2) {
+PtrGfx.prototype.connect = function(c1, c2) {
 		//graph function provides direction (s2c,s1c) same thing
 		//var v1= getObject(c1,graphLookup).ptr.value
 	//	var v2 =  getObject(c2,graphLookup).ptr.value
-		console.log("connecting..."+c1+" "+v1+"  ..  "+c2+" "+v2); 
-		pt = graph.prototype.connect(c1, c2);
+	//	console.log("connecting..."+c1+" "+v1+"  ..  "+c2+" "+v2); 
+		pt = Graph.prototype.connect(c1, c2);
 		//this.drawLinks(c1, c2); // doesnt matter which one we give it
 		//this.rebuild();
 	
@@ -25,4 +20,11 @@ ptrGfx.prototype.connect = function(c1, c2) {
 
 		linkCurve.prototype.drawCurves(c1);
 		linkCurve.prototype.drawCurves(c2);
+}
+
+function mkPtrGfx(obj) { 
+	var g = new PtrGfx();
+	
+	g.create({"type":"ptr", "ptr":[obj.id], "renderer":htmlRenderer});
+	return g;
 }

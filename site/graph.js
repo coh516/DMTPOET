@@ -13,10 +13,11 @@ var ptrLookup = {};
 lookups["graphLookup"] = graphLookup;
 
 //setPtrIndex should create an 'indexedGraph'
-
+// there should only be one universe.
+/*
 function universe(type) {
-	this.id = mkguid();
-	models[this.id] = {"graph":{}};//, "type":type};
+	//this.id = mkguid();
+	//models[this.id] = {"graph":{}};//, "type":type};
 	//if (!universes[type]) universes[type] = [];
 	//universes[type].push(this);
 }
@@ -33,7 +34,7 @@ universe.prototype = {
 		//	models[this.id]["graph"] = {}	
 		//}
 		mtg[gid] = ng;
-		ng.universeid = this.id
+		//ng.universeid = this.id
 		//models[this.id]["graph"]["id"][gid] = ng;
 		//models[this.id]["graph"][gid]  = ng;
 			
@@ -56,17 +57,18 @@ universe.prototype = {
 	//models[guid] = {};
 }
 
+*/
 
 
-
-function graph(uuid) {
+function Graph() {
 	this.id = mkguid();
 	this.object = {};
+	graphLookup[this.id] = this;
 	//models[id]  = this;
 	//var thisGraph = models[uuid]["graph"];
 	//thisGraph[this.id] = {"id":{}}
 	//this.object = 
-	obj = this.object;
+	
 	this.ptr = {};
 }
 
@@ -77,7 +79,7 @@ var lit = [];
 // uuid'd with a lookup ..
 //
 
-graph.prototype = {
+Graph.prototype = {
 	
 	//todo
 
@@ -633,16 +635,16 @@ graph.prototype = {
 				var c = copyArray(b);
 				c.push("item");
 				if (!stop) 
-				graph.prototype._recurseItems(tl[y]["item"], c, f, props, propsArr)
+				Graph.prototype._recurseItems(tl[y]["item"], c, f, props, propsArr)
 			}
 		}
 	},
 	"recurseItems":function(f, ptr, props) {
 
 		var obj; // should be from pointLookup... 
-		if (ptr) graph.prototype._recurseItems(getObject(ptr, graphLookup), ptr, f, props)
+		if (ptr) Graph.prototype._recurseItems(getObject(ptr, graphLookup), ptr, f, props)
 		else
-			graph.prototype._recurseItems(graphLookup[this.id]["item"], [this.id, "item"], f, props)
+			Graph.prototype._recurseItems(graphLookup[this.id]["item"], [this.id, "item"], f, props)
 	},
 	// all this copyArray shit is slow, for a future 
 	// upgrade, i should enforce all ptr's are copied from origin

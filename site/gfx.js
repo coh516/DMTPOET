@@ -34,67 +34,75 @@ gfxCounter = {};
 // need to update it...
 
 //used to be gfx(objType, id....
-function gfx(type, ptr, renderer) {
-//alert("test....");
-	//this.gid= id;
-	//this.id = id;
-	this.type = type;
-	this.rootPtr = ptr;
-	this.graphId = ptr[0];
-//	this.uid = uid;
-//	this.baseNode = baseNode;
+//
 
-	if (!renderer)
-		this.renderer = htmlRenderer.prototype;
+function Gfx(obj) {
 
-	else this.renderer  = renderer.prototype;
-	// should get rid of this reference
-//	this.model = graphLookup[id];
-	//var id = gid;
-	//graphics[id] = {}
-	//console.log(this.model);
-	//console.log("**************************************");
-	var ng = 0;
-	//console.log(id);
-//	for (var g in graphics);
-//	ng++;
-	this.id = mkguid();
-
-	if (!gfxLookup['type'][type])
-		gfxLookup['type'][type] = {};
-
-	gfxLookup['type'][type][ptr.join()] = this;
-	gfxLookup['id'][this.id] = this;
-	//div = document.createElement("div");
-	//this.indexedModel = graphics[id]; 
-	
-	//thisGfx = this;
-	//var gfxLookup
-	//this.indexedModel = indexedModel;
-	var o = getObject(ptr, graphLookup);
-	if (!o.gfx)
-		o.gfx = {};
-
-	if (!o.gfx[type])
-		o.gfx[this.type] = {};
-
-	var baseElement = document.body;	
-	//if (!baseElement) {
-		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
-	//}
-//	elsekr
-//	o.baseElement = baseElement;
-//	build();
-	this.gfxPtr = ptr.concat(['gfx', this.type]);
-	if (!gfx.prototype.setted) 
-		this.setupNodeEvents();
-	gfx.prototype.setted = true;
-
+	this.create(obj);
 }
 
+Gfx.prototype = {
 
+	"create":function(obj) {
+		this.init(obj.type, obj.ptr, obj.renderer);
+	},
 
-gfx.prototype = {
+	"init": function(type, ptr, renderer) {
+;
+		this.type = type;
+		this.rootPtr = ptr;
+		this.graphId = ptr[0];
+	//	this.uid = uid;
+	//	this.baseNode = baseNode;
+
+		if (!renderer)
+			this.renderer = htmlRenderer.prototype;
+
+		else this.renderer  = renderer.prototype;
+		// should get rid of this reference
+	//	this.model = graphLookup[id];
+		//var id = gid;
+		//graphics[id] = {}
+		//console.log(this.model);
+		//console.log("**************************************");
+		var ng = 0;
+		//console.log(id);
+	//	for (var g in graphics);
+	//	ng++;
+		this.id = mkguid();
+
+		if (!gfxLookup['type'][type])
+			gfxLookup['type'][type] = {};
+
+		gfxLookup['type'][type][ptr.join()] = this;
+		gfxLookup['id'][this.id] = this;
+		//div = document.createElement("div");
+		//this.indexedModel = graphics[id]; 
+		
+		//thisGfx = this;
+		//var gfxLookup
+		//this.indexedModel = indexedModel;
+		console.log(ptr);
+		var o = getObject(ptr, graphLookup);
+		if (!o.gfx)
+			o.gfx = {};
+
+		if (!o.gfx[type])
+			o.gfx[this.type] = {};
+
+		var baseElement = document.body;	
+		//if (!baseElement) {
+		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
+		//}
+	//	elsekr
+	//	o.baseElement = baseElement;
+	//	build();
+		this.gfxPtr = ptr.concat(['gfx', this.type]);
+		if (!Gfx.prototype.setted) 
+			this.setupNodeEvents();
+		Gfx.prototype.setted = true;
+
+	},
 	get graphGfxPtr() { return this.rootPtr.concat(['gfx', this.type]) },
 	get rootGfxObj() { return getObject(this.graphGfxPtr, graphLookup) },
 	"ptrs":{},
@@ -114,18 +122,18 @@ gfx.prototype = {
 		
 
 	"setupNodeEvents": function () {
-		var cfe = gfx.prototype.checkForEnter; //.bind({gid:this.id, uni:this.uid});
-		gfx.prototype.c4n = cfe;
+		var cfe = Gfx.prototype.checkForEnter; //.bind({gid:this.id, uni:this.uid});
+		Gfx.prototype.c4n = cfe;
 		window.addEventListener('keypress', cfe, true);
 		//if (!events["screenClick"]) events["screenClick"] = [];
-		//events["screenClick"].push(gfx.prototype.deselectInputBox);
+		//events["screenClick"].push(Gfx.prototype.deselectInputBox);
 	},
 	"checkForEnter": function(e) {
 	       	//alert("test...");
 		// need 'current focuses' 	
-		if (e.keyCode == 13 && gfx.prototype.isRenaming) {
+		if (e.keyCode == 13 && Gfx.prototype.isRenaming) {
 				
-			var n = gfx.prototype.deselectInputBox.bind({id:this.id})();
+			var n = Gfx.prototype.deselectInputBox.bind({id:this.id})();
 			
 			//window.removeEventListener('keypress', stageMenu.checkForEnter, true);
 		}
@@ -133,9 +141,9 @@ gfx.prototype = {
 	"deselectInputBox": function() {
 		//alert("TEST..");
 		//var t = gfxLookup.isRenaming;
-		var ptr = gfx.prototype.isRenaming.ptr;
+		var ptr = Gfx.prototype.isRenaming.ptr;
 		//alert(ptr);
-		if (ptr) { //gfx.prototype.isRenaming) { // renaming case
+		if (ptr) { //Gfx.prototype.isRenaming) { // renaming case
 			//console.log("-----");
 			//console.log(contextMenu.lastPtr);
 			
@@ -157,10 +165,10 @@ gfx.prototype = {
 			console.log(p);
 			console.log("MEOOOOOOOOOOOOOOOOWWWWWWWWWWWWWWWWWWWWWWWW");	
 			graphLookup[id].renamePtr(p, it);
-			gfx.prototype.isRenaming = false;
+			Gfx.prototype.isRenaming = false;
 			delete events[id];
 			//for (var i=0; i < 100; i++)
-			gfxLookup['id'][gfx.prototype.isRenaming.gfxId].rebuild();
+			gfxLookup['id'][Gfx.prototype.isRenaming.gfxId].rebuild();
 		}
 	},
 	// this should do something silly  like f(ptr).type = "inputBox"; reindex();
@@ -211,7 +219,7 @@ gfx.prototype = {
 		console.log(id + "<thumb");
 	
 		// this is such a hack becuase it requires focus.. whatever.
-		gfx.prototype.isRenaming = {"ptr":copyArray(ptr), "gfxId":this.id};
+		Gfx.prototype.isRenaming = {"ptr":copyArray(ptr), "gfxId":this.id};
 
 		//events[ptr.join()] = inputBoxHandler.prototype; //this.renamer.bind({gid:o.gid, uni:o.uni, objptr:this.lastPtr});
 	},
@@ -263,8 +271,8 @@ gfx.prototype = {
 	"reindex":function() {
 
 		snapSpace.prototype.updateSnapObject(this.gid, "graphLookup");
-
-		this.renderer.reindex(this.rootPtr);
+	//	alert("test");
+		this.renderer.reindex(this.rootGfxObj);
 		
 		// reindex all the index points (after deletion)
 		// reindex the curveLookup table also
@@ -285,14 +293,14 @@ gfx.prototype = {
 		// sort array, then traverse further into each element
 		//console.log(Array.isArray(g));
 		if (Array.isArray(g))
-			g.sort(gfx.prototype.doSort); // gfx contains dom references, can't use closures.
+			g.sort(Gfx.prototype.doSort); // gfx contains dom references, can't use closures.
 		else return;
 		for (var i = 0; i <  g.length; i++) {
 			if (g[i]["item"]) {
 				//this.idxSort.push(g[i]["item"]);
 				var o = g[i]["item"];
-				gfx.prototype.sortIM(o);
-				//o.sort(gfx.prototype.doSort);	
+				Gfx.prototype.sortIM(o);
+				//o.sort(Gfx.prototype.doSort);	
 			}
 		}
 	},
@@ -309,7 +317,7 @@ gfx.prototype = {
 		gph["hidden"] =  false; //(d.display.length > 0)
 			var pe = getPos(e);
 		// update event table
-		//alert(gfx.prototype.lastz);
+		//alert(Gfx.prototype.lastz);
 		//console.log(gfx);
 		gfxLookup[this.id].moveTo(pe.x, pe.y, zIndex["ptr"]+10);
 		gfxLookup[this.id].reindex();
@@ -347,6 +355,7 @@ gfx.prototype = {
 		this.rebuild();
 	},
 	"moveTo":function(x,y,z) {
+		console.log(this);
 		// only manage the lastz for indexPtr
 		this.rootGfxObj.loc = {"x":x, "y":y};
 		if (z) {
@@ -354,8 +363,8 @@ gfx.prototype = {
 
 //this should be typed to the graphicsType 
 
-			if (z > gfx.prototype.lastz && this.rootGfxObj.indexPtr)
-				gfx.prototype.lastz = z;
+			if (z > Gfx.prototype.lastz && this.rootGfxObj.indexPtr)
+				Gfx.prototype.lastz = z;
 		} 
 		if (this.hasBeenBuilt)
 			this.renderer.moveGfx(this.rootGfxObj);

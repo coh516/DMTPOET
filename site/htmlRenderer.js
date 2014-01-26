@@ -32,7 +32,7 @@ htmlRenderer.prototype = {
 		// should be gfxTypeLookup[lastz+1];
 		// should be in gfx
 		
-		var lz = gfx.prototype.lastz+1;
+		var lz = Gfx.prototype.lastz+1;
 		if (!lz) lz = 0;
 
 		
@@ -42,7 +42,7 @@ htmlRenderer.prototype = {
 			gfxRoot.loc.z = lz;
 		
 
-		gfx.prototype.lastz = gfxRoot.loc.z;
+		Gfx.prototype.lastz = gfxRoot.loc.z;
 		
 
 
@@ -83,7 +83,7 @@ htmlRenderer.prototype = {
 
 		// need to clean out the remaining tableRow and tableDivs 
 		delete objPtr.tableDiv; delete objPtr.tableRow;
-		graph.prototype.recurseItems(htmlRenderer.prototype.delDomRefs, ptrRoot)
+		Graph.prototype.recurseItems(htmlRenderer.prototype.delDomRefs, ptrRoot)
 			/*
 		var tl = graphLookup[id]["item"];
 		gfxLookup[id].cnt = 0;
@@ -171,7 +171,7 @@ htmlRenderer.prototype = {
 
 		for (var y=0; y < tl.length; y++) {
 			for (var idx =0; idx < tl[y]['index'].length; idx++) {
-				var group = tl[y]['index'][idx]['gfx']
+				var group = tl[y]['index'][idx]['gfx'][gfxRoot.type]
 			//console.log("yooo");
 			//for (var d =0; d < group.length; d++) {i
 				//cons
@@ -186,7 +186,7 @@ htmlRenderer.prototype = {
 				//console.log(gdg);
 				snapSpace.prototype.regObject(gdg.ptr, "graphLookup");
 			}
-			var group = tl[y]['gfx'];
+			var group = tl[y]['gfx'][gfxRoot.type];
 
 			var gdg = group;
 			var div = group.div;
@@ -198,13 +198,14 @@ htmlRenderer.prototype = {
 			snapSpace.prototype.regObject(gdg.ptr, "graphLookup");
 			delete div;
 			if (tl[y]["item"])
-				htmlRenderer.prototype._reindex(tl[y]["item"], id)
+				htmlRenderer.prototype._reindex(tl[y]["item"], gfxRoot)
 		}
 	},
-	"reindex":function(ptrRoot) {
+	"reindex":function(rootGfx) {
 		//console.log("breakpoint");
-
-		htmlRenderer.prototype._reindex(ptrRoot.concat(["item"]), id);
+		console.log(rootGfx);
+		console.log("---------");
+		htmlRenderer.prototype._reindex(rootGfx.rootPtr.concat(["item"]), rootGfx);
 	},
 
 	"getLayoutType":function(ptra) {
@@ -334,13 +335,13 @@ htmlRenderer.prototype = {
 		var loc = gfxRoot.loc;
 		var zi = gfxRoot.loc.z;
 		if (zi == undefined || zi == NaN) {   
-			var zi = gfx.prototype.topz+1;
+			var zi = Gfx.prototype.topz+1;
 			if ( zi == undefined || zi != NaN) {
 				zi = 0; //wtf?
-				//gfx.prototype.topz = 0
+				//Gfx.prototype.topz = 0
 			}
 		}
-		gfx.prototype.topz = zi;
+		Gfx.prototype.topz = zi;
 		// get parentNode?
 		var type = gfxRoot.type;
 		var links = 0;
@@ -502,7 +503,7 @@ htmlRenderer.prototype = {
 
 
 	"moveGfx":function(gfxRoot) {
-		console.log(id);
+		//console.log(id);
 		var t = gfxRoot.loc;
 		var canvas = gfxRoot.el;
 		//console.log("moving...."+this.id);

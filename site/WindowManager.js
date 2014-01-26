@@ -1,6 +1,6 @@
 function WindowManager() {
-	var uni = new universe();
-	this.uniID = uni.id;
+//var uni = new universe();
+//	this.uniID = uni.id;
 	this.setup();
 }
 
@@ -11,7 +11,7 @@ WindowManager.prototype = {
 	"setup":function() {
 		// element should be id'... 
 		this.element = document.createElement("div");
-		this.uni = new universe(); // no need to typecast the universe
+//		this.uni = new universe(); // no need to typecast the universe
 		this.mkTabs();
 	},
 
@@ -19,18 +19,19 @@ WindowManager.prototype = {
 	"mkTabs":function() {
 		var o = {"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"editor"}]}, {"label":[{"text":"stage"}]}]}]}};
 	
-		var gid = this.uni.addGraph();
-		graphLookup[gid].setFromJSON(o);
+//		var gid = this.uni.addGraph();
+//		graphLookup[gid].setFromJSON(o);
 		// this might need some refactoring down the road...
 		//
 		// the gfx phase should be a node which gets directed from the Point phase.....
 		//
 		//
 		// this _really_ should automatically generate a modular point structure 
-		var gf = new gfx("WindowManager", [gid], UIRenderer);
+		/*
+		var gf = new Gfx("WindowManager", [gid], UIRenderer);
 		gf.build();
 		gf.moveTo(0, 0);
-		
+		*/
 		
 
 		// need to link the code handler through the point traverser
