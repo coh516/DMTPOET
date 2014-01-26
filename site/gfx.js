@@ -22,7 +22,7 @@ zIndex["renderedApps"] = 12000
 
 
 var graphics = graphLookup; // probably this should be a subset from gfxLookup // this is the completed image  
-var gfxLookup = {}; // object references by id
+var gfxLookup = {"type":{}, "id":{}}; // object references by id
 var events = {}
 lookups["gfxLookup"] = gfxLookup;
 gfxCounter = {};
@@ -59,7 +59,12 @@ function gfx(type, ptr, renderer) {
 //	for (var g in graphics);
 //	ng++;
 	this.id = mkguid();
-	gfxLookup[this.id] = this;
+
+	if (!gfxLookup['type'][type])
+		gfxLookup['type'][type] = {};
+
+	gfxLookup['type'][type][ptr.join()] = this;
+	gfxLookup['id'][this.id] = this;
 	//div = document.createElement("div");
 	//this.indexedModel = graphics[id]; 
 	
@@ -67,17 +72,20 @@ function gfx(type, ptr, renderer) {
 	//var gfxLookup
 	//this.indexedModel = indexedModel;
 	var o = getObject(ptr, graphLookup);
-	o.gfx = {};
-	o.gfx[this.id] = {};
+	if (!o.gfx)
+		o.gfx = {};
+
+	if (!o.gfx[type])
+		o.gfx[this.type] = {};
 
 	var baseElement = document.body;	
 	//if (!baseElement) {
-		o.gfx[this.id] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
+		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
 	//}
 //	elsekr
 //	o.baseElement = baseElement;
 //	build();
-	this.gfxPtr = ptr.concat(['gfx', this.id]);
+	this.gfxPtr = ptr.concat(['gfx', this.type]);
 	if (!gfx.prototype.setted) 
 		this.setupNodeEvents();
 	gfx.prototype.setted = true;
@@ -87,7 +95,7 @@ function gfx(type, ptr, renderer) {
 
 
 gfx.prototype = {
-	get graphGfxPtr() { return this.rootPtr.concat(['gfx', this.id]) },
+	get graphGfxPtr() { return this.rootPtr.concat(['gfx', this.type]) },
 	get rootGfxObj() { return getObject(this.graphGfxPtr, graphLookup) },
 	"ptrs":{},
 	"img":{},
@@ -152,7 +160,7 @@ gfx.prototype = {
 			gfx.prototype.isRenaming = false;
 			delete events[id];
 			//for (var i=0; i < 100; i++)
-			gfxLookup[gfx.prototype.isRenaming.gfxId].rebuild();
+			gfxLookup['id'][gfx.prototype.isRenaming.gfxId].rebuild();
 		}
 	},
 	// this should do something silly  like f(ptr).type = "inputBox"; reindex();
@@ -197,7 +205,7 @@ gfx.prototype = {
 			o.inputBox = ibc;
 		o.hiddenInputBox = ib;
 		//console.log("__________________________________");
-		gfxLookup[graphId].reindex();
+		gfxLookup['id'][graphId].reindex();
 		//console.log(this.lastPtr);
 		//console.log("&*8&&&**************************&$&$");
 		console.log(id + "<thumb");

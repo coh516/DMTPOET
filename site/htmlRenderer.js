@@ -237,7 +237,7 @@ htmlRenderer.prototype = {
 		var pptr = copyArray(ptra);
 		pptr.pop();pptr.pop();
 		console.log(pptr);
-		var el = getObject(pptr, graphLookup)['gfx'][gfxRoot.gfxId].el;
+		var el = getObject(pptr, graphLookup)['gfx'][gfxRoot.type].el;
 	//	console.log(pptr+"   << pptr");
 		var cta = copyArray(ptra);
 		
@@ -401,7 +401,7 @@ htmlRenderer.prototype = {
 			//		console.log(pos);
 			//		use rational index positions instead 
 			var ll = i;
-			ptr = ptr.concat(["index", ll, "gfx", gfxRoot.gfxId]);
+			ptr = ptr.concat(["index", ll, "gfx", gfxRoot.type]);
 			//	console.log("posss-----------------------------------");
 			var o = {"type":"index", "index":i, "height":ch, "width":cw, "x":pos.x, "y":pos.y, "z":zi, "right": cw+pos.x, "bottom":ch+pos.y, "graphptr":{"id":id,  'value':tlg["value"], "index":i}, "ptr":ptr, "div":d, "cssType":gfxRoot.type}
 			rect.y+=ch;
@@ -409,7 +409,7 @@ htmlRenderer.prototype = {
 		//	console.log(tlg['index']);
 		//	console.log("------------------ll:  "+ll);
 			if (!tlg['index'][ll]["gfx"]) tlg['index'][ll]['gfx'] = {};
-			tlg['index'][ll]["gfx"][gfxRoot.gfxId] = o;
+			tlg['index'][ll]["gfx"][gfxRoot.type] = o;
 			//	console.log(graphics);
 			//console.log("-_________________________ptr");
 			//console.log(ptr);	
@@ -454,7 +454,7 @@ htmlRenderer.prototype = {
 		var loh = label.offsetHeight;
 		var low = label.offsetWidth;
 		var ptr= copyArray(ptra);
-		ptr = ptr.concat(["gfx", gfxRoot.gfxId]);
+		ptr = ptr.concat(["gfx", gfxRoot.type]);
 		var ptrs = ptra.join();
 		var pos = getElPos(label);
 		var ps = [];
@@ -462,7 +462,7 @@ htmlRenderer.prototype = {
 			ps.push[ptr[i]];
 		}
 		var o = {"visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptr, "div":label, "ptrString":ps.join()};
-		tlg["gfx"][gfxRoot.gfxId] = o;
+		tlg["gfx"][gfxRoot.type] = o;
 		rect.y+=loh;
 
 
@@ -472,8 +472,8 @@ htmlRenderer.prototype = {
 	
 		var csstype = gfxRoot.type;
 		if (!tlg['gfx']) tlg['gfx'] = {};
-		if (!tlg['gfx'][gfxRoot.gfxId]) tlg['gfx'][gfxRoot.gfxId] = {};
-		tlg["gfx"][gfxRoot.gfxId]["el"] = li;
+		if (!tlg['gfx'][gfxRoot.type]) tlg['gfx'][gfxRoot.type] = {};
+		tlg["gfx"][gfxRoot.type]["el"] = li;
 		console.log(ptr);
 		console.log(gfxRoot);
 		snapSpace.prototype.regObject(ptr, "graphLookup", nodeEvents);
