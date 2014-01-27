@@ -83,14 +83,21 @@
 		list-style-type: none;
 		
 	}
-	.ptrLI {
+	.ptrContainerUL { 
 		margin-left: 10px;
+		border: none;
+		padding: 0px;
+		list-style-type: none;
+	}	
+	
+	.ptrLI {
+	/*	margin-left: 10px; */
 		list-style-type: none;
 		border: none;
 		padding: 0px;
 	}
 	.ptrLinksLI {
-		margin-left: 10px;
+	/*	margin-left: 10px; */
 		list-style-type: none;
 		border: none;
 		padding: 0px;
@@ -222,10 +229,13 @@
 
 	[gridtable =table] {
 		display:table;
+		padding:0px;
 	}
 	[gridtable=row] {
 		display:table-row;
+		padding:0px;
 	}
 	[gridtable=cell] {
+		padding:0px;
 		display:table-cell;
 	}

@@ -20,7 +20,7 @@ htmlRenderer.prototype = {
 		var el = gfxRoot.el; // this may or may not be the best way of doing it.. it might actually be faster to rerender the bounded elements
 		//var uid = graphLookup[id].universeid;
 	//	console.log(uid
-		var type = type; //models[uid].type;
+		var type = gfxRoot.type; //models[uid].type;
 		el.width = 400;
 		el.height = 400;
 		el.style.position = "absolute";
@@ -99,7 +99,13 @@ htmlRenderer.prototype = {
 		// graphics id should not be the same as ptr id ... must fix
 		//
 		gfxRoot.el.innerHTML = "";
-		htmlRenderer.prototype.recursePtrImgs(gfxRoot, ptrRootItemArray, 0, Object.create(rect), cb, ptrRootItemArray);
+
+//		htmlRenderer.prototype.recursePtrImgs(gfxRoot, cta, x+1, rl.rect, cb)
+// 			var rl = htmlRenderer.prototype.mkPtrImg(cta, x, y, rect.rect, gfxRoot, rect.lastNode, rect.lastNodeType, cb);
+	
+		var r = {"rect":Object.create(rect), "lastNode":gfxRoot.el, "lastNodeType":"list"}
+	
+		htmlRenderer.prototype.recursePtrImgs(gfxRoot, ptrRootItemArray, 0, r, cb, ptrRootItemArray);
 		//var ma = Object.getOwnPropertyNames(tl);
 		//},
 	},
@@ -129,42 +135,7 @@ htmlRenderer.prototype = {
 
 	// really should use a reverse decorator that traces into the last node, then
 	// recurses back out
-	"recursePtrImgs":function(gfxRoot, tla, x, rect, cb) {
-		//var images = [];
-		var count = 0;
-		var tl = getObject(tla, graphLookup);
-		var tll = tl.length;
-		//var gfxRoot = getObject(ogPtr, graphLookup);
-	//	gfxLookup[id].cnt;
-		//console.log(gfxRoot);
-		var el = gfxRoot.el
-		el.style.top = gfxRoot.loc.y+"px";
-		el.style.left = gfxRoot.loc.x+"px";
 
-		for (var y=0; y < tl.length; y++) {
-			var tlg = tl[y];
-			var cta = copyArray(tla);
-			cta.push(y);
-		
-
-			//if (!ok)
-			// rl is really confusing, "rect" should be nested inside the cta+["item"];
-			//
- 			var rl = htmlRenderer.prototype.mkPtrImg(tla[0], cta, x, y, rect, cb, gfxRoot);
-		
-			//fix me
-			//var s = getObject(ar, graphics);
-			var hide = tlg.hideChildren;
-			
-			
-			if (tlg["item"] && !hide) {
-			//	ar2.push("item");
-				cta.push("item");
-			 	htmlRenderer.prototype.recursePtrImgs(gfxRoot, cta, x+1, rl, cb)
-			}
-		}
-		delete el;
-	},
 
 	"_reindex":function(tl, gfxRoot) {
 		//alert(id);
@@ -188,7 +159,7 @@ htmlRenderer.prototype = {
 				snapSpace.prototype.regObject(gdg.ptr, "graphLookup");
 			}
 			var group = tl[y]['gfx'][gfxRoot.type];
-
+			console.log(tl[y]);
 			var gdg = group;
 			var div = group.div;
 			var pos = getElPos(div);
@@ -231,12 +202,63 @@ htmlRenderer.prototype = {
 	},
 
 	// tlg looks to be leaking memory, use ptra instead 
-	"mkPtrImg":function(id, tlga, x, y, rect, cb, gfxRoot) {
+	// this shit is so sketchy
+	
+		// not having lastNode, lastNodeType ("table, row, cell")
+		//
+		//
+	"recursePtrImgs":function(gfxRoot, tla, x, rect, cb) {
+		//var images = [];
+		var count = 0;
+		var tl = getObject(tla, graphLookup);
+		var tll = tl.length;
+		//var gfxRoot = getObject(ogPtr, graphLookup);
+	//	gfxLookup[id].cnt;
+		//console.log(gfxRoot);
+		var el = gfxRoot.el
+		el.style.top = gfxRoot.loc.y+"px";
+		el.style.left = gfxRoot.loc.x+"px";
 
-		var ptra = tlga; 	
-		var tlg = getObject(tlga, graphLookup);
-		if ( tlg['gfx'])
-		var layout =  tlg['gfx'][gfxRoot.type].layout
+		for (var y=0; y < tl.length; y++) {
+			var tlg = tl[y];
+			var cta = copyArray(tla);
+			cta.push(y);
+		
+
+			//if (!ok)
+			// rl is really confusing, "rect" should be nested inside the cta+["item"];
+		//	/(itemPtr, x, y, rect, gfxRoot, lastNode, lastNodeType, cb/
+ 			var rl = htmlRenderer.prototype.mkPtrImg(cta, x, y, rect.rect, gfxRoot, rect.lastNode, rect.lastNodeType, cb);
+		
+			//fix me
+			//var s = getObject(ar, graphics);
+			var hide = tlg.hideChildren;
+			
+			
+			if (tlg["item"] && !hide) {
+			//	ar2.push("item");
+				cta.push("item");
+			 	htmlRenderer.prototype.recursePtrImgs(gfxRoot, cta, x+1, rl, cb)
+			}
+		}
+		delete el;
+	}, 
+
+
+
+
+	"mkPtrImg":function(itemPtr, x, y, rect, gfxRoot, lastNode, lastNodeType, cb) {
+
+//	"mkPtrImg":function(id, tlga, x, y, rect, cb, gfxRoot) {
+		var tlg = getObject(itemPtr, graphLookup);
+		var text = tlg["value"];
+		if (!tlg['gfx']) tlg['gfx'] = {};
+		if (!tlg['gfx'][gfxRoot.type]) tlg['gfx'][gfxRoot.type] = {};
+
+		var gfo = tlg['gfx'][gfxRoot.type];		
+		var el = lastNode;
+		var id = itemPtr[0];
+				
 
 		var linkHeight = this.linkHeight;
 
@@ -244,103 +266,51 @@ htmlRenderer.prototype = {
 		var text = tlg["value"]
 	//	console.log(tlg);
 
-		var model = graphLookup[id];
-		var images = [];
-		var pptr = copyArray(ptra);
-		pptr.pop();pptr.pop();
-	//	console.log(pptr);
-		var el = getObject(pptr, graphLookup)['gfx'][gfxRoot.type].el;
-	//	console.log(pptr+"   << pptr");
-		var cta = copyArray(ptra);
-		
-	//	cta.pop(); cta.pop();
-	//	console.log(cta +" <<<<<< cta");
-		var po = tlg;// getObject(pptr, graphLookup);
-		//var lt = htmlRenderer.prototype.getLayoutType(tlga);
+//		var model = graphLookup[id];
 
-	// leave this alone for now... put it into the gfx folder later...
-	//should be linked to id's anyway.... there should _never_ be dom node in the
-	//graph ptr .... 
-		if (po['gfx'])	
-		var freshtable = layout == "grid" && !po['gfx'][gfxRoot.type].tableDiv;
-		
-		var ft = false;
-	//	console.log("cta....");
-	//	console.log(po);
-		if (freshtable) {
-			ft = true;
-			console.log("grizzle grizzle");
-		//	console.log(po);
-			console.log("&^^^");
-		//	console.log(tlg);
+	//make table if the layout is grid
+		if (lastNodeType == "grid") {
 
-			//	alert("grizzle");
-			//	alert("griddla");
-			var label = document.createElement('div');
-
-			label.setAttribute("gridtable","table");
 			
-			var row = document.createElement("div");
+			var row = document.createElement("ul");
 			
 			row.setAttribute("gridtable","row");
-			po['gfx'][gfxRoot.type].tableDiv = label;//c1; // = {"parentTable": c1}; //layout; // should just have parentTable (row is useless)
+			gfo.tableDiv = el;//table;//c1; // = {"parentTable": c1}; //layout; // should just have parentTable (row is useless)
 			
-			tlg['gfx'][gfxRoot.type].tableRow = row;
-			label.appendChild(row);
+			gfo.tableRow = row;
+			el.appendChild(row);
 
 			//throw('xxxxx');
-			el.appendChild(label);
+			el.appendChild(row);
 			el = row;
-			//li.appendChild(label);
-			//layout needs to nest
-			//return {"rect":rect, "layout":layout}	
-			//li = row;	
-			var setGrid = {"tableDiv": label, "tableRow":row}
-		//	alert("abc");
+			var _lastNode = row;
+			//return;
+			_lastNodeType = 'row';
 		}
-
-		var newRow = false;
-		if (po['gfx'])	
-		if (layout == "grid" && po['gfx'][gfxRoot.type].tableDiv && !ft) { // && !po.tableRow && !tlg.tableRow) {
-		//	console.log("-------------------fresh");
-			var row = document.createElement("div");
-			row.setAttribute("gridtable", "row");
-			li = po['gfx'][gfxRoot.type].tableDiv; //getObject(pot.tableDiv, graphLookup);
-			li.appendChild(row);
-			li = row;
-			el = row;
-			newRow = row;
-			tlg['gfx'][gfxRoot.type].tableRow = row;//c1;
-		}
-
-		//if (tlg.tabletGRow)
-		//	var prow = tlg.tableRow; //getObject(tlg.tableRow, graphLookup);
-
-		if (po['gfx'])
-		if (po['gfx'][gfxRoot.type].tableRow)
-			var prow = po['gfx'][gfxRoot.type].tableRow; //getObject(po.tableRow, graphLookup);
 
 	
-		var o = htmlRenderer.prototype.getLayoutType(cta, gfxRoot.type);
+//		var o = htmlRenderer.prototype.getLayoutType(cta, gfxRoot.type);
 		//alert(o);
-		//console.log(o);
+	//	console.log(o);
+		
 	//	if (o == "grid") console.log("woijo");
-		if (prow && o == "grid") {
+		if (lastNodeType == "row") {
 			//alert('test');
 			console.log("------ooo------");
 			//console.log(layout);
-			var pro = prow; //layout.parentRow;
+			//var pro = prow; //layout.parentRow;
 		//	throw('xxxx');
 			//var pro = getObject(prow, graphLookup);
-			var cell = document.createElement("span")
+			var cell = document.createElement("ul")
 			cell.setAttribute("gridtable", "cell");
-			var ul = document.createElement("ul");
-			ul.setAttribute("class", "ptrUL"); // fix
+
 		//	console.log("parentRow"+prow);
 			//console.log(pro);
-			pro.appendChild(cell);
-			cell.appendChild(ul);
+			el.appendChild(cell);
+			//cell.appendChild(ul);
 			el = cell;
+			var _lastNodeType = "cell";
+		//	var _lastNode = cell;
 			//alert('test.....');
 		}
 		if (!tlg.gfx) tlg.gfx = {};
@@ -368,16 +338,22 @@ htmlRenderer.prototype = {
 			else links = tlg.index.length;
 		} else links = 1;
 		var tof; // = layout;
-		
+	
+		var ul = document.createElement("ul");
+
+		el.appendChild(ul);
+	//	ul.setAttribute(type+"label", ptt);
+		ul.setAttribute("class", type+"ContainerUL");	
+		el = ul;
 		// should have something like 'usesPtrLinks' .. uggh .. dirty code.
 		for (var i = links-1; i >=0; i--) {// links; i++) {
 			//if (!tlg.index) return;
 			//sketchy
 			if (!tlg.index)
-				graphLookup[id].addIndex(ptra);
+				graphLookup[id].addIndex(itemPtr);
 
 			else if (!tlg.index[i])
-				graphLookup[id].addIndex(ptra);
+				graphLookup[id].addIndex(itemPtr);
 			//alert('etst');
 			
 			var li =  document.createElement("li");	
@@ -410,13 +386,13 @@ htmlRenderer.prototype = {
 			var ch = d.offsetHeight;
 			//var ow = ow ? ow : x*cw;
 			//var ptr = ptra.join();
-			var ptr = copyArray(ptra);
-			var ptrs = ptr.join();
+			//var ptr = copyArray(ptra);
+			//var ptrs = itemPtr.join();
 			var pos = getElPos(d);
 			//		console.log(pos);
 			//		use rational index positions instead 
 			var ll = i;
-			ptr = ptr.concat(["index", ll, "gfx", gfxRoot.type]);
+			ptr = itemPtr.concat(["index", ll, "gfx", gfxRoot.type]);
 			//	console.log("posss-----------------------------------");
 			var o = { "type":"index", "index":i, "height":ch, "width":cw, "x":pos.x, "y":pos.y, "z":zi, "right": cw+pos.x, "bottom":ch+pos.y, "graphptr":{"id":id,  'value':tlg["value"], "index":i}, "ptr":ptr, "div":d, "cssType":gfxRoot.type}
 			rect.y+=ch;
@@ -436,12 +412,19 @@ htmlRenderer.prototype = {
 	
 		var show = !tlg.hideChildren; //true;
 		// if this style is grid, then 
-		var li = document.createElement("li");
+		//
+		//
+		ptt = show ? "unselected" : "hidechildren";
+
+
+
+		var li = document.createElement("li"); // should be ul if has children
 		li.setAttribute("class", type+"LI");
 
-		el.appendChild(li);
+	//	el.appendChild(ul);
 
-		ptt = show ? "unselected" : "hidechildren";
+		ul.appendChild(li);
+
 		//alert("test111");
 
 
@@ -454,7 +437,9 @@ htmlRenderer.prototype = {
 		// check to see if we are in a prior grid 
 
 		label.setAttribute(type+"label", ptt);
-		
+	
+
+
 		if (!tlg.hideItem) 
 			label.innerText = text;
 
@@ -468,16 +453,21 @@ htmlRenderer.prototype = {
 		//rect.y+=label.offsetHeight;
 		var loh = label.offsetHeight;
 		var low = label.offsetWidth;
-		var ptr= copyArray(ptra);
-		ptr = ptr.concat(["gfx", gfxRoot.type]);
-		var ptrs = ptra.join();
+		var ptr= copyArray(itemPtr);
+		ptra = ptr.concat(["gfx", gfxRoot.type]);
+	//	var ptrs = itemPtr.join();
 		var pos = getElPos(label);
 		var ps = [];
 		for (var i = 0; i < ptr.length; i+=2) {
 			ps.push[ptr[i]];
 		}
-		var o = {"layout":layout, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptr, "div":label, "ptrString":ps.join()};
+		var layout = gfo.layout;
+		var o = {"layout":gfo.layout, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptr, "div":label, "ptrString":ps.join()};
+	//	if (_tableDiv) o.tableDiv = _tableDiv
+	//	if (_tableRow) o.tableRow = _tableRow
+	//	if (_layout) o.layout = _layout
 		tlg["gfx"][gfxRoot.type] = o;
+		//gfo = o;
 		rect.y+=loh;
 
 
@@ -486,9 +476,9 @@ htmlRenderer.prototype = {
 		
 	
 		var csstype = gfxRoot.type;
-		if (!tlg['gfx']) tlg['gfx'] = {};
-		if (!tlg['gfx'][gfxRoot.type]) tlg['gfx'][gfxRoot.type] = {};
-		tlg["gfx"][gfxRoot.type]["el"] = li;
+		//if (!tlg['gfx']) tlg['gfx'] = {};
+		//if (!tlg['gfx'][gfxRoot.type]) tlg['gfx'][gfxRoot.type] = {};
+		gfo["el"] = li;
 		//console.log(ptr);
 		//console.log(gfxRoot);
 		snapSpace.prototype.regObject(ptr, "graphLookup", nodeEvents);
@@ -499,17 +489,25 @@ htmlRenderer.prototype = {
 				//tlg['tye]
 				//alert("yoo");
 				var t = tlg.types[type];
-				tlg.gfx.div.setAttribute(csstype+type, t ? "label": false);
+				gfo.div.setAttribute(csstype+type, t ? "label": false);
 
-				tlg.el.setAttribute(csstype+type, t ? "section":false); // not really sure about this one...
+				gfo.el.setAttribute(csstype+type, t ? "section":false); // not really sure about this one...
 			}
 		}
-
+		if (!_lastNodeType) _lastNodeType = "list";
+		if (gfo.layout == 'grid') {
+			var table = document.createElement('div');
+			table.setAttribute("gridtable","table");
+			_lastNode = table;
+			_lastNodeType = 'grid';
+			li.appendChild(table);
+		}
+		if (!_lastNode) _lastNode = ul;
 		delete label;
 		delete el;
 		delete li;
 		delete c;
-		return rect
+		return {"rect":rect, "lastNode":_lastNode, "lastNodeType":_lastNodeType};
 		//return {"rect":rect, "layout":layout};
 		//	}		
 	},
