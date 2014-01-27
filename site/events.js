@@ -43,11 +43,11 @@ snapSpace.prototype = {
 		// needs to be fixed.......... 
 
 		var lookup = lookups[objName]
-		console.log(ptr);
+		//console.log(ptr);
 		var rect = getObject(ptr, lookup);
 		if (objName == "curveLookup") {		
-			console.log("ptr:"+ptr+" "+objName);
-			console.log(rect); 
+		//	console.log("ptr:"+ptr+" "+objName);
+		//	console.log(rect); 
 		}
 		snapLookup = snapSpace.prototype.snapLookup;
 		var id = rect.ptr[0];
@@ -652,9 +652,9 @@ contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 	var id= obj.rect.ptr[0];
 	var g = graphLookup[id];
 	var r = g.getLabels(ca);
-	console.log("-------------------------shide");
-	console.log(r.join());
-	console.log(ca); 
+//	console.log("-------------------------shide");
+//	console.log(r.join());
+//	console.log(ca); 
 	// there should be some type of auto-mapping
 	switch (r.join()) {
 		case "expand":
@@ -1023,8 +1023,8 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 			//	s1c.push(g1index);
 			//	s2c.push("index");
 			//	s2c.push(g2index);
-				console.log(s1c);
-				console.log(s2c);
+		//		console.log(s1c);
+		//		console.log(s2c);
 				s1c.pop(); s2c.pop();
 				gfx.prototype.connect(s1c, s2c);
 

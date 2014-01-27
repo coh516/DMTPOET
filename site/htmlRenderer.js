@@ -136,7 +136,7 @@ htmlRenderer.prototype = {
 		var tll = tl.length;
 		//var gfxRoot = getObject(ogPtr, graphLookup);
 	//	gfxLookup[id].cnt;
-		console.log(gfxRoot);
+		//console.log(gfxRoot);
 		var el = gfxRoot.el
 		el.style.top = gfxRoot.loc.y+"px";
 		el.style.left = gfxRoot.loc.x+"px";
@@ -170,6 +170,7 @@ htmlRenderer.prototype = {
 		//alert(id);
 
 		for (var y=0; y < tl.length; y++) {
+			//console.log(tl);
 			for (var idx =0; idx < tl[y]['index'].length; idx++) {
 				var group = tl[y]['index'][idx]['gfx'][gfxRoot.type]
 			//console.log("yooo");
@@ -203,9 +204,9 @@ htmlRenderer.prototype = {
 	},
 	"reindex":function(rootGfx) {
 		//console.log("breakpoint");
-		console.log(rootGfx);
-		console.log("---------");
-		htmlRenderer.prototype._reindex(rootGfx.rootPtr.concat(["item"]), rootGfx);
+		//console.log(rootGfx);
+		//console.log("---------");
+		htmlRenderer.prototype._reindex(getObject(rootGfx.rootPtr.concat(["item"]), graphLookup), rootGfx);
 	},
 
 	"getLayoutType":function(ptra) {
@@ -237,7 +238,7 @@ htmlRenderer.prototype = {
 		var images = [];
 		var pptr = copyArray(ptra);
 		pptr.pop();pptr.pop();
-		console.log(pptr);
+	//	console.log(pptr);
 		var el = getObject(pptr, graphLookup)['gfx'][gfxRoot.type].el;
 	//	console.log(pptr+"   << pptr");
 		var cta = copyArray(ptra);
@@ -475,8 +476,8 @@ htmlRenderer.prototype = {
 		if (!tlg['gfx']) tlg['gfx'] = {};
 		if (!tlg['gfx'][gfxRoot.type]) tlg['gfx'][gfxRoot.type] = {};
 		tlg["gfx"][gfxRoot.type]["el"] = li;
-		console.log(ptr);
-		console.log(gfxRoot);
+		//console.log(ptr);
+		//console.log(gfxRoot);
 		snapSpace.prototype.regObject(ptr, "graphLookup", nodeEvents);
 		//console.log(tlg);	
 		//not sure where else to put it at the moment

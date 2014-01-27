@@ -2,10 +2,9 @@
 // need to form a strategy to manage the zindex properly.....
 
 function linkCurve() {
-	// should be part of lineRenderer .. .let's do some testing with this configuratoin than move it out 	
-	//elem.setAttributeNS(null, "d", 225, 225 c 30,105, 30 -150, -150);
-}
 
+}
+//hardcoded to gfx type ptr
 linkCurve.prototype = {
 	"setup": function() {
 		var xmlns = "http://www.w3.org/2000/svg";
@@ -22,6 +21,8 @@ linkCurve.prototype = {
 		// not sure if this is the best approach ... but the link curve needs to be quantized .. so we'll do it like this.. maybe figure smoetning to extend the functionality of the universe model to add link curves... 
 		events["curveLookup"] = new linkCurveHandler();		
 		document.body.appendChild(svg);
+	//	this.gfxSuffix = ['gfx', 'ptr'];
+		
 		//var elem = document.createElementNS(xmlns, "path");
 	},
 	"points": function() {
@@ -92,6 +93,8 @@ linkCurve.prototype = {
 
 	"drawCurves": function(c1, c2) {
 		//console.log("test...");
+		//console.log("______________________");
+		//console.log(c1);
 		this.drawCurve(c1);
 		//this.drawCurve(c2);
 		/*
@@ -120,6 +123,9 @@ function getCurve(p,c) {
 		
 	var pj = p.join();
 	var cj = c.join();
+
+	
+
 	if (curveLookup.hasOwnProperty(pj)) if (curveLookup[pj].hasOwnProperty(cj))
 		return curveLookup[pj][cj];
 	/*
@@ -399,16 +405,12 @@ curveLine.prototype = {
 		//if a1Items = 2 .. that means theres a label and a free space
 		//if a1Items = 3 .. then there is a label and 2 free spaces
 		//if a1Items =4 .. then there is a label and 3 free spaces
+
+		// in the future this is going to need to be refactored as PtrLinkCurve 
+		// when more curve drawing tools are available....
+		// for now this is ok, as its hardcoded to the ptrGfx class...
+		a1 = a1.concat(["index", i1, "gfx", "ptr"]);
 	
-	       	//
-		//var a2Index = a2Items-1-i2;
-		//console.log("a1Index:"+a1Index+"  i1:"+i1+"   a1items:"+a1Items);
-		//console.log(o);
-		//console.log("thas twas o");
-		a1 = a1.concat(["index", i1, "gfx"]);
-		//a2.concat(["gfx", a2Index]);
-		//console.log(a1Index);
-		//console.log("--------------------------a 1 test -----------------------------------");
 		var o1 = getObject(a1, graphLookup);
 		//console.log("o1:::::"+a1);
 		//console.log(o1);
@@ -433,6 +435,8 @@ curveLine.prototype = {
 		g2 = this.getGfx(this.o2);
 		//console.log("g1:");
 		//console.log(this.g1);
+		//console.log(this.g2);
+		//console.log("_______");
 		var g1xy = this.getXY(g1, 4);
 		var g2xy = this.getXY(g2, 4);
 		//console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");

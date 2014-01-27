@@ -35,7 +35,7 @@ function testCase() {
 	//	universes['ptr', uni.id, 
 		gids[i].setFromJSON(json);
 	//	alert(gids[i].id);
-		console.log(gids[i].id);	
+		//console.log(gids[i].id);	
 		var gf = mkPtrGfx({"id":gids[i].id}); 
 		//gf.create(gids[i]); //"ptr", [gids[i]], htmlRenderer); // should be new gfx() gfx.create
 		
@@ -68,7 +68,7 @@ function testCase() {
 	var dbgraph = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 2, 'index', 0];
 
 	var timestamp = [gids[2].id, 'item', 0, 'index', 0];
-	var su = [gids[3], 'item', 0, 'index', 0];
+	var su = [gids[3].id, 'item', 0, 'index', 0];
 
 
 	var a1 = [gids[4].id, 'item', 0, 'index', 0];
@@ -104,34 +104,16 @@ function testCase() {
 
 }
 
-
-function launch() {
-//	alert("test..");
-//		document.body.appendChild(canvas);
-	
-//	console.log = function() { };
-	//test//
-
-//	var uni = new universe();
-//	models[uni.id].type = "ptr";
-// **todo**
-//
-//  it might be nice to automatically group elements...
-//
-//
-//
-	// maybe the window manager should return the universe id
-	//var wh = new WindowManager();
+function setupCanvas() {
+	linkCurve.prototype.setup();       	
 	contextMenu.setup();
 	stageMenu.setup();
 	saveMenu.setup();
+}
 
-	linkCurve.prototype.setup();
-
-//	events[uni.id] = nodeEvents; // should be instance of obj handle
-	// universes["type"]["events"] 
-	//
+function launch() {
+//setupcanvascode
+	setupCanvas();
 	testCase();
-
 }
 

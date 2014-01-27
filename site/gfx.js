@@ -82,7 +82,7 @@ Gfx.prototype = {
 		//thisGfx = this;
 		//var gfxLookup
 		//this.indexedModel = indexedModel;
-		console.log(ptr);
+		//console.log(ptr);
 		var o = getObject(ptr, graphLookup);
 		if (!o.gfx)
 			o.gfx = {};
@@ -265,7 +265,8 @@ Gfx.prototype = {
 		this.build();
 		this.reindex();
 		handlerData.offset = false;
-		this.drawCurves();
+		if (typeof this._rebuild === 'function') this._rebuild();
+		//this.drawCurves();
 		return;
 	},
 	"reindex":function() {
@@ -349,13 +350,13 @@ Gfx.prototype = {
 	"hideChildren":function(ptr) {
 		var o = getObject(ptr, graphLookup);
 		o.hideChildren = true;
-		console.log(o);
-		console.log("extasy");
+		//console.log(o);
+		//console.log("extasy");
 
 		this.rebuild();
 	},
 	"moveTo":function(x,y,z) {
-		console.log(this);
+		//console.log(this);
 		// only manage the lastz for indexPtr
 		this.rootGfxObj.loc = {"x":x, "y":y};
 		if (z) {
@@ -490,14 +491,10 @@ Gfx.prototype = {
 		// register curves to event handler...
 	},
 
-	"drawCurves":function() {
-		//console.log("test..."); 
-		linkCurve.prototype.drawCurves([this.id]);
-		// not sure if the lineCurve should be with the renderer
-	},
+
 	"moveCanvas":function() {
 		this.renderer.moveGfx(this.rootGfxObj);
-		this.drawCurves();
+		if (typeof this._moveCanvas === 'function') this._moveCanvas();//this.drawCurves();
 		
 		return;
 		var t = this.model.loc;
