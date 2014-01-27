@@ -21,7 +21,7 @@ function testCase() {
 			["acid1"],["acid2"],["acid3"],["acid4"],["acid5"],["acid6"]
 
 	    ];
-	for (var i =0; i < jobjects.length; i++ ) {
+	for (var i =0; i < 1; i++) {//jobjects.length; i++ ) {
 		gids[i] = new Graph(); //uni.addGraph();
 		// var json = {"UI":{"save/load dialogue":[{"label":[{"text":"save"}, {"events":"onClick"}]}, {"label":[{"text":"load"}, {"events":"onClick"}]}]}}
 		//
@@ -36,7 +36,8 @@ function testCase() {
 		gids[i].setFromJSON(json);
 	//	alert(gids[i].id);
 		//console.log(gids[i].id);	
-		var gf = mkPtrGfx({"id":gids[i].id}); 
+		var gf = mkPtrGfx({"id":gids[i].id});
+	       mids.push(gf);	
 		//gf.create(gids[i]); //"ptr", [gids[i]], htmlRenderer); // should be new gfx() gfx.create
 		
 		gf.moveTo(i*100, i*10);
@@ -48,6 +49,7 @@ function testCase() {
 	
 	}
 	gojs[0].moveTo(450, 20);
+	/*
 	gojs[3].moveTo(200, 300);
 
 	gojs[4].moveTo(650, 500);
@@ -78,12 +80,17 @@ function testCase() {
 	var a5 = [gids[8].id, 'item', 0, 'index', 0];
 	var a6 = [gids[9].id, 'item', 0, 'index', 0];
 //	var a7 = [gids[10], 'item', 0, 'index', 0];
-
+	*/
 
 
 	var o = getObject([gids[0].id, 'item', 0, 'item', 0], graphLookup);
-	o.layout = "grid";
 
+	o.gfx.ptr.layout = "grid";
+	console.log(o);
+	mids[0].rebuild();
+//	mids[0].rebuild();
+	
+/*
 
 	PtrGfx.prototype.connect(uiroot, uisub);
 	PtrGfx.prototype.connect(uisub, uitext);
@@ -100,15 +107,15 @@ function testCase() {
 	PtrGfx.prototype.connect(a4, a5);
 	PtrGfx.prototype.connect(a3, a6);
 	PtrGfx.prototype.connect(a3, a4);
-	
-
+	mids[0].rebuild();
+*/
 }
 
 function setupCanvas() {
-	linkCurve.prototype.setup();       	
-	contextMenu.setup();
-	stageMenu.setup();
-	saveMenu.setup();
+//	linkCurve.prototype.setup();       	
+//	contextMenu.setup();
+//	stageMenu.setup();
+//	saveMenu.setup();
 }
 
 function launch() {

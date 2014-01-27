@@ -7,8 +7,8 @@ PtrGfx.prototype.connect = function(c1, c2) {
 		//var v1= getObject(c1,graphLookup).ptr.value
 	//	var v2 =  getObject(c2,graphLookup).ptr.value
 	//	console.log("connecting..."+c1+" "+v1+"  ..  "+c2+" "+v2); 
-		console.log(c1);
-		console.log(c2);
+		//console.log(c1);
+		//console.log(c2);
 		pt = Graph.prototype.connect(c1, c2);
 		//this.drawLinks(c1, c2); // doesnt matter which one we give it
 		//this.rebuild();

@@ -68,8 +68,8 @@ htmlRenderer.prototype = {
 	//
 	"delDomRefs":function(ar){
 		var o = getObject(ar, graphLookup);
-		delete o.tableDiv;
-		delete o.tableRow;
+		delete o['gfx'][gfxRoot.type].tableDiv;
+		delete o['gfx'][gfxRoot.type].tableRow;
 		//o.
 	},
 	// should be ptr instead...
@@ -82,7 +82,7 @@ htmlRenderer.prototype = {
 		objPtr = getObject(ptrRoot, graphLookup);
 
 		// need to clean out the remaining tableRow and tableDivs 
-		delete objPtr.tableDiv; delete objPtr.tableRow;
+		delete objPtr['gfx'][gfxRoot.type].tableDiv; delete objPtr['gfx'][gfxRoot.type].tableRow;
 		Graph.prototype.recurseItems(htmlRenderer.prototype.delDomRefs, ptrRoot)
 			/*
 		var tl = graphLookup[id]["item"];
@@ -209,13 +209,22 @@ htmlRenderer.prototype = {
 		htmlRenderer.prototype._reindex(getObject(rootGfx.rootPtr.concat(["item"]), graphLookup), rootGfx);
 	},
 
-	"getLayoutType":function(ptra) {
+	"getLayoutType":function(ptra, type) {
 		//return;
 		var pc = copyArray(ptra);
 		var pcl = pc.length-1;
 		for (var i = pcl; i >=0; i--) {
-			var g = getObject(pc, graphLookup).layout
-			if (g) return g;
+			var g = getObject(pc, graphLookup)
+			//console.log(g);
+			if (g['gfx']) {
+				if (g['gfx'][type].layout) {
+					//alert ("test");
+					//console.log(g['gfx'][type].layout);
+					//console.log(g);
+					return g['gfx'][type].layout;
+				}
+			}
+//			if (g) return g;
 			pc.pop(); 
 		}
 		return false;
@@ -226,7 +235,8 @@ htmlRenderer.prototype = {
 
 		var ptra = tlga; 	
 		var tlg = getObject(tlga, graphLookup);
-
+		if ( tlg['gfx'])
+		var layout =  tlg['gfx'][gfxRoot.type].layout
 
 		var linkHeight = this.linkHeight;
 
@@ -243,25 +253,25 @@ htmlRenderer.prototype = {
 	//	console.log(pptr+"   << pptr");
 		var cta = copyArray(ptra);
 		
-		cta.pop(); cta.pop();
+	//	cta.pop(); cta.pop();
 	//	console.log(cta +" <<<<<< cta");
-		var po = getObject(cta, graphLookup);
+		var po = tlg;// getObject(pptr, graphLookup);
 		//var lt = htmlRenderer.prototype.getLayoutType(tlga);
 
 	// leave this alone for now... put it into the gfx folder later...
 	//should be linked to id's anyway.... there should _never_ be dom node in the
 	//graph ptr .... 
-	
-		var freshtable = po.layout == "grid" && !po.tableDiv;
+		if (po['gfx'])	
+		var freshtable = layout == "grid" && !po['gfx'][gfxRoot.type].tableDiv;
 		
 		var ft = false;
 	//	console.log("cta....");
 	//	console.log(po);
 		if (freshtable) {
 			ft = true;
-		//	console.log("grizzle grizzle");
+			console.log("grizzle grizzle");
 		//	console.log(po);
-		//	console.log("&^^^");
+			console.log("&^^^");
 		//	console.log(tlg);
 
 			//	alert("grizzle");
@@ -273,9 +283,9 @@ htmlRenderer.prototype = {
 			var row = document.createElement("div");
 			
 			row.setAttribute("gridtable","row");
-			po.tableDiv = label;//c1; // = {"parentTable": c1}; //layout; // should just have parentTable (row is useless)
+			po['gfx'][gfxRoot.type].tableDiv = label;//c1; // = {"parentTable": c1}; //layout; // should just have parentTable (row is useless)
 			
-			tlg.tableRow = row;
+			tlg['gfx'][gfxRoot.type].tableRow = row;
 			label.appendChild(row);
 
 			//throw('xxxxx');
@@ -290,32 +300,34 @@ htmlRenderer.prototype = {
 		}
 
 		var newRow = false;
-		
-		if (po.layout == "grid" && po.tableDiv && !ft) { // && !po.tableRow && !tlg.tableRow) {
+		if (po['gfx'])	
+		if (layout == "grid" && po['gfx'][gfxRoot.type].tableDiv && !ft) { // && !po.tableRow && !tlg.tableRow) {
 		//	console.log("-------------------fresh");
 			var row = document.createElement("div");
 			row.setAttribute("gridtable", "row");
-			li = po.tableDiv; //getObject(pot.tableDiv, graphLookup);
+			li = po['gfx'][gfxRoot.type].tableDiv; //getObject(pot.tableDiv, graphLookup);
 			li.appendChild(row);
 			li = row;
 			el = row;
 			newRow = row;
-			tlg.tableRow = row;//c1;
+			tlg['gfx'][gfxRoot.type].tableRow = row;//c1;
 		}
 
 		//if (tlg.tabletGRow)
 		//	var prow = tlg.tableRow; //getObject(tlg.tableRow, graphLookup);
 
-	
-		if (po.tableRow)
-			var prow = po.tableRow; //getObject(po.tableRow, graphLookup);
+		if (po['gfx'])
+		if (po['gfx'][gfxRoot.type].tableRow)
+			var prow = po['gfx'][gfxRoot.type].tableRow; //getObject(po.tableRow, graphLookup);
 
 	
-		var o = htmlRenderer.prototype.getLayoutType(cta);
+		var o = htmlRenderer.prototype.getLayoutType(cta, gfxRoot.type);
 		//alert(o);
+		//console.log(o);
+	//	if (o == "grid") console.log("woijo");
 		if (prow && o == "grid") {
 			//alert('test');
-		//	console.log("------ooo------");
+			console.log("------ooo------");
 			//console.log(layout);
 			var pro = prow; //layout.parentRow;
 		//	throw('xxxx');
@@ -331,7 +343,8 @@ htmlRenderer.prototype = {
 			el = cell;
 			//alert('test.....');
 		}
-		tlg.gfx = [];
+		if (!tlg.gfx) tlg.gfx = {};
+	//	tlg.gfx = [];
 
 		var loc = gfxRoot.loc;
 		var zi = gfxRoot.loc.z;
@@ -405,7 +418,7 @@ htmlRenderer.prototype = {
 			var ll = i;
 			ptr = ptr.concat(["index", ll, "gfx", gfxRoot.type]);
 			//	console.log("posss-----------------------------------");
-			var o = {"type":"index", "index":i, "height":ch, "width":cw, "x":pos.x, "y":pos.y, "z":zi, "right": cw+pos.x, "bottom":ch+pos.y, "graphptr":{"id":id,  'value':tlg["value"], "index":i}, "ptr":ptr, "div":d, "cssType":gfxRoot.type}
+			var o = { "type":"index", "index":i, "height":ch, "width":cw, "x":pos.x, "y":pos.y, "z":zi, "right": cw+pos.x, "bottom":ch+pos.y, "graphptr":{"id":id,  'value':tlg["value"], "index":i}, "ptr":ptr, "div":d, "cssType":gfxRoot.type}
 			rect.y+=ch;
 			//	console.log(ptra);
 		//	console.log(tlg['index']);
@@ -463,7 +476,7 @@ htmlRenderer.prototype = {
 		for (var i = 0; i < ptr.length; i+=2) {
 			ps.push[ptr[i]];
 		}
-		var o = {"visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptr, "div":label, "ptrString":ps.join()};
+		var o = {"layout":layout, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptr, "div":label, "ptrString":ps.join()};
 		tlg["gfx"][gfxRoot.type] = o;
 		rect.y+=loh;
 
