@@ -156,10 +156,10 @@ htmlRenderer.prototype = {
 
 				gdg.height = h; gdg.width = w; gdg.z = gfxRoot.loc.z; gdg.x = pos.x; gdg.y = pos.y; gdg.right = w+pos.x; gdg.bottom = h+pos.y;
 				//console.log(gdg);
-				snapSpace.prototype.regObject(gdg.ptr, "graphLookup");
+				snapSpace.prototype.regObject(gdg.ptr, "graphLookup", nodeEvents);
 			}
 			var group = tl[y]['gfx'][gfxRoot.type];
-			console.log(tl[y]);
+			//console.log(tl[y]);
 			var gdg = group;
 			var div = group.div;
 			var pos = getElPos(div);
@@ -296,7 +296,7 @@ htmlRenderer.prototype = {
 	//	if (o == "grid") console.log("woijo");
 		if (lastNodeType == "row") {
 			//alert('test');
-			console.log("------ooo------");
+			//console.log("------ooo------");
 			//console.log(layout);
 			//var pro = prow; //layout.parentRow;
 		//	throw('xxxx');
@@ -462,7 +462,7 @@ htmlRenderer.prototype = {
 			ps.push[ptr[i]];
 		}
 		var layout = gfo.layout;
-		var o = {"layout":gfo.layout, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptr, "div":label, "ptrString":ps.join()};
+		var o = {"layout":gfo.layout, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptra, "div":label, "ptrString":ps.join()};
 	//	if (_tableDiv) o.tableDiv = _tableDiv
 	//	if (_tableRow) o.tableRow = _tableRow
 	//	if (_layout) o.layout = _layout
@@ -481,7 +481,7 @@ htmlRenderer.prototype = {
 		gfo["el"] = li;
 		//console.log(ptr);
 		//console.log(gfxRoot);
-		snapSpace.prototype.regObject(ptr, "graphLookup", nodeEvents);
+		snapSpace.prototype.regObject(ptra, "graphLookup", nodeEvents);
 		//console.log(tlg);	
 		//not sure where else to put it at the moment
 		if (tlg.types) {

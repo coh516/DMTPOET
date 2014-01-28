@@ -271,7 +271,7 @@ Gfx.prototype = {
 	},
 	"reindex":function() {
 
-		snapSpace.prototype.updateSnapObject(this.gid, "graphLookup");
+		snapSpace.prototype.updateSnapObject(this.graphId, "graphLookup");
 	//	alert("test");
 		this.renderer.reindex(this.rootGfxObj);
 		
