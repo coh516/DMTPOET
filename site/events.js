@@ -35,6 +35,7 @@ snapSpace.prototype = {
 	// expects a group (array) of objects' bounding boxes.........
 	// needs to point to the gfx portion
 	// bound a different object other than 'graphics' ... 'graphics' should be parameterized 
+	// objName needs to go... useless shit
 	"regObject":function(ptr, objName, eventObject, refinementFunction) { // using bounding box from the gfx renderer
 
 
@@ -83,7 +84,7 @@ snapSpace.prototype = {
 				snaps.push(snap);
 			}
 		}
-		events[ptr.join()] = eventObject;
+		//events[ptr.join()] = eventObject; // should be a secondary function call to add an event to the object
 		if (!lookup[id].snaps) lookup[id].snaps = [];
 		lookup[id].snaps.push(snaps);
 		//console
@@ -114,7 +115,7 @@ snapSpace.prototype = {
 				for (var i in snapLookup[x][y]) {
 					var a = snapLookup[x][y][i];
 					//console.log(a);
-					if (lookups[a.lookupName][a.rect.ptr[0]].hidden) continue;
+					if (gfxLookup[a.rect.gfxId].isHidden()) continue;
 				 	var rect = a.rect; //getObject(a.rect, lookups[a.lookupName]);
 	
 					if (withinRect({"x":pos.x, "y":pos.y}, rect)) {
@@ -183,11 +184,12 @@ snapSpace.prototype = {
 			//console.log("_______________localE___________");
 			//console.log(le);
 			var rr = regged[r];
+			//console.log(rr);
 			if (!events[le]) {				
-				var uid = lookups[rr.lookupName][rr.rect.ptr[0]].universeid
-				//console.log("xx: "+uid);
+				var eventType = rr.rect.cssType;
+				//console.log("xx: "+eventType);
 				//console.log(rr.rect.ptr[0]);
-				var evt = events[uid];
+				var evt = events[eventType];
 			} else {
 				evt = events[le];
 			}
@@ -212,10 +214,12 @@ snapSpace.prototype = {
 				var evt = events[gem.rect.ptr.join()];
 				if (!evt) {
 					//console.log(gem);
-					var uid = lookups[gem.lookupName][gem.rect.ptr[0]].universeid;
+					//var uid = lookups[gem.lookupName][gem.rect.ptr[0]].universeid;
+					var eventType = gem.rect.cssType;
+					
 					//console.log(uid);
 					//console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-					evt = events[uid];
+					evt = events[eventType];
 
 					// mix in program level calls...
 
@@ -257,7 +261,7 @@ snapSpace.prototype = {
 			//var uid = lookups[gmg.lookupName][gmg.rect.ptr[0]].universeid
 			var evt = events[gmg.rect.ptr];
 			if (!evt)
-				evt = events[uid]
+				evt = events[gmg.rect.cssType]
 			evt.handleMouseDrag(gmg, e);
 		}
 /*
@@ -314,10 +318,12 @@ snapSpace.prototype = {
 
 			//if (rr.handleMouseMove) {
 			var rr = regged[r];
-			var uid = lookups[rr.lookupName][rr.rect.ptr[0]].universeid ;
+			//var uid = lookups[rr.lookupName][rr.rect.ptr[0]].universeid ;
+			var eventType = rr.rect.cssType;
+			
 			var evt = events[rr.rect.ptr.join()];
 			if (!evt)
-				evt = events[uid];
+				evt = events[eventType];
 			//console.log(uid + "<<uid");
 			evt.handleMouseMove(rr, e)
 			//}
@@ -345,7 +351,8 @@ snapSpace.prototype = {
 			//console.log(grid.overs[g]);
 			var gog = grid.overs[g];
 
-			var uid = lookups[gog.lookupName][gog.rect.ptr[0]].universeid;
+//			var uid = lookups[gog.lookupName][gog.rect.ptr[0]].universeid;
+				var eventType = gog.rect.cssType;
 			
 			//lookups[	
 			// need to 'mixin types' 
@@ -357,7 +364,7 @@ snapSpace.prototype = {
 			//var evt = events[grid.overs[g].ptr];  // do not delete 
 			//
 			if (!evt) 
-				var evt = events[uid];
+				var evt = events[eventType];
 			
 			evt.handleMouseDown(gog, e); //gog.handleMouseDown(e);
 			grid.movers[g] = gog; //grid.overs[g];
@@ -373,11 +380,12 @@ snapSpace.prototype = {
 				var uid = lookups[ggo.lookupName][ggo.rect.ptr[0]].universeid;
 				//console.log(uid);
 				var evt = events[ggo.rect.ptr.join()];
+				var eventType = ggo.rect.cssType;
 				if (!evt) {
 			//		console.log(ggo.lookupName);
 			//		console.log(uid);
 			//		console.log("-----------------");
-					evt = events[uid];
+					evt = events[eventType];
 			//		console.log(evt);
 				}
 				evt.handleMouseOut(ggo, e);
@@ -397,10 +405,12 @@ snapSpace.prototype = {
 			//console.log("testing mouse up handler from __handlers");
 			//console.log(grid.movers[g].ptr[0]);
 			var gmg = grid.movers[g];
-			var uid = lookups[gmg.lookupName][gmg.rect.ptr[0]].universeid;
+			//var uid = lookups[gmg.lookupName][gmg.rect.ptr[0]].universeid;
+			var eventType = gmg.rect.cssType;
+			
 			var evt = events[gmg.rect.ptr.join()]
 			if (!evt)
-				evt = events[uid];
+				evt = events[eventType];
 			if (Math.abs(grid.mouseDownXY.x - pos.x) < 4 && Math.abs(grid.mouseDownXY.y - pos.y) < 4) {
 				//	alert("click")
 				//	console.log(grid.movers[g]);
@@ -494,12 +504,12 @@ userEvents.prototype = {
 	//	var type= ptr.ptr[ptr.ptr.length-2];
 		//console.log(gfx);
 		//console.log("*********");
-		var p = getObject(obj.rect.ptr, lookup);	
+		var p = getObject(obj.rect.ptr, graphLookup);	
 		//console.log(p);
 		var type = obj.rect.type ? obj.rect.type : "";
 			
 	//	if (type == "label") i
-		//console.log("::::p:::::");
+//		console.log("::::p:::::");
 		//console.log(p);
 		//alert("test");
 		p.div.setAttribute(csstype+type, "over");
@@ -535,7 +545,7 @@ userEvents.prototype = {
 		//console.log("testing mouse out from this shit..");
 		//console.log(gfx);
 		var id = obj.rect.ptr[0];
-		var csstype = obj.type;
+		var csstype = obj.rect.cssType;
 		var type= obj.rect.type;
 		//console.log(obj);
 		//console.log("*******^^^^********");	
@@ -546,7 +556,7 @@ userEvents.prototype = {
 		graphLookup[id]["ptr"][p.ptr];
 		*/
 		var a = copyArray(obj.rect.ptr);
-		a.pop();a.pop();	
+	//	a.pop();a.pop();	
 		var selected = !getObject(a, graphLookup).hideChildren;
 		
 		switch (type) {
@@ -585,17 +595,21 @@ stageEventHandler.prototype.handleMouseClick = function(obj, e) {
 	//console.log(ptr);
 	var ca = copyArray(obj.rect.ptr);
 	//ca.splice(ptr.length-2, 2);
-//	ca.pop(); 
+	//var o = getObject(ca, graphLookup);
+	var h = gfxLookup[obj.rect.gfxId].isHidden()
+	if (h) return;
+
+	ca.pop(); 
 	ca.pop();
 //
 	var lookup = lookups[obj.lookupName];
 	var o = getObject(ca, lookup);
-
+	console.log(o);
 	//console.log("LOG LOG LOG LOG LOG LOG LOG LOG LOG LOG LOG LOG LOG");
 
 	//console.log(o);
 	//alert(ca);
-	console.log(o);
+	//console.log(o);
 	//alert(ptr.ptr);
 	//alert(o.);
 	switch (o.value) {
@@ -640,23 +654,20 @@ contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 	//alert("test...");
 	//console.log(ptr);
 	//console.log(ptr);
-	var ca = copyArray(obj.rect.ptr);
-	//ca.splice(ptr.length-2, 2);
-	//alert(ca);
-	//ca.pop();
-	 ca.pop();
-	var lookup = lookups[obj.lookupName];
-	var o = getObject(ca, lookup);
-	//console.log(o.ptr);
+
+	//var lookup = lookups[obj.lookupName];
+	var o = getGraphObject(obj.rect.nodeRoot)
+	
 	// need a way to travel backwords to get text representation
-	var id= obj.rect.ptr[0];
-	var g = graphLookup[id];
-	var r = g.getLabels(ca);
+	//var id= obj.rect.ptr[0];
+	//var g = graphLookup[id];
+	//var r = g.getLabels(ca);
 //	console.log("-------------------------shide");
 //	console.log(r.join());
 //	console.log(ca); 
 	// there should be some type of auto-mapping
-	switch (r.join()) {
+	//cntextMenu.lastPtr = obj.rect;
+	switch (o.value) {
 		case "expand":
 		//		alert("test..");
 			contextMenu.showLastPtr();			
@@ -766,9 +777,9 @@ moveHandler.prototype.handleMouseDown = function(obj, e) {
 		var pos = getPos(e);
 		//console.log(pos.x+" "+abs.x);
 		//console.log(id);
-		var lookup = lookups[obj.lookupName];
-		var abs = lookup[id].loc;
-
+		//var lookup = lookups[obj.lookupName];
+		//var abs = lookup[id].loc;
+		var abs = getObject(obj.rect.gfxRoot, graphLookup).loc;
 		handlerData.offset = {"x": pos.x - abs.x, "y": pos.y - abs.y};
 		//console.log("offset: "+self.offset);
 	}
@@ -806,7 +817,8 @@ moveHandler.prototype.handleMouseDrag = function(obj, e){
 	//	var pos = stage.getUserPosition();
 	ptr = obj.rect.ptr; // 
 	var lookup = lookups[obj.lookupName];
-	var gfo = gfxLookup[ptr[0]];
+	console.log(obj.rect.gfxId + "<<");
+	var gfo = gfxLookup[obj.rect.gfxId];
 	//console.log(pos.x);
 	if (handlerData.offset) {
 		var pos = getPos(e);
@@ -838,7 +850,7 @@ moveHandler.prototype.handleMouseDrag = function(obj, e){
 		
 		// this really shouldnt be here -- this was just put there because as you dragged it was weird ...
 		// the onmouse over commands should be ignored if moving
-		gfo.isDragging = true;
+			gfxLookup[obj.rect.gfxId].isDragging = true;
 		gfo.reindex();
 		//.layer.draw();
 	}
@@ -865,7 +877,7 @@ moveHandler.prototype.handleMouseUp = function(obj, e) {
 	//self.mover = false;
 	var lookup = lookups[ptr.lookupName];
 	var gfo = gfxLookup[ptr[0]]; // perhaps gtfo is a better variable name
-	gfo.isDragging = false;
+	gfxLookup[obj.rect.gfxId].isDragging = false;
 	//var pos = getPos(e); //stage.getUserPosition();
 	//alert(self.obj);
 	//var abs = self.obj.layer.getAbsolutePosition();
@@ -1063,17 +1075,18 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 		//
 		var id = obj.rect.ptr[0];
 		//alert('test...');
-		if (gfxLookup[id].isDragging)
+		if (	gfxLookup[obj.rect.gfxId].isDragging)
 			return;
 
-		var csstype = models[graphLookup[id].universeid].type;
+		var csstype =obj.rect.cssType;// models[graphLookup[id].universeid].type;
 	//	var type= ptr.ptr[ptr.ptr.length-2];
 		//console.log(gfx);
 		//console.log("*********");
-		var p = getObject(obj.rect.ptr, graphics);	
+		var p = getObject(obj.rect.ptr, graphLookup);	
 		//console.log(p);
 		var type = obj.rect.type	
 	//	if (type == "label") {
+		console.log("test....");
 		p.div.setAttribute(csstype+type, "over");
 		//	console.log(ptr.div);
 	//	}else 
@@ -1088,10 +1101,10 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 		//console.log("testing mouse out from this shit..");
 		//console.log(gfx);
 		var id = obj.rect.ptr[0];
-		if (gfxLookup[id].isDragging)
+		if (	gfxLookup[obj.rect.gfxId].isDragging)
 		       	return;
 
-		var csstype = models[graphLookup[id].universeid].type;
+		var csstype = obj.rect.cssType;//models[graphLookup[id].universeid].type;
 		var type= obj.rect.type;
 
 		/*
@@ -1101,7 +1114,7 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 		graphLookup[id]["ptr"][p.ptr];
 		*/
 		var a = copyArray(obj.rect.ptr);
-		a.pop();a.pop();	
+	//	a.pop();a.pop();	
 		var selected = !getObject(a, graphLookup).hideChildren;
 		
 		switch (type) {
@@ -1118,7 +1131,7 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 	}
 
 	nodeEventHandler.prototype["handleMouseUp"] = function (obj, e) {
-		var id = obj.rect.ptr[0];
+		var id = obj.rect.gfxId;
 		gfxLookup[id].reindex();
 		//gfxLookup[id].redrawImages();
 	}

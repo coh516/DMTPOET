@@ -394,7 +394,7 @@ htmlRenderer.prototype = {
 			var ll = i;
 			ptr = itemPtr.concat(["index", ll, "gfx", gfxRoot.type]);
 			//	console.log("posss-----------------------------------");
-			var o = { "type":"index", "index":i, "height":ch, "width":cw, "x":pos.x, "y":pos.y, "z":zi, "right": cw+pos.x, "bottom":ch+pos.y, "graphptr":{"id":id,  'value':tlg["value"], "index":i}, "ptr":ptr, "div":d, "cssType":gfxRoot.type}
+			var o = { "type":"index", "index":i, "height":ch, "width":cw, "x":pos.x, "y":pos.y, "z":zi, "right": cw+pos.x, "bottom":ch+pos.y, "graphptr":{"id":id,  'value':tlg["value"], "index":i}, "ptr":ptr, "div":d, "cssType":gfxRoot.type, "gfxRoot":gfxRoot.rootPtr.concat(['gfx', gfxRoot.type]), "gfxId":gfxRoot.gfxId, "nodeRoot":itemPtr, "indexRoot":itemPtr.concat(["index", ll])}
 			rect.y+=ch;
 			//	console.log(ptra);
 		//	console.log(tlg['index']);
@@ -404,7 +404,7 @@ htmlRenderer.prototype = {
 			//	console.log(graphics);
 			//console.log("-_________________________ptr");
 			//console.log(ptr);	
-			snapSpace.prototype.regObject(ptr, "graphLookup", nodeEvents);
+			snapSpace.prototype.regObject(ptr, "graphLookup");
 			//	console.log(tlg);
 			//grid.regObject(ptrs);
 			//	buffer.fillRect(0,i*10, 10, 10);
@@ -462,7 +462,10 @@ htmlRenderer.prototype = {
 			ps.push[ptr[i]];
 		}
 		var layout = gfo.layout;
-		var o = {"layout":gfo.layout, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptra, "div":label, "ptrString":ps.join()};
+		var o = {"layout":gfo.layout, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptra, "div":label, "ptrString":ps.join(), "cssType":gfxRoot.type, "gfxRoot":gfxRoot.rootPtr.concat(['gfx', gfxRoot.type]), "gfxId":gfxRoot.gfxId, "nodeRoot":ptr, "el":ul};
+
+		// -> 
+
 	//	if (_tableDiv) o.tableDiv = _tableDiv
 	//	if (_tableRow) o.tableRow = _tableRow
 	//	if (_layout) o.layout = _layout

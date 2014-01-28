@@ -32,14 +32,18 @@ var menuHandler = {
 		// need to figure how to connect the nodes and execute the point.....
 		this.gid = graph.id;
 
-		var g= new Gfx({"type":uniName, "ptr":[this.gid], "renderer":htmlRenderer}); 
+		var g= new Gfx({"type":uniName, "ptr":[this.gid], "renderer":htmlRenderer});
+		this.gfxId = g.id;
 		//g.create(graph.id);  //uniName, [gid], htmlRenderer);
 	//	g.moveTo(0,100, 100);//gfxLookup[gid].topz+1);
 		console.log(g);
+		console.log(this.gfxId);
+		
 		g.build();
 		g.hide();
 		this.cssType = g.type
 		//console.log(g);
+
 		if (zIndex[uniName] === undefined)
 			alert("xxxx");
 
@@ -59,7 +63,7 @@ var menuHandler = {
 	},
 
 	"showMenu":function (e, gfxObj) {
-		if (gfx.prototype.isRenaming) return;
+		if (Gfx.prototype.isRenaming) return;
 		var id = this.gid;
 		//console.log(id + " <<< yo");
 		//console.log([id].isRenaming);
@@ -67,27 +71,30 @@ var menuHandler = {
 		//if (gfx.prototype.isRenaming) return;
 		//console.log("<SLKFJSDLF" + this.lastPtr);
 		//if (this.lastPtr) console.log(this.lastPtr);
-		this.cssType = gfxObj.cssType;
-		this.lastGfx = gfxObj;
-		this.lastPtr = gfxObj.ptr;
+		//gfxLookup[this.gfxId].rootGfxObj
+		//this.cssType = gfxObj.cssType;
+		//this.lastGfx = gfxObj;
+		this.lastRect = gfxObj;
 		
 		//console.log("cleo the cat");
-		var gph = models[this.uni]["graph"][this.gid];
+	//	var gph = models[this.uni]["graph"][this.gid];
 		//var gf2 = gfxLookup[gpo.gid];
-		var d = gph.el.style;
+	//	var d = gph.el.style;
 		//console.log(d);
 		//console.log("_-----------------------_");
-		d.display = ""; //"none" ? "" : "none";
+	//	d.display = ""; //"none" ? "" : "none";
 		//alert("test...");
-		gph["hidden"] =  false; //(d.display.length > 0)
+	//	gph["hidden"] =  false; //(d.display.length > 0)
+		
+		gfxLookup[this.gfxId].show();
 		var pe = getPos(e);
 		// update event table
 		//alert(gfx.prototype.lastz);
 		//console.log(gfx);
 		
 	//	alert("xxxxx: "+models[this.uni].type);
-		gfxLookup[this.gid].moveTo(pe.x, pe.y,  zIndex[models[this.uni].type]);
-		gfxLookup[this.gid].reindex();
+		gfxLookup[this.gfxId].moveTo(pe.x, pe.y,  zIndex[gfxLookup[this.gfxId].type]);
+		gfxLookup[this.gfxId].reindex();
 		this.menuVisible = true;
 
 		console.log("xxxxxxxxxxxxxxxx");	
@@ -100,17 +107,18 @@ var menuHandler = {
 		var id = this.gid;
 		//var ptr = contextHandler.prototype.lastPTR;
 		//console.log(id);
-		var h = graphLookup[id]["hidden"]
+		var h = gfxLookup[this.gfxId]["hidden"]
 		//alert(h);
 		//if (gfxLookup[id].isRenaming) return;
-		if (!h) {
-			gfxLookup[id].hide();
+		if (!gfxLookup[this.gfxId].isHidden()) {
+			console.log(this);
+			gfxLookup[this.gfxId].hide();
 			//var d = graphLookup[id].el.style;
 			//d.display = "none";
 			//graphLookup[id]["hidden"] = true;
 		} else {
 		//	if (gfx.isRenaming) return;
-			var cm = menuHandler.showMenu.bind({"gid":id, "uni":this.uni});
+			var cm = menuHandler.showMenu.bind({"gid":id, "gfxId":this.gfxId});
 			cm(e);
 		}
 	},
@@ -118,12 +126,14 @@ var menuHandler = {
 		//alert(this.id);
 		var id = this.gid;
 		//var ptr = contextHandler.prototype.lastPTR;
-		var h = graphLookup[id]["hidden"]
+		//var h = graphLookup[id]["hidden"]
+		var h = gfxLookup[this.gfxId].isHidden()
 		//alert(h);
 		if (!h) {
-			var d = graphics[id].el.style;
-			d.display = "none";
-			graphLookup[id]["hidden"] = true;
+			//var d = graphics[id].el.style;
+			//d.display = "none";
+			//graphLookup[id]["hidden"] = true;
+			gfxLookup[this.gfxId].hide();
 			this.menuVisible = false;		
 			
 		} else {
@@ -157,7 +167,7 @@ contextMenu.setup = function() {
 	//console.log("____________________________");
 	// event processor needs to check if there is a specific event on the item node selected
 	//
-	events[o.uni] = contextEventHandler.prototype;
+	events['contextmenu'] = contextEventHandler.prototype;
 }
 
 contextMenu.traverseProgram = function() {
@@ -208,49 +218,34 @@ contextMenu.traverseProgram = function() {
 }
 
 contextMenu.hideLastPtr = function()  {
-	var lastPtr =  this.lastPtr;
-	console.log(lastPtr);
-	var id = lastPtr[0]
-		var a = copyArray(lastPtr);
-	a.pop(); //a.pop();
-	gfxLookup[id].hideChildren(a);
+	
+	gfxLookup[this.lastRect.gfxId].hideChildren(this.lastRect.nodeRoot);
 }
 
-contextMenu.showLastPtr = function() {
-	var lastPtr =  this.lastPtr;
-	//lastPTR.pop();lastPTR.pop();
-	// access ptr from graphics
-	var id = lastPtr[0];
-	var a = copyArray(lastPtr);
-	a.pop(); 
-	gfxLookup[id].showChildren(a);
+contextMenu.showLastPtr = function(rect) {
+	gfxLookup[this.lastRect.gfxId].showChildren(this.lastRect.nodeRoot);
+
 }
 
 contextMenu.renamePtr = function() {
-	// push textmenu div :)	
-	//var id = this.lastPtr[0];
-	//alert("test..");
-	gfx.prototype.mkInputBox(this.lastPtr);
-	//this.isRenaming = true;
-	return;
+	gfxLookup[this.lastRect.gfxId].renamePtr(this.lastRect.nodeRoot);
 }
 
 contextMenu.addSibling = function() {
-	var id = this.lastPtr[0];
-	var a = copyArray(this.lastPtr);
-	a.pop();//;a.pop();
-	graphLookup[id].addSibling(a, "acid", contextMenu.cleanUpLines);
-	gfxLookup[id].rebuild();	
+	var id = this.lastRect.ptr[0];
+//	var a = copyArray(this.lastRect.nodeRoot);
+	//a.pop();//;a.pop();
+	//this makes no sense .. cleanUpLines should be part of gfx.......
+	graphLookup[id].addSibling(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
+	gfxLookup[this.gfxId].rebuild();	
 }
 
 contextMenu.addChild = function() {
-	var id = this.lastPtr[0];
-	var o = graphLookup[id];
-	var a = copyArray(this.lastPtr);
-	a.pop();
-	graphLookup[id].addChild(a, "acid", contextMenu.cleanUpLines);
+	var id = this.lastRect.ptr[0];
+
+	graphLookup[id].addChild(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
 	//console.log("loooochi");
-	gfxLookup[id].rebuild();
+	gfxLookup[this.gfxId].rebuild();
 	/*
 	var id = this.lastPtr[0];
 	var o = getObject(this.lastPtr, graphics);
@@ -264,7 +259,7 @@ contextMenu.addChild = function() {
 //
 //
 // this should bemoved to be part of the curvelines.... not here... anything but here! omg! no!
-//
+// ugh.
 //
 
 contextMenu.cleanUpLines = function(o) {
@@ -310,51 +305,39 @@ contextMenu.cleanUpLines = function(o) {
 }
 // i think this should be in a general user interface class...... 
 contextMenu.remove = function() {
-	var a = copyArray(this.lastPtr);
-	//console.log(a);
-	var b = copyArray(this.lastPtr);
 
-	//alert(this.lastPtr.join());
+	var id = this.lastRect.ptr[0];
+	var o = getGraphObject(this.lastRect.nodeRoot);
 
-	b.pop();
-        //b.pop();
-	var ca = copyArray(b);
-	
-	//var o = getObject(b, grraphLookup);
-	//var oItems = o.gfx.length
+	graphLookup[id].deleteNode(b, contextMenu.cleanUpLines);
 
-	var idx = a[a.length-1];
-
-	var o = getObject(b, graphLookup);
-	//console.log(idx);
-	//console.log(o);
-	ca.push("index");
-
-	graphLookup[b[0]].deleteNode(b, contextMenu.cleanUpLines);
-
-	gfxLookup[b[0]].rebuild();
+	//gwan need some help
+	gfxLookup[this.lastRect.gfxId].rebuild();
 }
 contextMenu.setNodeType = function(type) {
+	/*
 	var a = copyArray(this.lastPtr);
 	a.pop();
 	var id = a[0];
 	var o = getObject(a, graphLookup)
-	console.log(o);
+	*/
+	var o = getGraphObject(this.lastRect.nodeRoot)
+//	console.log("xxxxxxxxxxxxxxxxxxxxx");
 	//console.log(o);
 	//o.type = o.type == type ? "" : type;
 	//o.type = "root";
-	if (!o.types) o.types = {}
+	 if (!o.types) o.types = {}
 	
 	o.types[type] = !o.types[type] 
 	
 	// this should be in the renderer (call re-render)
 	// should be re-render node without rebuilding the entire tree
-	var csstype = this.cssType; //models[graphLookup[id].universeid].type;
+	var csstype = this.lastRect.cssType; //models[graphLookup[id].universeid].type;
 	//csstype+="UL";
 	var t = o.types[type];
 	o.gfx.div.setAttribute(csstype+type, t ? "label": false);
 
-	o.el.setAttribute(csstype+type, t ? "section":false);
+	o.gfx.el.setAttribute(csstype+type, t ? "section":false);
 
 	
 
@@ -409,8 +392,8 @@ stageMenu.setup = function() {
 	var o = this.init(menu, "stagemenu");
 	//console.log(o);
 	//console.log("________________________________");
-	events[o.uni] = stageEventHandler.prototype;
-	events["screenClick"] = this.manageScreenClick.bind({gid:o.gid, uni:o.uni});
+	events['stagemenu'] = stageEventHandler.prototype;
+	events["screenClick"] = this.manageScreenClick.bind({gid:o.gid, gfxId:this.gfxId});
 }
 
 
@@ -422,10 +405,11 @@ stageMenu.mksubmenu = function() {
 
 stageMenu.manageScreenClick = function(e) {
 	//if (!contextMenu.lastPtr) //return;
-	var sv = menuHandler.switchVisibility.bind({gid:this.gid, uni:this.uni});
+	var sv = menuHandler.switchVisibility.bind({gid:this.gid, gfxId:this.gfxId});
 	//sv(e);
 	var ok = true;
-	if (gfx.prototype.isRenaming) {
+	// should be 'get renaming'
+	if (Gfx.prototype.isRenaming) {
 		ok = false;
 		gfx.prototype.deselectInputBox();
 	}
@@ -451,7 +435,7 @@ stageMenu.mkNewNode = function(e) {
 	//gf.setXYZ();
 	//gf.build();
 	pg.build();
-	events[pid] = nodeEvents;
+//	events[pid] = nodeEvents;
 }
 
 // draw the save / load dialogs

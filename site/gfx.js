@@ -74,8 +74,8 @@ Gfx.prototype = {
 		if (!gfxLookup['type'][type])
 			gfxLookup['type'][type] = {};
 
-		gfxLookup['type'][type][ptr.join()] = this;
-		gfxLookup['id'][this.id] = this;
+	//	gfxLookup['type'][type][ptr.join()] = this;
+		gfxLookup[this.id] = this;
 		//div = document.createElement("div");
 		//this.indexedModel = graphics[id]; 
 		
@@ -335,7 +335,10 @@ Gfx.prototype = {
 		//o["hidden"] = true;	
 		this.renderer.hide(o);
 	},
-
+	"isHidden":function() {
+		var o = getObject(this.gfxPtr, graphLookup);
+		return o.hidden;	
+	},
 	"show":function() {
 		var o = getObject(this.gfxPtr, graphLookup);
 		this.renderer.show(o);
@@ -348,9 +351,10 @@ Gfx.prototype = {
 		this.rebuild();
 	},
 	"hideChildren":function(ptr) {
+		// should be in gfx object
 		var o = getObject(ptr, graphLookup);
 		o.hideChildren = true;
-		//console.log(o);
+		console.log(o);
 		//console.log("extasy");
 
 		this.rebuild();
@@ -509,8 +513,9 @@ Gfx.prototype = {
 		//console.log(canvas.style);
 	},
 	"setX":function(x) {
-
-		this.model.loc.x = x;
+		var tml = this.rootGfxObj
+		//console.log(this.rootGfxObj.loc + ")()()(*)(*)(*)()(*)(*)(*");
+		tml.loc.x = x;
 
 		this.moveCanvas();
 			
@@ -519,14 +524,16 @@ Gfx.prototype = {
 	},
 	"setY":function(y) {
 		//console.log("draggging....");
-		this.model.loc.y = y;
+		var tml = this.rootGfxObj
+		//
+		tml.loc.y = y;
 		this.moveCanvas();
 		//this.putToScreen();
 
 		// move canvas element
 	},
 	"setXY":function(x, y) {
-		var tml = this.model.loc;
+		var tml = this.rootGfxObj.loc
 		tml.x = x;
 		tml.y = y;// = { "x":x, "y":y};
 		this.moveCanvas();

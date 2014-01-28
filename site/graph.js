@@ -1034,5 +1034,8 @@ Graph.prototype = {
 		// reduce the actualy child/parent hash now
 }
 
-
+function getGraphObject(p) {
+	console.log(getObject(p, graphLookup));
+	return getObject(p, graphLookup);
+}
 

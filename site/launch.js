@@ -112,9 +112,10 @@ function testCase() {
 }
 
 function setupCanvas() {
-//	linkCurve.prototype.setup();       	
-//	contextMenu.setup();
-//	stageMenu.setup();
+	events['ptr'] = nodeEvents;
+	linkCurve.prototype.setup();       	
+	contextMenu.setup();
+	stageMenu.setup();
 //	saveMenu.setup();
 }
 
