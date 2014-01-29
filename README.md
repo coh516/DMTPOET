@@ -2,7 +2,7 @@ Document Management Template POET
 ===
 Linked document graph framework for managing complex templates modularly.  The templars toolkit.
 
-The DMT POET provides a system to model, edit, evaluate and compare grouped variables. This is accomplished by creating a graph model from a system of phrases delineating executable context and the data it’s bound within, editable within the api or patch editor environment. This simplifies the management of complex business logic using the poetic vector interface. The resultant is the generation of organized parseable generic documents (json/xml/csv/html/css/text/etc).
+The DMT POET system provides a method to model, edit, evaluate and compare grouped variables. This is accomplished by creating a graph model from a system of phrases delineating executable context and the data it’s bound within, editable within the api or patch editor environment. This simplifies the management of complex business logic using the poetic vector interface. The resultant is the generation of organized parseable generic documents (json/xml/csv/html/css/text/etc).
 
 Testing
 ===
