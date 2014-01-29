@@ -1,6 +1,6 @@
 Document Management Template POET
 ===
-Linked document graph framework for managing complex templates modularly, with visual path editor.
+Linked document graph framework for managing complex templates modularly.  The templars toolkit.
 
 Testing
 ===
