@@ -653,21 +653,10 @@ contextEventHandler.prototype.handleMouseCanvasClick = function(obj, e) {
 contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 	//alert("test...");
 	//console.log(ptr);
-	//console.log(ptr);
 
-	//var lookup = lookups[obj.lookupName];
-	var o = getGraphObject(obj.rect.nodeRoot)
-	
-	// need a way to travel backwords to get text representation
-	//var id= obj.rect.ptr[0];
-	//var g = graphLookup[id];
-	//var r = g.getLabels(ca);
-//	console.log("-------------------------shide");
-//	console.log(r.join());
-//	console.log(ca); 
-	// there should be some type of auto-mapping
-	//cntextMenu.lastPtr = obj.rect;
-	switch (o.value) {
+	var r = Graph.prototype.getLabels(obj.rect.nodeRoot);
+
+	switch (r.join()) {
 		case "expand":
 		//		alert("test..");
 			contextMenu.showLastPtr();			
@@ -689,12 +678,16 @@ contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 		case "add sibling":
 			contextMenu.addSibling();
 			break;
+		case "set type,value":
+			contextMenu.setNodeType("value");
+			break;
 		case "set type,root":
-			contextMenu.setRootNode();
+			contextMenu.setNodeType("root");
 			//alert("xxx");
 			break;
 		case "set type,program":
 			contextMenu.setNodeType("program");
+			console.log("hihihi")
 			break;
 		case "set layout,grid":
 			contextMenu.setGridLayout();
@@ -1008,44 +1001,12 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 				//graph = graphLookup[s1.id];
 				//graph.prototype.connect(s1.graphptr, s2.graphptr);
 				//alert("test..");
-				var s1c = copyArray(s1.rect.ptr);
-				var s2c = copyArray(s2.rect.ptr);
-				// this conversion needs to be reversed in the line curve
-				// perhaps later, i'll make a static function or smth
+		//		var s1c = copyArray(s1.rect.indexRoot);
+		//		var s2c = copyArray(s2.rect.indexRoot);
+		
+				Gfx.prototype.connect(s1.rect, s2.rect);
 
-				//console.log(s1);
-				//console.log(s1c);
-				//console.log("--");
-				
-
-			
-				// this should be somewhere else ...
-				// on reload, this will need to be reorganized.. 
-				/*
-				if (!g1o.hasOwnProperty("index")) {
-					g1o.index = [{"parents":[]}];
-					g1o.index = [{"children":[]}];
-				}
-				if (!g2o.i("index")) {
-					g2o.index = [{"parents":[]}];
-					g2o.index = [{"children":[]}];
-				}
-				*/
-			//	s1c.push("index");
-			//	s1c.push(g1index);
-			//	s2c.push("index");
-			//	s2c.push(g2index);
-		//		console.log(s1c);
-		//		console.log(s2c);
-				s1c.pop(); s2c.pop();
-				gfx.prototype.connect(s1c, s2c);
-
-
-				//graph.prototype.connect(s1c, s2c);
-				//console.log("**************************");
-				//console.log(s1.ptr);
-				//console.log("(())(())(())(())(())(())(())");
-				//console.log(s2.ptr);	
+	
 				s1.rect.div.setAttribute(csstype, "unselected");
 				s2.rect.div.setAttribute(csstype, "unselected");
 				s1.rect.selected = false;

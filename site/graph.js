@@ -591,7 +591,7 @@ Graph.prototype = {
 		graph.prototype.itemListArray.push(item);	
 	},
 	"getItemListFromPtr":function(ptr) {
-		graph.prototype.itemListArray = [];
+		Graph.prototype.itemListArray = [];
 		var to = getObject(ptr, graphLookup);
 		//console.log(ptr);
 		//console.log(to);
@@ -1035,7 +1035,6 @@ Graph.prototype = {
 }
 
 function getGraphObject(p) {
-	console.log(getObject(p, graphLookup));
 	return getObject(p, graphLookup);
 }
 

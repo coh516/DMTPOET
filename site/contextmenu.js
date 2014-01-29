@@ -107,7 +107,7 @@ var menuHandler = {
 		var id = this.gid;
 		//var ptr = contextHandler.prototype.lastPTR;
 		//console.log(id);
-		var h = gfxLookup[this.gfxId]["hidden"]
+		//var h = gfxLookup[this.gfxId]["hidden"]
 		//alert(h);
 		//if (gfxLookup[id].isRenaming) return;
 		if (!gfxLookup[this.gfxId].isHidden()) {
@@ -228,7 +228,8 @@ contextMenu.showLastPtr = function(rect) {
 }
 
 contextMenu.renamePtr = function() {
-	gfxLookup[this.lastRect.gfxId].renamePtr(this.lastRect.nodeRoot);
+	gfxLookup[this.lastRect.gfxId].mkInputBox(this.lastRect);
+//	gfxLookup[this.lastRect.gfxId].renamePtr(this.lastRect.nodeRoot);
 }
 
 contextMenu.addSibling = function() {
@@ -237,7 +238,7 @@ contextMenu.addSibling = function() {
 	//a.pop();//;a.pop();
 	//this makes no sense .. cleanUpLines should be part of gfx.......
 	graphLookup[id].addSibling(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
-	gfxLookup[this.gfxId].rebuild();	
+	gfxLookup[this.lastRect.gfxId].rebuild();	
 }
 
 contextMenu.addChild = function() {
@@ -245,7 +246,7 @@ contextMenu.addChild = function() {
 
 	graphLookup[id].addChild(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
 	//console.log("loooochi");
-	gfxLookup[this.gfxId].rebuild();
+	gfxLookup[this.lastRect.gfxId].rebuild();
 	/*
 	var id = this.lastPtr[0];
 	var o = getObject(this.lastPtr, graphics);
@@ -305,14 +306,12 @@ contextMenu.cleanUpLines = function(o) {
 }
 // i think this should be in a general user interface class...... 
 contextMenu.remove = function() {
-
 	var id = this.lastRect.ptr[0];
-	var o = getGraphObject(this.lastRect.nodeRoot);
 
-	graphLookup[id].deleteNode(b, contextMenu.cleanUpLines);
-
-	//gwan need some help
+	graphLookup[id].deleteNode(this.lastRect.nodeRoot, contextMenu.cleanUpLines);
+	//console.log("loooochi");
 	gfxLookup[this.lastRect.gfxId].rebuild();
+
 }
 contextMenu.setNodeType = function(type) {
 	/*
@@ -322,6 +321,7 @@ contextMenu.setNodeType = function(type) {
 	var o = getObject(a, graphLookup)
 	*/
 	var o = getGraphObject(this.lastRect.nodeRoot)
+//	var p = getGraphObject(this.lastRect.)
 //	console.log("xxxxxxxxxxxxxxxxxxxxx");
 	//console.log(o);
 	//o.type = o.type == type ? "" : type;
@@ -335,9 +335,11 @@ contextMenu.setNodeType = function(type) {
 	var csstype = this.lastRect.cssType; //models[graphLookup[id].universeid].type;
 	//csstype+="UL";
 	var t = o.types[type];
-	o.gfx.div.setAttribute(csstype+type, t ? "label": false);
+	console.log("-------");
+	console.log(this.lastRect);
+	this.lastRect.div.setAttribute(csstype+type, t ? "label": false);
 
-	o.gfx.el.setAttribute(csstype+type, t ? "section":false);
+	this.lastRect.el.setAttribute(csstype+type, t ? "section":false);
 
 	
 
@@ -411,7 +413,7 @@ stageMenu.manageScreenClick = function(e) {
 	// should be 'get renaming'
 	if (Gfx.prototype.isRenaming) {
 		ok = false;
-		gfx.prototype.deselectInputBox();
+		gfxLookup[this.gfxId].deselectInputBox();
 	}
 	if (contextMenu.menuVisible) {
 	       ok = false;	

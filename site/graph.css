@@ -17,19 +17,19 @@
 		list-style-type: none;
 		
 	}
-	.stagemenuLI {
+	.stagemenuContainerUL {
 		margin: 0px;
 		padding: 0px;
-		margin-left:10px;
+		margin-left:0px;
 		list-style-type: none;
 		border: none; 
 	}
 	/* shouldn't need to be here.. theres no links! */
 	
-	.stagemenuLinksLI {
+	.stagemenuLI {
 		margin: 0px;
 		padding: 0px;
-		margin-left:10px;
+		margin-left:0px;
 		list-style-type: none;
 		border: none; 
 	}
@@ -67,12 +67,19 @@
 		list-style-type: none;
 		
 	}
+	.contextmenuContainerUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+		background-color:yellow;
+		list-style-type: none;
+	}	
+	
 	/* shouldn't need to be here.. theres no links! */
 	
-	.contextmenuLinksLI {
-		margin: 0px;
+	.contextmenuLI {
+		margin-left: 15px;
 		padding: 0px;
-		margin-left:10px;
 		list-style-type: none;
 		border: none; 
 	}

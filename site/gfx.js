@@ -141,14 +141,12 @@ Gfx.prototype = {
 	"deselectInputBox": function() {
 		//alert("TEST..");
 		//var t = gfxLookup.isRenaming;
-		var ptr = Gfx.prototype.isRenaming.ptr;
+		var rect = Gfx.prototype.isRenaming.rect;
+		var ptr = rect.ptr;
 		//alert(ptr);
-		if (ptr) { //Gfx.prototype.isRenaming) { // renaming case
-			//console.log("-----");
-			//console.log(contextMenu.lastPtr);
+		if (ptr) {;
 			
 			var o = getObject(ptr, graphLookup);
-			//console.log(t);
 			//once again.. need to store id's...
 			if (!o.inputBox) console.log(o);
 			var it = o.inputBox.value;
@@ -156,33 +154,28 @@ Gfx.prototype = {
 			
 			o.inputBox.parentNode.removeChild(o.inputBox);
 			o.hiddenInputBox.parentNode.removeChild(o.hiddenInputBox);	
-			//o.div.innerText = it;
 			
 			var p = copyArray(ptr);
 			p.pop(); 
 			var id = ptr[0];
-			console.log(it);
-			console.log(p);
-			console.log("MEOOOOOOOOOOOOOOOOWWWWWWWWWWWWWWWWWWWWWWWW");	
-			graphLookup[id].renamePtr(p, it);
+		
+			graphLookup[id].renamePtr(rect.nodeRoot, it);
 			Gfx.prototype.isRenaming = false;
 			delete events[id];
-			//for (var i=0; i < 100; i++)
-			gfxLookup['id'][Gfx.prototype.isRenaming.gfxId].rebuild();
+			gfxLookup[rect.gfxId].rebuild();
 		}
 	},
 	// this should do something silly  like f(ptr).type = "inputBox"; reindex();
 	// this should be in html renderer
 	// will refactor in a minute....
-	"mkInputBox":function(ptr) {
+	"mkInputBox":function(rect) {
 		// push textmenu div :)
 		console.log(ptr + "<<<<>>>>>");	
 		var id = ptr[0];
-		var o = getObject(ptr, graphLookup);
-		//console.log(o);
-		var ca = copyArray(ptr);
-		ca.pop();//ca.pop();
-		var item = getObject(ca, graphics);
+		console.log(rect);
+		var o = getGraphObject(rect.ptr)//, graphLookup);
+		var item = getGraphObject(rect.nodeRoot);
+		//var item = this.rootGfxObj;//ect() //getObject(ca, graphics);
 		var d = o.div;
 		d.innerText = "";
 
@@ -194,9 +187,7 @@ Gfx.prototype = {
 		//ib.style.zIndex = "2000000";
 		ib.value = item.value; 
 		d.appendChild(ib);
-		//d.style.width = d.offsetWidth + "px";
-		//d.style.height = d.offsetHeight + "px";
-		//d.removeChild(ib);
+	
 		//the idea is to create a hidden area and an absolute
 		// position one .. this way you can keep the svg layer
 		// between the two
@@ -213,15 +204,14 @@ Gfx.prototype = {
 			o.inputBox = ibc;
 		o.hiddenInputBox = ib;
 		//console.log("__________________________________");
-		gfxLookup['id'][graphId].reindex();
+		this.reindex();
 		//console.log(this.lastPtr);
 		//console.log("&*8&&&**************************&$&$");
 		console.log(id + "<thumb");
 	
 		// this is such a hack becuase it requires focus.. whatever.
-		Gfx.prototype.isRenaming = {"ptr":copyArray(ptr), "gfxId":this.id};
+		Gfx.prototype.isRenaming = {"rect":rect, "gfxId":this.id};
 
-		//events[ptr.join()] = inputBoxHandler.prototype; //this.renamer.bind({gid:o.gid, uni:o.uni, objptr:this.lastPtr});
 	},
 
 	// 2 b refactored
@@ -248,16 +238,11 @@ Gfx.prototype = {
 	},
 	
 	"build":function(cb) {
-		//this.mkIndexedModel();
-		//var pts = htmlRenderer.prototype.putToScreen.bind({id:this.id}); // after images made, put to screen
 		graphics = graphLookup;
 		this.renderer.setElement(this.rootGfxObj);
                                         //obj ref, beginPtr
 		this.renderer.mkPtrImgs(this.rootGfxObj);
 		this.hasBeenBuilt = true;
-		//this.renderer = htmlRenderer.prototype;
-		//this.drawAll();
-		//this.putToScreen();
 	},
 	"rebuild":function(cb) {
 	//	alert("x");
@@ -450,49 +435,17 @@ Gfx.prototype = {
 	},
 
 	"connect":function(c1, c2) {
-		//graph function provides direction (s2c,s1c) same thing
-		//var v1= getObject(c1,graphLookup).ptr.value
-	//	var v2 =  getObject(c2,graphLookup).ptr.value
-		console.log("connecting..."+c1+" "+v1+"  ..  "+c2+" "+v2); 
-		pt = graph.prototype.connect(c1, c2);
-		//this.drawLinks(c1, c2); // doesnt matter which one we give it
-		//this.rebuild();
+		console.log(c1+ " "+c2);	 
+		pt = Graph.prototype.connect(c1.indexRoot, c2.indexRoot);
 	
-		//linkCurve.prototype.refactor(c1, c2);
 		if (!pt) return;
-		graphLookup[c1[0]].rebuild();
+		gfxLookup[c1.gfxId].rebuild();
 
-		graphLookup[c2[0]].rebuild();
-		// add another index to the graph 
+		graphLookup[c1.gfxId].rebuild();
 
-		linkCurve.prototype.drawCurves(c1);
-		linkCurve.prototype.drawCurves(c2);
-		
-		/*	
-		var ps = pt.p.join(); 
-		var cs = pt.c.join();
-		var pca = [ps, cs, "rect"];
-		var pj = pt.p.join();
-		var cj = pt.c.join();
-		var curve = curveLookup[pj][cj];
-		*/
+		linkCurve.prototype.drawCurves(c1.indexRoot);
+		linkCurve.prototype.drawCurves(c2.indexRoot);
 
-		//alert(pca);
-	//	curve.register(); // should work
-		//snapSpace.prototype.regObject(pca, "curveLookup");
-		//curveLookup[pj]
-		//curveLookup[pj].regObject(pca, "curveLookup");
-//nom wah tea parlor dimsung
-		//events[j+]	
-		//curve.rect = {"ptr":[pt.ps, pt.cs], "x":
-
-		//var ptr = pt.p.join().concat(pt.c.join());
-	       	
-		//graphics[ptr] = {"rect":{"ptr":[ptr], "x":"", "y""}}
-		// create a new universe 
-			
-		//var o = {"visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptr, "div":label, "ptrString":ps.join()};
-		// register curves to event handler...
 	},
 
 
