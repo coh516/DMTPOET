@@ -28,7 +28,7 @@ As of Jan 2, 2004, The two stage document graph model is completed.
 >>>>>>> 
 License
 ===
-MIT
+GPL V3
 
 
 
