@@ -40,7 +40,7 @@ function testCase() {
 	       mids.push(gf);	
 		//gf.create(gids[i]); //"ptr", [gids[i]], htmlRenderer); // should be new gfx() gfx.create
 		
-		gf.moveTo(i*100, i*10);
+	//	gf.setXY(i*100, i*10);
 		
 		//gf.setXYZ();
 		//gf.build();
@@ -48,7 +48,7 @@ function testCase() {
 		gojs.push(gf);
 	
 	}
-	gojs[0].moveTo(450, 20);
+	mids[0].moveTo(450, 20, 100);
 	/*
 	gojs[3].moveTo(200, 300);
 
@@ -87,7 +87,9 @@ function testCase() {
 
 	o.gfx.ptr.layout = "grid";
 	console.log(o);
-	mids[0].rebuild();
+	mids[0].rebuild();  //rebuild might need to be fixed to just 'build'
+//	o.gfx.ptr.layout = "list";
+//	mids[0].rebuild();
 //	mids[0].rebuild();
 	
 /*
@@ -112,10 +114,20 @@ function testCase() {
 }
 
 function setupCanvas() {
-	events['ptr'] = nodeEvents;
-	linkCurve.prototype.setup();       	
-	contextMenu.setup();
+
+	var wm = new WindowManager();
+
+	wm.setup();
+
 	stageMenu.setup();
+
+	//stageMenu.baseNode
+	// should be ptrGfx.prototype.setupLinkCurve and ptrGfx.prototype.setupContextMenu
+
+//	ptrGfx.prototype.baseElement = stageMenu.baseElement;
+		events['ptr'] = nodeEvents;
+		linkCurve.prototype.setup();       	
+		contextMenu.setup();
 //	saveMenu.setup();
 }
 

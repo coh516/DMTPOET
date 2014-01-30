@@ -1,43 +1,44 @@
 function WindowManager() {
-//var uni = new universe();
-//	this.uniID = uni.id;
-	this.setup();
+
 }
+//WindowManager.prototype = Object.create(Gfx.prototype);
 
 WindowManager.prototype = {
 // i guess for the time being.. just draw a square in the upper left hand corner
 // one window 
 //
 	"setup":function() {
-		// element should be id'... 
-		this.element = document.createElement("div");
+		// element should be id'...
+		//this.element = document.createElement("span");
 //		this.uni = new universe(); // no need to typecast the universe
-		this.mkTabs();
+//		this.mkTabs()
+	//	this.element.setAttribute("setAttribute",
+		var graph = new Graph();
+		graph.hasIndex = false;
+
+		// bug in the renderer doesnt allow the first element to be set as a grid.
+		graph.setFromJSON({"x":["l","pivot", "r"]});	
+		var g= new Gfx({"type":"windowmanager", "ptr":[graph.id], "renderer":htmlRenderer});
+		g.build();
+		 graphLookup[graph.id]['gfx']['windowmanager'].layout = 'grid';
+		 graphLookup[graph.id]['item'][0]['gfx']['windowmanager'].hideItem = true;
+	//	 graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].hideItem = true;
+		 
+		 //a quick lookup system like wm['x'][0]['f'][0]['pivot'] would be ok
+	//	 var [graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].join()
+		 
+		g.rebuild();		
+		events['windowmanager'] = new staticEvents;
+		PtrGfx.prototype.baseElement = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
+
+		//nodeEvents[graph.id, 'item' , 1, 'gfx', 'windowmanager'] = function
 	},
+	"showDesign":function() {
 
+	},
+	"showRender":function() {
 
-	"mkTabs":function() {
-		var o = {"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"editor"}]}, {"label":[{"text":"stage"}]}]}]}};
-	
-//		var gid = this.uni.addGraph();
-//		graphLookup[gid].setFromJSON(o);
-		// this might need some refactoring down the road...
-		//
-		// the gfx phase should be a node which gets directed from the Point phase.....
-		//
-		//
-		// this _really_ should automatically generate a modular point structure 
-		/*
-		var gf = new Gfx("WindowManager", [gid], UIRenderer);
-		gf.build();
-		gf.moveTo(0, 0);
-		*/
-		
-
-		// need to link the code handler through the point traverser
-		//
 	}
-	
 }
 
 

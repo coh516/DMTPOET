@@ -34,7 +34,7 @@ gfxCounter = {};
 // need to update it...
 
 //used to be gfx(objType, id....
-//
+//there shouldnt be any html / dom references in here
 
 function Gfx(obj) {
 
@@ -47,8 +47,8 @@ Gfx.prototype = {
 		this.init(obj.type, obj.ptr, obj.renderer);
 	},
 
-	"init": function(type, ptr, renderer) {
-;
+	"init": function(type, ptr, renderer ) {
+		//console.log(baseElement);
 		this.type = type;
 		this.rootPtr = ptr;
 		this.graphId = ptr[0];
@@ -59,30 +59,16 @@ Gfx.prototype = {
 			this.renderer = htmlRenderer.prototype;
 
 		else this.renderer  = renderer.prototype;
-		// should get rid of this reference
-	//	this.model = graphLookup[id];
-		//var id = gid;
-		//graphics[id] = {}
-		//console.log(this.model);
-		//console.log("**************************************");
+
 		var ng = 0;
-		//console.log(id);
-	//	for (var g in graphics);
-	//	ng++;
+
 		this.id = mkguid();
 
 		if (!gfxLookup['type'][type])
 			gfxLookup['type'][type] = {};
 
-	//	gfxLookup['type'][type][ptr.join()] = this;
 		gfxLookup[this.id] = this;
-		//div = document.createElement("div");
-		//this.indexedModel = graphics[id]; 
-		
-		//thisGfx = this;
-		//var gfxLookup
-		//this.indexedModel = indexedModel;
-		//console.log(ptr);
+
 		var o = getObject(ptr, graphLookup);
 		if (!o.gfx)
 			o.gfx = {};
@@ -90,13 +76,12 @@ Gfx.prototype = {
 		if (!o.gfx[type])
 			o.gfx[this.type] = {};
 
-		var baseElement = document.body;	
+		if (!this.baseElement)
+			this.baseElement = document.body;
+		//console.log(this.baseElement);
 		//if (!baseElement) {
-		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
-		//}
-	//	elsekr
-	//	o.baseElement = baseElement;
-	//	build();
+		o.gfx[this.type] = {'baseElement':this.baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
+
 		this.gfxPtr = ptr.concat(['gfx', this.type]);
 		if (!Gfx.prototype.setted) 
 			this.setupNodeEvents();
@@ -344,6 +329,7 @@ Gfx.prototype = {
 
 		this.rebuild();
 	},
+	/*
 	"moveTo":function(x,y,z) {
 		//console.log(this);
 		// only manage the lastz for indexPtr
@@ -356,15 +342,21 @@ Gfx.prototype = {
 			if (z > Gfx.prototype.lastz && this.rootGfxObj.indexPtr)
 				Gfx.prototype.lastz = z;
 		} 
-		if (this.hasBeenBuilt)
+		if (this.hasBeenBuilt) {
 			this.renderer.moveGfx(this.rootGfxObj);
+		}
 
 		//linkCurve.prototype.drawCurves(c1);
 		//console.log("test test...");
 		// use proper canvas movation
 		//this.putToScreen();
 	},
+	*/
+	// wtv
+	"moveTo":function(x,y,z) {
+		this.setXY(x,y,z);
 
+	},
 	"renamePtr":function(oldptr, endPoint) {
 		n = this.indexedObject["item"];
 		//n.getOwnPropertNames.length();
@@ -441,7 +433,7 @@ Gfx.prototype = {
 		if (!pt) return;
 		gfxLookup[c1.gfxId].rebuild();
 
-		graphLookup[c1.gfxId].rebuild();
+		gfxLookup[c2.gfxId].rebuild();
 
 		linkCurve.prototype.drawCurves(c1.indexRoot);
 		linkCurve.prototype.drawCurves(c2.indexRoot);
@@ -486,17 +478,35 @@ Gfx.prototype = {
 		// move canvas element
 	},
 	"setXY":function(x, y) {
-		var tml = this.rootGfxObj.loc
-		tml.x = x;
-		tml.y = y;// = { "x":x, "y":y};
-		this.moveCanvas();
+		if (!this.rootGfxObj.loc)
+			this.rootGfxObj.loc = {'x':x, 'y':y}
+	       	else {
+			var tml = this.rootGfxObj.loc
+			tml.x = x;
+			tml.y = y;// = { "x":x, "y":y};
+		//}
+			this.moveCanvas();
+		}
 		//console.log(this.model.loc)
 		//console.log(canvas.style.top+" "+canvas.style.left);
 		//this.putToScreen();
 
 		// move canvas element
-	}, 
+	},
+       	"setZ":function(z) {
+		this.rootGfxObj.loc.z = z;
+	},	
+	"setXYZ":function(x,y,z) {
+		var tml = this.rootGfxObj.loc
+		tml.x = x;
+		tml.y = y;// = { "x":x, "y":y};
+		if (z) {
+			tml.z = z;
+		//	Gfx.prototype.lastz = z;
+		}
+		this.moveCanvas();
 
+	},
 	// most likely this will be refactored out into something more generic ... 
 
 	"ptr2InputBox":function(ptr) {

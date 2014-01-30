@@ -190,6 +190,8 @@ snapSpace.prototype = {
 				//console.log("xx: "+eventType);
 				//console.log(rr.rect.ptr[0]);
 				var evt = events[eventType];
+//				console.log(eventType);
+				//console.log(events[eventType]);
 			} else {
 				evt = events[le];
 			}
@@ -613,14 +615,17 @@ stageEventHandler.prototype.handleMouseClick = function(obj, e) {
 	//alert(ptr.ptr);
 	//alert(o.);
 	switch (o.value) {
-		case "evaluate": 
+		case "design window": 
 			// not sure if this is possible?
+			break;
+		case "render window":
 			break;
 		case "new node":
 			stageMenu.mkNewNode(e);
 			stageMenu.hideMenu();
 
 			break;
+	
 		case "save":
 			//alert("test...");
 		       	// draw save menu dialog
@@ -690,10 +695,10 @@ contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 			console.log("hihihi")
 			break;
 		case "set layout,grid":
-			contextMenu.setGridLayout();
+			contextMenu.setLayout('grid');
 			break;
 		case "set layout,list":
-			contextMenu.setListLayout();
+			contextMenu.setLayout('list');
 			break;
 		case "set type,value":
 			contextMenu.setNodeType("value");
@@ -720,11 +725,70 @@ contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 }
 
 
+function staticEvents() { }
+ 
+
+staticEvents.prototype = Object.create(userEvents.prototype);
+
+staticEvents.prototype.checkPtr = function(ptr) {
+	return (nodeEvents.hasOwnProperty(ptr))
+}
+staticEvents.prototype["handleMouseDown"] =  function(obj, e) {
+	//for (var i = 0; i < obj.rect.events.mouseDown.length; i++) {
+	console.log(obj.rect.ptr);
+	if (this.checkPtr(obj.rect.ptr.join()))
+	
+	if (nodeEvents[obj.rect.ptr.join()].mouseDown)
+		nodeEvents[obj.rect.ptr].mouseDown(e);
+	//}
+	//staticEvents[
+}
+
+staticEvents.prototype[	"handleMouseDrag"]= function(obj, e) {
+	if (this.checkPtr(obj.rect.ptr.join()))
+
+	
+	if (nodeEvents[obj.rect.ptr.join()].handleMouseDrag)	
+		obj.rect.events.handleMouseDrag(e);
+}
+
+staticEvents.prototype[	"handleMouseMove"]= function(obj, e) {
+	if (this.checkPtr(obj.rect.ptr.join()))
+
+	
+	if (nodeEvents[obj.rect.ptr.join()].handleMouseMove)
+		obj.rect.events.handleMouseDrag(e);
+}
+
+staticEvents.prototype[	"handleMouseClick"]= function(obj, e) {
+	if (this.checkPtr(obj.rect.ptr.join()))
+
+	
+	if (nodeEvents[obj.rect.ptr.join()].handleMouseClick)
+		obj.rect.events.handleMouseDrag(e);
+}
+
+staticEvents.prototype[	"handleMouseOut"]=function(obj, e) {
+	if (this.checkPtr(obj.rect.ptr.join()))
+
+	if (nodeEvents[obj.rect.ptr.join()].handleMouseOut)
+		obj.rect.events.handleMouseDrag(e);	
+}
+staticEvents.prototype[	"handleMouseEnter"]=function(obj, e) {
+	if (this.checkPtr(obj.rect.ptr.join()))
+
+	if (nodeEvents[obj.rect.ptr.join()].handleMouseEnter)
+		obj.rect.events.handleMouseEnter(e);	
+}
+
 
 //console.log(contextEventHandler.prototype);
 
 // todo manage ptr to events //
 // then refresh ptr event // 
+
+
+
 
 var handlerData = {};
 
@@ -778,18 +842,7 @@ moveHandler.prototype.handleMouseDown = function(obj, e) {
 	}
 	this.caller.handleMouseDown(ogptr, e);
 
-	//self.dbo.layer.draggable(false);
-	//	var dom = stage.getDOM();
-	//	dom.addEventListener('mousemove', self.handleMove, true);
-	//	dom.addEventListener('mouseup', self.handleMouseUp, true);
-	//	dom.addEventListener('click', self.handleClick, true);
-	//maybe self clean?
-	//
-	//	for (var g in self.moveStack) {
-	//		dom.addEventListener('mousemove', self.moveStack[g], true);
-	//	}
-	//
-	//beginmove
+e
 }
 // should probably be a new one
 //mover.layer.on("mousemove",
@@ -810,7 +863,7 @@ moveHandler.prototype.handleMouseDrag = function(obj, e){
 	//	var pos = stage.getUserPosition();
 	ptr = obj.rect.ptr; // 
 	var lookup = lookups[obj.lookupName];
-	console.log(obj.rect.gfxId + "<<");
+	//console.log(obj.rect.gfxId + "<<");
 	var gfo = gfxLookup[obj.rect.gfxId];
 	//console.log(pos.x);
 	if (handlerData.offset) {
@@ -857,55 +910,10 @@ moveHandler.prototype.handleMouseUp = function(obj, e) {
 	ptr = obj.rect.ptr;
 	
 	handlerData.offset = false;
-	//alert('testtttt..');	
-	//		console.log("handleMouseUp");
-	//		var dom = stage.getDOM();
-	//		dom.removeEventListener('mousemove', mover.handleMove, true);
-	//		dom.removeEventListener('mouseup', mover.handleMouseUp, true);
-	//for (var g in self.moveStack) {
-	//	dom.removeEventListener('mousemove', self.moveStack[g], true);
-	//	console.log("testing move listeners........");
-	//}
-
-	//self.mover = false;
+;
 	var lookup = lookups[ptr.lookupName];
 	var gfo = gfxLookup[ptr[0]]; // perhaps gtfo is a better variable name
 	gfxLookup[obj.rect.gfxId].isDragging = false;
-	//var pos = getPos(e); //stage.getUserPosition();
-	//alert(self.obj);
-	//var abs = self.obj.layer.getAbsolutePosition();
-	//	console.log(pos.x+" "+abs.x);
-	//var test = {};
-	//test.x = pos.x;
-	//test.y = pos.y;
-	//	console.log(pos);
-	//	console.log("-----");
-	//	console.log(self.ogup);
-	//e.stopImmediatePropagation();
-	//endmove
-	//handlerData.offset = false;
-	// should check draggability and then update the event grid
-	// assume everything is draggable for now.......
-	//var id = ptr[0];
-	/*
-	   var gl = gfxLookup[id];
-	   var sl = gl.snaps.length;
-	   for (var i=0; i < sl; i++) {
-	   var gls = gl.snaps[i];
-	   var glsl = gls.length;
-	   for (var j = 0; j < glsl; j++) {
-	   var glsj = gls[j];
-	//console.log(gls.x+" "+gls.y+" "+gls.ptr);
-	delete grid.snapLookup[glsj.x][glsj.y][glsj.ptr]
-	}
-	}
-	console.log("____ggggllll_____");
-	console.log(gl) 
-	delete gl.snaps;
-	*/
-	//snapSpace.prototype.updateSnapObject(id);
-	//grid.setItem(ptr);
-	//gl.regAll();		
 
 	this.caller.handleMouseUp(obj, e);
 

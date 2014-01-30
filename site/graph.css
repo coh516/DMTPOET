@@ -9,6 +9,24 @@
 			padding: 0px;
 			/*background-color: black;*/
       		}
+	.windowmanagerContainerUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+	/*	background-color:yellow; */
+		list-style-type: none;
+
+		
+	}
+	.windowmanagerUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+	/*	background-color:yellow; */
+		list-style-type: none;
+
+		
+	}
 	.stagemenuUL {
 		padding: 0px;	
 		margin: 0px;
@@ -165,6 +183,7 @@
 	[ptrlabel] {
 		display:inline-block;
 		cursor:pointer;
+		white-space: nowrap;
 	}
 	
 	[ptrlabel=unselected] {
