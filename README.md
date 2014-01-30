@@ -1,6 +1,6 @@
 Document Management Template POET
 ===
-Linked document graph framework for managing complex templates modularly.  The templars toolkit.
+Linked document graph framework for managing complex templates modularly.
 
 The DMT POET system provides a method to generate documents using tools to model, edit, evaluate and compare grouped variables. This is accomplished by creating a graph model from sets of phrases simplifying the management of complex business logic using the poetic vector interface.
 
