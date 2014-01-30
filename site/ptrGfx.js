@@ -42,7 +42,9 @@ PtrGfx.prototype._moveCanvas = function() {
 
 function mkPtrGfx(obj) { 
 	var g = new PtrGfx();
-	
+	//console.log(g.baseElement);
+	if (!g.baseElement) g.baseElement = document.body;
+	//console.log(g.baseElement);
 	g.create({"type":"ptr", "ptr":[obj.id], "renderer":htmlRenderer});
 	return g;
 }

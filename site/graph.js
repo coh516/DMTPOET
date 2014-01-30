@@ -183,7 +183,7 @@ Graph.prototype = {
 			var b = {};
 			//b.ptr = pc;
 			if (o["item"].length) {
-				b[item.value] = graph.prototype._toJSON(pc, item.value);
+				b[item.value] = Graph.prototype._toJSON(pc, item.value);
 			
 			}
 			else 
@@ -196,7 +196,7 @@ Graph.prototype = {
 	"toJSON": function(ptr) {
 		if (!ptr) var ptr = [this.id];
 		
-		return graph.prototype._toJSON(ptr);
+		return Graph.prototype._toJSON(ptr);
 	},
 
 	// rebuilding to standardize the gfx ptr 
@@ -301,8 +301,8 @@ Graph.prototype = {
 					var lio = liao[i] //getObject(lia, graphLookup);
 					if (lio.parents)
 					for (var lpa = 0; lpa < lio.parents.length; lpa++) {
-						v = graph.prototype.linksToRoot(lio.parents[lpa])
-						//v = graph.prototype.linksToRoot(lia[i]);
+						v = Graph.prototype.linksToRoot(lio.parents[lpa])
+						//v = Graph.prototype.linksToRoot(lia[i]);
 					//	console.log("------zoopie de pesce----");	
 					//	if (v) console.log("treeeeeeeeeeeeeeez");
 						if (!g && v) {
@@ -359,7 +359,7 @@ Graph.prototype = {
 						alert("test..");
 						return true;
 					}
-					v = graph.prototype.linksToRoot2(o.children[lpa], ptr, initPtr)
+					v = Graph.prototype.linksToRoot2(o.children[lpa], ptr, initPtr)
 				} 
 				if (v)
 				return v;		
@@ -384,9 +384,9 @@ Graph.prototype = {
 						alert("test..");
 						return true;
 					}
-					v = graph.prototype.linksToRoot2(o.parents[lpa], ptr, initPtr)
+					v = Graph.prototype.linksToRoot2(o.parents[lpa], ptr, initPtr)
 				} 
-					//v = graph.prototype.linksToRoot(lia[i]);
+					//v = Graph.prototype.linksToRoot(lia[i]);
 					//	console.log("------zoopie de pesce----");
 					//	if (v) console.log("treeeeeeeeeeeeeeez");
 				if ( v ) return v;
@@ -423,7 +423,7 @@ Graph.prototype = {
 					//	alert("test..");
 						return true;
 					}
-					v = graph.prototype.isCircular(o.children[lpa], ptr, initPtr)
+					v = Graph.prototype.isCircular(o.children[lpa], ptr, initPtr)
 				//	if (v) return v;
 				} 
 				
@@ -445,7 +445,7 @@ Graph.prototype = {
 					//	alert("test..");
 						return true;
 					}
-					v = graph.prototype.isCircular(o.parents[lpa], ptr, initPtr)
+					v = Graph.prototype.isCircular(o.parents[lpa], ptr, initPtr)
 				//	if (v) return v;
 				}
 				//return 	 v;
@@ -532,7 +532,7 @@ Graph.prototype = {
 		p["children"].push(n2);
 		
 		/*
-		if(graph.prototype.isCircular(n1, n2, n2)) {
+		if(Graph.prototype.isCircular(n1, n2, n2)) {
 			c["parents"].pop();
 			p["children"].pop();
 		//	alert("test...");
@@ -540,7 +540,7 @@ Graph.prototype = {
 		}
 		*/
 	//	alert("test..");
-	//	alert(graph.prototype.isCircular(n2, n1, n1, n2));
+	//	alert(Graph.prototype.isCircular(n2, n1, n1, n2));
 		
 		
 
@@ -579,7 +579,7 @@ Graph.prototype = {
 		c["parents"].push(n1);
 		p["children"].push(n2);
 
-		graph.prototype.isCircular(n1, n2);
+		Graph.prototype.isCircular(n1, n2);
 		
 
 		return {"p":n1, "c":n2};
@@ -588,7 +588,7 @@ Graph.prototype = {
 	// this returns an array of [clean] ptrArrays
 	"_getItemList":function(item) {
 	//	console.log("test test test test............................................"+item);
-		graph.prototype.itemListArray.push(item);	
+		Graph.prototype.itemListArray.push(item);	
 	},
 	"getItemListFromPtr":function(ptr) {
 		Graph.prototype.itemListArray = [];
@@ -598,14 +598,14 @@ Graph.prototype = {
 		//console.log("___________ptr from getItemListFromPtr____________________");	
 		//console.log("to::::");
 		//console.log(to);
-		graphLookup[this.id]._recurseItems(to, ptr, graph.prototype._getItemList);
-		return graph.prototype.itemListArray;
+		graphLookup[this.id]._recurseItems(to, ptr, Graph.prototype._getItemList);
+		return Graph.prototype.itemListArray;
 	},
 	"getItemList":function(ptr) {
 		if (ptr) return this.getItemListFromPtr(ptr);
-		graph.prototype.itemListArray = [];
-		graphLookup[this.id].recurseItems(graph.prototype._getItemList)
-		return graph.prototype.itemListArray;	
+		Graph.prototype.itemListArray = [];
+		graphLookup[this.id].recurseItems(Graph.prototype._getItemList)
+		return Graph.prototype.itemListArray;	
 	},
 	"_recurseItems":function(tl, a, f, props, propsArr) {
 		//alert(id);
@@ -940,7 +940,7 @@ Graph.prototype = {
 		var n = getObject(ptr, graphLookup);
 		var hier = [n.value];
 		var x = {};
-		while (n = graph.prototype['..'](n.ptr)) {
+		while (n = Graph.prototype['..'](n.ptr)) {
 			var v = getObject(n.ptr, graphLookup).value;
 			x[v] = {};
 			x = x[v];

@@ -23,7 +23,7 @@ var menuHandler = {
 
  		//this.uni =uni;
 
-		
+		graph.hasIndex = false;
 		graph.setFromJSON(json);
 		//alert(gfx)
 		//
@@ -33,11 +33,12 @@ var menuHandler = {
 		this.gid = graph.id;
 
 		var g= new Gfx({"type":uniName, "ptr":[this.gid], "renderer":htmlRenderer});
+		
 		this.gfxId = g.id;
 		//g.create(graph.id);  //uniName, [gid], htmlRenderer);
 	//	g.moveTo(0,100, 100);//gfxLookup[gid].topz+1);
-		console.log(g);
-		console.log(this.gfxId);
+		//console.log(g);
+		//console.log(this.gfxId);
 		
 		g.build();
 		g.hide();
@@ -47,7 +48,7 @@ var menuHandler = {
 		if (zIndex[uniName] === undefined)
 			alert("xxxx");
 
-		g.rootGfxObj.el.style.zIndex = 10000;
+		g.setZ(10000);
 		//zIndex[uniName]+1; 
 
 		return {"gid":this.gid}
@@ -361,26 +362,23 @@ contextMenu.setRootNode = function() {
 	o.el.setAttribute(csstype+"root", o.root);
 }
 
-contextMenu.setGridLayout = function() {
-	var b = copyArray(this.lastPtr);
-	b.pop();
-        //b.pop();
 
-	var o = getObject(b, graphLookup);
 
-	o.layout = "grid";
-	gfxLookup[this.lastPtr[0]].rebuild();
-	console.log(o);
-	console.log("ohioioioioioioioioooooo");
-}
+contextMenu.setLayout = function(g) {
 
-contextMenu.setListLayout = function() {
+	//var o = getGraphObject(this.lastRect)
+
+	this.lastRect.layout = g;
+	gfxLookup[this.lastRect.gfxId].rebuild();
+
+	/*
 	var lp = copyArray(this.lastPtr);
 	lp.pop();
 	//lp.pop();
 	var o = getObject(lp, graphLookup);
 	o.layout = "list";
 	gfxLookup[this.lastPtr[0]].rebuild();
+	*/
 }
 
 

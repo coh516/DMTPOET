@@ -470,7 +470,7 @@ curveLine.prototype = {
 		//var d = "M150 0 L75 200 L225 200 Z";
 		//instead of setting the height and width from scrollbars, it should be from
 		//content instead (getMaxRegdItem) or something
-		linkCurve.prototype.svg.setAttribute("height", snapSpace.prototype.maxY); //document.body.scrollHeight);
+		linkCurve.prototype.svg.setAttribute("height", snapSpace.prototype.maxY); 
 		linkCurve.prototype.svg.setAttribute("width", snapSpace.prototype.maxX);
 		var d = ["M", g1xy.x, g1xy.y,  "C", x1, g1xy.y, ",", x2, g2xy.y, ",", g2xy.x, g2xy.y]; 
 		var p = linkLookup[this.pj][this.cj];
