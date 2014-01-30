@@ -20,13 +20,12 @@ As of Jan 2, 2004, The two stage document graph model is completed.
 - ~~traverser is still not done~~
 - requires a window management layer to view the rendered document
 <<<<<<< HEAD
-  - necessary refactor for the gfx layer to further abstract the coupling of the node pointer from the node itself
+  - ~~necessary refactor for the gfx layer to further abstract the coupling of the node pointer from the node itself~~
     - ~~removed universe, graphs are id'd and graphics are now typed~~
 
 =======
-  - necessary refactor for the gfx layer to further abstract the coupling of the node pointers from the visualization
-  
->>>>>>> 82673f35d308c7284b8f5ba1876a4a66b9195aa7
+
+>>>>>>> 
 License
 ===
 MIT
