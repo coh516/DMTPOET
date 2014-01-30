@@ -489,7 +489,7 @@ Graph.prototype = {
 
 					var v2 = copyArray(visits);
 					v2.push(lpj);
-					var val = getObject(lpt, graphLookup).gfx.graphptr.value;
+				//	var val = getObject(lpt, graphLookup).gfx.graphptr.value;
 					var bad = false;
 					for (var k=0; k < pl.length; k++)
 						if (pl[k] == lpj)
@@ -508,7 +508,7 @@ Graph.prototype = {
 		//var pathList = {};
 
 		var ptr2 = copyArray(ptr);
-		ptr2.pop();
+	//	ptr2.pop();
 		ptr2.push('index');
 		var po = getObject(ptr2, graphLookup);
 		//var ptrGraph = {};

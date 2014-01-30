@@ -55,7 +55,7 @@ htmlRenderer.prototype = {
 		Graph.prototype.recurseItems(htmlRenderer.prototype.delDomRefs, ptrRoot)
 
 		gfxRoot.el.innerHTML = "";
-		console.log(gfxRoot.layout);
+		//console.log(gfxRoot.layout);
 		var r = {"rect":Object.create(rect), "lastNode":gfxRoot.el, "lastNodeType":gfxRoot.layout}
 	
 		htmlRenderer.prototype.recursePtrImgs(gfxRoot, ptrRootItemArray, 0, r, cb, ptrRootItemArray);

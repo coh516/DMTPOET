@@ -176,15 +176,15 @@ contextMenu.traverseProgram = function() {
 	
 	//traverseProgram(this.getLastPtr());
 //var ptr2 = Graph.prototype['..'](ptr);
-		
-	var pathList = Graph.prototype.getPaths(this.lastPtr);
-	
+	//this.lastRect.nodeRoot	
+	var pathList = Graph.prototype.getPaths(this.lastRect.nodeRoot);
+	console.log(pathList);	
 	console.log(pathList);
 	console.log("DOA");
 	console.log(this.lastPtr);
-	var ca = copyArray(this.lastPtr);
+	//var ca = copyArray(this.lastPtr);
 	ca.pop();
-	var o = getObject(ca, graphLookup);
+	var o = getGraphObject(this.lastRect.nodeRoot);
 	var delRoot = false;
 
 	// do this a bit cleaner for deliniating phrases

@@ -21,7 +21,7 @@ function testCase() {
 			["acid1"],["acid2"],["acid3"],["acid4"],["acid5"],["acid6"]
 
 	    ];
-	for (var i =0; i < 1; i++) {//jobjects.length; i++ ) {
+	for (var i =0; i < jobjects.length; i++ ) {
 		gids[i] = new Graph(); //uni.addGraph();
 		// var json = {"UI":{"save/load dialogue":[{"label":[{"text":"save"}, {"events":"onClick"}]}, {"label":[{"text":"load"}, {"events":"onClick"}]}]}}
 		//
@@ -49,15 +49,15 @@ function testCase() {
 	
 	}
 	mids[0].moveTo(450, 20, 100);
-	/*
-	gojs[3].moveTo(200, 300);
+	mids[2].moveTo(200, 20);	
+	mids[3].moveTo(200, 300);
 
-	gojs[4].moveTo(650, 500);
-	gojs[5].moveTo(580, 450);
-	gojs[6].moveTo(510, 480);
-	gojs[7].moveTo(510, 350);
-	gojs[8].moveTo(450, 350);
-	gojs[9].moveTo(450, 400);
+	mids[4].moveTo(650, 500);
+	mids[5].moveTo(580, 450);
+	mids[6].moveTo(510, 480);
+	mids[7].moveTo(510, 350);
+	mids[8].moveTo(450, 350);
+	mids[9].moveTo(450, 400);
 
 
 	var uiroot = [gids[0].id, 'item', 0, 'index', 0];
@@ -80,7 +80,7 @@ function testCase() {
 	var a5 = [gids[8].id, 'item', 0, 'index', 0];
 	var a6 = [gids[9].id, 'item', 0, 'index', 0];
 //	var a7 = [gids[10], 'item', 0, 'index', 0];
-	*/
+	
 
 
 	var o = getObject([gids[0].id, 'item', 0, 'item', 0], graphLookup);
@@ -92,7 +92,7 @@ function testCase() {
 //	mids[0].rebuild();
 //	mids[0].rebuild();
 	
-/*
+
 
 	PtrGfx.prototype.connect(uiroot, uisub);
 	PtrGfx.prototype.connect(uisub, uitext);
@@ -104,13 +104,15 @@ function testCase() {
 	
 
 	PtrGfx.prototype.connect(a1, a2);
+
 	PtrGfx.prototype.connect(a2, a3);
 	PtrGfx.prototype.connect(a2, a4);
 	PtrGfx.prototype.connect(a4, a5);
 	PtrGfx.prototype.connect(a3, a6);
 	PtrGfx.prototype.connect(a3, a4);
-	mids[0].rebuild();
-*/
+
+//	mids[0].rebuild();
+
 }
 
 function setupCanvas() {

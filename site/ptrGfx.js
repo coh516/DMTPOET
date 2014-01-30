@@ -3,21 +3,19 @@ function PtrGfx()  {}
 PtrGfx.prototype = Object.create(Gfx.prototype);
 
 PtrGfx.prototype.connect = function(c1, c2) {
-		//graph function provides direction (s2c,s1c) same thing
-		//var v1= getObject(c1,graphLookup).ptr.value
-	//	var v2 =  getObject(c2,graphLookup).ptr.value
-	//	console.log("connecting..."+c1+" "+v1+"  ..  "+c2+" "+v2); 
-		//console.log(c1);
-		//console.log(c2);
-		pt = Graph.prototype.connect(c1, c2);
-		//this.drawLinks(c1, c2); // doesnt matter which one we give it
-		//this.rebuild();
-	
-		//linkCurve.prototype.refactor(c1, c2);
-		if (!pt) return;
-		gfxLookup['type']['ptr'][c1[0]].rebuild();
 
-		gfxLookup['type']['ptr'][c2[0]].rebuild();
+		pt = Graph.prototype.connect(c1, c2);
+
+		if (!pt) return;
+
+		var c1o = getGraphObject(c1)
+		var graphId1 = c1o.gfx.ptr.gfxId;
+		var c2o = getGraphObject(c2);
+		var graphId2 = c2o.gfx.ptr.gfxId;
+
+
+		gfxLookup[graphId1].rebuild();
+		gfxLookup[graphId2].rebuild();
 		// add another index to the graph 
 
 		linkCurve.prototype.drawCurves(c1);
@@ -42,9 +40,9 @@ PtrGfx.prototype._moveCanvas = function() {
 
 function mkPtrGfx(obj) { 
 	var g = new PtrGfx();
-	//console.log(g.baseElement);
+	//this gets set from WindowManager
 	if (!g.baseElement) g.baseElement = document.body;
-	//console.log(g.baseElement);
+
 	g.create({"type":"ptr", "ptr":[obj.id], "renderer":htmlRenderer});
 	return g;
 }

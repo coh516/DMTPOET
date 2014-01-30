@@ -76,6 +76,10 @@ Gfx.prototype = {
 		if (!o.gfx[type])
 			o.gfx[this.type] = {};
 
+
+
+		// baseElement is when there is an object within another object
+		// the external object's responsibility to set it 
 		if (!this.baseElement)
 			this.baseElement = document.body;
 		//console.log(this.baseElement);
