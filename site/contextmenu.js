@@ -158,14 +158,10 @@ var contextMenu = Object.create(menuHandler);
 
 
 contextMenu.setup = function() {
-	//put JSON in here
-	//alert("test");
+
 	var json = ['expand', 'hide', 'rename', 'remove', 'add child', 'add sibling', 'converge', 'split', 'copy', {'set type':["root", "program", "value"]}, {'set layout':["grid", "list"]}, 'evaluate'];
 	var o = this.init(json, "contextmenu");
 
-	//console.log("============================");
-	//console.log(o);
-	//console.log("____________________________");
 	// event processor needs to check if there is a specific event on the item node selected
 	//
 	events['contextmenu'] = contextEventHandler.prototype;
@@ -174,15 +170,9 @@ contextMenu.setup = function() {
 contextMenu.traverseProgram = function() {
 	//var id = this.lastPtr[0];
 	
-	//traverseProgram(this.getLastPtr());
-//var ptr2 = Graph.prototype['..'](ptr);
-	//this.lastRect.nodeRoot	
+	
 	var pathList = Graph.prototype.getPaths(this.lastRect.nodeRoot);
-	console.log(pathList);	
-	console.log(pathList);
-	console.log("DOA");
-	console.log(this.lastPtr);
-	//var ca = copyArray(this.lastPtr);
+
 	ca.pop();
 	var o = getGraphObject(this.lastRect.nodeRoot);
 	var delRoot = false;

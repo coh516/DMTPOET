@@ -68,8 +68,10 @@ function Graph() {
 	//var thisGraph = models[uuid]["graph"];
 	//thisGraph[this.id] = {"id":{}}
 	//this.object = 
-	
 	this.ptr = {};
+
+
+
 }
 
 
@@ -175,22 +177,21 @@ Graph.prototype = {
 	"_toJSON": function(ptr) {
 		var o = getObject(ptr, graphLookup);
 		var a = [];
-		//var b = copyArray(ar);
 		if (o["item"])
 		for (var i = 0; i < o["item"].length; i++) {
 			var item = o["item"][i];
 			var pc = ptr.concat(["item",i]);
 			var b = {};
-			//b.ptr = pc;
-			if (o["item"].length) {
-				b[item.value] = Graph.prototype._toJSON(pc, item.value);
-			
+			if (item["item"].length) {
+				val = Graph.prototype._toJSON(pc);
+				 b[item.value] = val;
 			}
 			else 
 				b = item.value;
-
+	
 			a.push(b);
 		}
+
 		return a;
 	},
 	"toJSON": function(ptr) {

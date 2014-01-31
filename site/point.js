@@ -21,7 +21,7 @@ function Point(options){
 	pointLookup[this.id] = this;
 //	pointLookup[parentId] = this;
 	
-;
+
 	console.log("============cool beanz====================");
 
 	
@@ -34,7 +34,7 @@ function Point(options){
 	if (pl)
 	pl.children[this.childNumber] = this.id;
 	
-	
+	//console.log(this.ptr);	
 	var p2 = copyArray(this.ptr);
 	p2.pop();p2.pop();
 	this.superGroup = p2; //getObject(p2, graphLookup);
@@ -339,7 +339,8 @@ UIClass.prototype = {
 		// only at the phrase begin stage should this ever draw a ui
 		if (!this.phraseBegin) { 
 			var pi = pointLookup[this.parentId]
-			var pa = getObject(this.superGroup, graphLookup);
+			var pa = getObject(this.superGroup, graphLookup); // doesnt make sense -- points to 'type'
+			// needs to trace up until it finds a UI object
 			var rootPoint = pointLookup[this.rootNodeId];
 			console.log("------");
 			console.log(pa);
@@ -361,7 +362,13 @@ UIClass.prototype = {
 //			}
 		}else { // imply  {"GFX":{"renderer":"WindowManager"}}
 			// for the most part, this should work...
-			this.createDom();
+			// it should duplicate the graph and use a modified renderer
+		
+		//	this.createDom();
+			var json =  graphLookup[this.ptrId].toJSON();
+			console.log(JSON.stringify(json));
+
+
 		}
 	
 
@@ -377,17 +384,22 @@ UIClass.prototype = {
 		console.log(this.ptr);
 
 		var ar = graph.prototype.getPtrValue(this.superGroup, 'dialog');
-
+		// put it in the 'r' window
 		this.tableNode.style.position = "absolute";
 		this.tableNode.style.zIndex = "20000";
 
 		//this.bringToTop();
-		
+		// should create a new gfx object and silence the rows 
 
 		for (var i=0; i < ar.length; i++) 
 			this.evaluateDialog(ar[i]);
 
 	},
+
+
+
+
+	/* more code to throw out */
 
 	"evaluateDialog":function(dialogPtr) {
 		var view = graph.prototype.getPtrValue(dialogPtr, "view");
