@@ -9,10 +9,10 @@ var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, 
 
 function Point(options){ 
 
-	this.nodePtr = copyArray(ptr);
-	this.nodePtr.pop();this.nodePtr.pop();
+//	this.nodePtr = copyArray(ptr);
+//	this.nodePtr.pop();this.nodePtr.pop();
 	this.ptr = options.ptr;
-	this.ptrId = ptr[0];
+	this.ptrId = this.ptr[0];
 	this.childNumber = options.childNumber;
 	this.id =  mkguid();
 	this.parentId = options.parentId;
@@ -335,11 +335,10 @@ UIClass.prototype = {
 	// this needs to be moved to the UIRenderer class....
 	"evaluate":function() {
 
-;
 		// only at the phrase begin stage should this ever draw a ui
 		if (!this.phraseBegin) { 
 			var pi = pointLookup[this.parentId]
-			var pa = getObject(this.superGroup, graphLookup); // doesnt make sense -- points to 'type'
+			var pa = getObject(this.superGroup, graphLookup); 
 			// needs to trace up until it finds a UI object
 			var rootPoint = pointLookup[this.rootNodeId];
 			console.log("------");
@@ -366,107 +365,112 @@ UIClass.prototype = {
 		
 		//	this.createDom();
 			var json =  graphLookup[this.ptrId].toJSON();
-			console.log(JSON.stringify(json));
-
-
+			//console.log(JSON.stringify(json));
+			var graph = new Graph();
+			graph.setFromJSON(json);
+			var g = new Gfx({"type":"point", "ptr":[graph.id], "renderer":htmlRenderer, "baseElement":renderedWindowElement});
+			g.hasIndex = false;
+			gfxLookup[g.id].initNodes();
+			console.log(graphLookup[graph.id]);	
+			this.linkedGfxId = g.id
+			//this.node.ptr
+			this.linkedGraphId = graph.id;
+			this.createDom();
 		}
-	
-
+	},
+	"getLinkedPtr":function(ptr) { 
+		var _ptr = copyArray(ptr);
+		_ptr[0] = this.linkedGraphId;
+		return _ptr;
+	},
+	"getLinkedNode":function(ptr) {
+		return getGraphObject(this.getLinkedPtr(ptr));
 	},
 	// this is a much better way of rendering rather than htmlrenderer
 	"createDom":function() {
-		// need to create a seperate dom renderer plugin for this..
-		//this.namespace = this.obj2JSON();
-		this.tableNode = document.createElement("div");
-		document.body.appendChild(this.tableNode);
-		this.tableNode.setAttribute("class", "UIRootTable");
-		//var dialogs = getObjs(this.namespace, "dialog");
-		console.log(this.ptr);
 
-		var ar = graph.prototype.getPtrValue(this.superGroup, 'dialog');
-		// put it in the 'r' window
-		this.tableNode.style.position = "absolute";
-		this.tableNode.style.zIndex = "20000";
-
-		//this.bringToTop();
-		// should create a new gfx object and silence the rows 
+		var ar = Graph.prototype.getPtrValue(this.superGroup, 'dialog');
+		console.log(this.getLinkedNode(this.superGroup));
+		this.getLinkedNode(this.superGroup)['gfx']['point'].hideItem = true;
 
 		for (var i=0; i < ar.length; i++) 
 			this.evaluateDialog(ar[i]);
 
 	},
 
-
-
-
 	/* more code to throw out */
 
 	"evaluateDialog":function(dialogPtr) {
-		var view = graph.prototype.getPtrValue(dialogPtr, "view");
-		console.log("debugging....");
-		console.log(view);
-		var grid = graph.prototype.getPtrValue(view[0], "grid");
-		console.log("...");
-
+		var view = Graph.prototype.getPtrValue(dialogPtr, "view");
+		var grid = Graph.prototype.getPtrValue(view[0], "grid");
+		
+		//gfxLookup[this.linkedGfxId].
 
 		if (grid) {
-			var rows = graph.prototype.getPtrValue(dialogPtr, "row");
-			var rowNode = document.createElement("div");
-			this.tableNode.appendChild(rowNode);
-			rowNode.setAttribute("class", "UItableRow");
-			this.evaluateRows(rows, rowNode);
+			var rows = Graph.prototype.getPtrValue(dialogPtr, "row");
+			this.evaluateRows(rows);
 		}
 	},
-	"evaluateRows":function(rows, rowNode) {
-		//this.tableRow
-		console.log("-------------#######-=-----------");
-		console.log(rows);
-	//	var row = rows[i];
+	"evaluateRows":function(rows) {
+		console.log(rows)
 		for (var i =0 ; i < rows.length; i++) {
+			this.getLinkedNode(rows[i])['gfx']['point'].hideItem = true;			
 			var row = getObject(rows[i], graphLookup);
-			console.log(row);
-			console.log("---------------");	
+		
 			for (var j=0; j < row['item'].length; j++) {
 				var rowItem = row['item'][j];
-				console.log(rowItem);
-				var item = rowItem.value;
-				var rowNode = document.createElement("ul");
-				rowNode.setAttribute("class", "UIULCell");
-				//var ul = document.createElement("ul");
 
-				var li = document.createElement("li");
-				li.setAttribute("class", "UILICell");
-				rowNode.appendChild(li);
-				this.drawElement(item, rowNode, li, rowItem)
+				this.drawElement(rowItem)
 					//li.innerText = row[items];
 			}
 		}
-		
-
+	
 	},
 
-	"drawElement":function(item, node, li, ptrObject) {
-		ptrObject.renderedUI = {};
+	"drawElement":function(rowItem) {
+	//	ptrObject.renderedUI = {};
+		gfxLookup[this.linkedGfxId];// this.getLinkedNode(ptrObject.ptr)['gfx']['point'].hideItem = true;
+		//ptrObject.ptr
 		//ptrObject.renderedUI.item = item;
-		switch(item) {
+		var ri = this.getLinkedPtr(rowItem.ptr);
+		//
+		
+		switch(rowItem.value) {
 			case 'label':
-				var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");
-				//var text = row[items]['text']
-				li.innerText = val;
-				ptrObject.renderedUI.domNode = li;
+				//var o = this.getLinkedPtr(rowItem);
+				//gfxLookup[this.linkedGfxId];
+				//the id shouldnt be there...
+				var p1 = rowItem.ptr[0] 
+				gfxLookup[this.linkedGfxId].hideChildren(ri);				
+				//var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");
+				//
+			//	ptrObject.renderedUI.linkedPtrGfx = ptrObject.renderedUI;
+				////domNode = li;
+
 			break;
 			case 'inputbox':
+				//this.getLinkedNode(dialogPtr)['gfx']['point']. = true;
+				gfxLookup[this.linkedGfxId].makeInputBox(rowItem.ptr);
+
+				gfxLookup[this.linkedGfxId].hideChildren(ri);
+				/*	
 				var ib = document.createElement("input");
 				li.appendChild(ib);
 				ib.setAttribute("class", "UIInputCell");
 				ptrObject.renderedUI.domNode = ib;
 				ptrObject.renderedUI.type = "text";
+				*/
 			break;
 			case 'button':
-				var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");			
+				gfxLookup[this.linkedGfxId].makeButton(rowItem.ptr);			
+				gfxLookup[this.linkedGfxId].hideChildren(ri);
+
+			//	var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");	
+				/*
 				li.innerText = 'text';
 				ptrObject.renderedUI.domNode = li;
 				ptrObject.renderedUI.type = "onSubmit";
+				*/
 				//this.point
 				//getObject(item, graphLookup);
 
@@ -621,6 +625,38 @@ DBClass.prototype = {
 	"getValueNode":function() {
 		
 	}
+}
+
+
+Point.prototype.traverseProgram = function(ptr) {
+	console.log(ptr);
+	var pathList = Graph.prototype.getPaths(ptr);
+
+	var o = getGraphObject(ptr);
+	var delRoot = false;
+
+	// do this a bit cleaner for deliniating phrases
+	if (!o.types) {
+		o.types = {"root":true};
+		delRoot = true;
+	}
+	if (!o.types.root) {
+		o.types.root = true;
+		delRoot = true;
+	}
+
+	console.log(o);
+//	return;
+	for (var i = 0 ; i < o.index.length; i++) {
+	//	alert(o.ptr.join());
+		var oc = copyArray(o.ptr);
+		oc = oc.concat(['index', i]);
+		
+		var sys = new System(oc, pathList);
+		sys.begin();
+		//pt.evaluatePhrase();
+	}
+	if (delRoot) delete o.types.root;
 }
 
 

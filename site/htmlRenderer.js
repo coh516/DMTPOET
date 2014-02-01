@@ -55,7 +55,7 @@ htmlRenderer.prototype = {
 		Graph.prototype.recurseItems(htmlRenderer.prototype.delDomRefs, ptrRoot)
 
 		gfxRoot.el.innerHTML = "";
-		//console.log(gfxRoot.layout);
+	//	uu//console.log(gfxRoot.layout);
 		var r = {"rect":Object.create(rect), "lastNode":gfxRoot.el, "lastNodeType":gfxRoot.layout}
 	
 		htmlRenderer.prototype.recursePtrImgs(gfxRoot, ptrRootItemArray, 0, r, cb, ptrRootItemArray);
@@ -94,7 +94,7 @@ htmlRenderer.prototype = {
 		//console.log(id);
 		for (var y=0; y < tl.length; y++) {
 			//console.log(tl);
-			if (graphLookup[id].hasIndex !== false)
+			if (gfxRoot.hasIndex !== false)
 			for (var idx =0; idx < tl[y]['index'].length; idx++) {
 				var group = tl[y]['index'][idx]['gfx'][gfxRoot.type]
 		
@@ -259,7 +259,7 @@ htmlRenderer.prototype = {
 		ul.setAttribute("class", type+"ContainerUL");	
 		el = ul;
 		// should have something like 'usesPtrLinks' .. uggh .. dirty code.
-		if (graphLookup[id].hasIndex !== false)	
+		if (gfxRoot.hasIndex !== false)	
 		for (var i = links-1; i >=0; i--) {// links; i++) {
 			//if (!tlg.index) return;
 			//sketchy

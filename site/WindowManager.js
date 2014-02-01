@@ -14,11 +14,13 @@ WindowManager.prototype = {
 //		this.mkTabs()
 	//	this.element.setAttribute("setAttribute",
 		var graph = new Graph();
+		//
 		graph.hasIndex = false;
 
 		// bug in the renderer doesnt allow the first element to be set as a grid.
 		graph.setFromJSON({"x":["l","pivot", "r"]});	
 		var g= new Gfx({"type":"windowmanager", "ptr":[graph.id], "renderer":htmlRenderer});
+		graph['gfx']['windowmanager'].hasIndex = false;
 		g.build();
 		 graphLookup[graph.id]['gfx']['windowmanager'].layout = 'grid';
 		 graphLookup[graph.id]['item'][0]['gfx']['windowmanager'].hideItem = true;
@@ -30,6 +32,9 @@ WindowManager.prototype = {
 		g.rebuild();		
 		events['windowmanager'] = new staticEvents;
 		PtrGfx.prototype.baseElement = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
+		console.log("xx");
+		//fixme
+		renderedWindowElement = graphLookup[graph.id]['item'][0]['item'][2]['gfx']['windowmanager'].el
 
 		//nodeEvents[graph.id, 'item' , 1, 'gfx', 'windowmanager'] = function
 	},

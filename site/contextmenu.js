@@ -23,7 +23,6 @@ var menuHandler = {
 
  		//this.uni =uni;
 
-		graph.hasIndex = false;
 		graph.setFromJSON(json);
 		//alert(gfx)
 		//
@@ -33,7 +32,7 @@ var menuHandler = {
 		this.gid = graph.id;
 
 		var g= new Gfx({"type":uniName, "ptr":[this.gid], "renderer":htmlRenderer});
-		
+		g.hasIndex = false;
 		this.gfxId = g.id;
 		//g.create(graph.id);  //uniName, [gid], htmlRenderer);
 	//	g.moveTo(0,100, 100);//gfxLookup[gid].topz+1);
@@ -170,7 +169,8 @@ contextMenu.setup = function() {
 contextMenu.traverseProgram = function() {
 	//var id = this.lastPtr[0];
 	
-	
+	Point.prototype.traverseProgram(this.lastRect.nodeRoot)
+		/*
 	var pathList = Graph.prototype.getPaths(this.lastRect.nodeRoot);
 
 	ca.pop();
@@ -205,11 +205,12 @@ contextMenu.traverseProgram = function() {
 	// maybe a method should be m
 
 	//graphLookup[id].addChild(a, "acid",
+	*/
 
 }
 
 contextMenu.hideLastPtr = function()  {
-	
+	// not right!	
 	gfxLookup[this.lastRect.gfxId].hideChildren(this.lastRect.nodeRoot);
 }
 

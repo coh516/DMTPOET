@@ -37,17 +37,17 @@ gfxCounter = {};
 //there shouldnt be any html / dom references in here
 
 function Gfx(obj) {
-
+	// shouldnt call this on new .
 	this.create(obj);
 }
 
 Gfx.prototype = {
 
 	"create":function(obj) {
-		this.init(obj.type, obj.ptr, obj.renderer);
+		this.init(obj.type, obj.ptr, obj.renderer, obj.baseElement);
 	},
 
-	"init": function(type, ptr, renderer ) {
+	"init": function(type, ptr, renderer, baseElement ) {
 		//console.log(baseElement);
 		this.type = type;
 		this.rootPtr = ptr;
@@ -80,11 +80,12 @@ Gfx.prototype = {
 
 		// baseElement is when there is an object within another object
 		// the external object's responsibility to set it 
-		if (!this.baseElement)
-			this.baseElement = document.body;
+		if (!baseElement)
+			baseElement = document.body;
+		this.baseElement = baseElement;
 		//console.log(this.baseElement);
 		//if (!baseElement) {
-		o.gfx[this.type] = {'baseElement':this.baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
+		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
 
 		this.gfxPtr = ptr.concat(['gfx', this.type]);
 		if (!Gfx.prototype.setted) 
@@ -94,13 +95,37 @@ Gfx.prototype = {
 	},
 	get graphGfxPtr() { return this.rootPtr.concat(['gfx', this.type]) },
 	get rootGfxObj() { return getObject(this.graphGfxPtr, graphLookup) },
+	set hasIndex() { this.rootGfxObj._index = false },
+	get hasIndex() { return this.rootGfxObj._index ? true : false }, 
+	"getGfx":function(ptr) { 
+		var o = getGraphObject(ptr);
+		return o['gfx'][this.type];
+	},
+	"setVisibility":function(ptr, bool) {
+		var gfx = this.getGfx(ptr);
+		if (bool) {
+			gfx.hideItem = true;
+			this.hideChildren(ptr);			
+		}
+	},
 	"ptrs":{},
 	"img":{},
 	"ptrModel":{},
 	"idxSort":[],
 	"linkSize":10,
 	"fontSize":28,
+	"initNodes":function() {
+		var type = this.type;
+		graphLookup[this.graphId].recurseItems(
+				function(ptr) {
+				       console.log(ptr);	
+					var o = getGraphObject(ptr); 
+					if (!o.gfx)o.gfx = {};
+				       	o.gfx[type] = {} 
+				}
+				)
 
+	},
 	// there should be a property set in the graph object which defines this.rootPtr to be an input box...
 	// this input box shit has to be put into the html renderer...
 	// type = "inputBox" -- then re-indexed
@@ -524,3 +549,6 @@ Gfx.prototype = {
 
 
 // probably easiest way of doing this is create an alert system to update the drawing of the grph
+//
+//
+
