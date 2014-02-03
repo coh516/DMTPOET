@@ -58,6 +58,20 @@ WindowManager.prototype = {
 			loadScripts(["utils.js", "point.js", "linkCurve.js", "events.js", "htmlRenderer.js", "gfx.js", "ptrGfx.js", "contextmenu.js", "launch.js"], frame.contentDocument, function() { frame.contentWindow.launch() });
 		
 		}
+		var resizeFrame = function() {
+		//	alert("xxxx");
+			//var st = this.frame.contentDocument.body.scrollTop;
+			var w = window.innerWidth/ 2;
+			var h = window.innerHeight-20;/// 2; i could get more scientific about it...
+			this.frame.height = h;
+			this.frame.width = w;
+//			document.documentElement.scrollTop
+			
+		}
+		var rf = resizeFrame.bind({'frame':frame});
+		document.body.onresize = rf;
+		document.body.onresize();
+		console.log(rf);
 		fd.appendChild(frame);
 	
 

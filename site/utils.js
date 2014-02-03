@@ -214,18 +214,23 @@ function getElPos(obj) {
 
 function loadScripts(filenames, doc, callback) {
 	var files = 0;
-	for (var i=0; i < filenames.length; i++) {
+//	should make a json loader like {"file1":["file2",{"f1":["file3"]}]} to manage dependcies
+//	and load asyncronlously .. bit of a pain in the ass.. save 4 a rainy day
+	function load() {
 		var script = doc.createElement("script");	
-		script.setAttribute("src", filenames[i]);
+		script.setAttribute("src", filenames[files]);
 		script.onload = function() { 
 			files++;
 		       console.log(files+" "+filenames.length);	
 		       	
 			if (files == filenames.length) callback();
+			else load();
 		}
+
 		doc.getElementsByTagName('head')[0].appendChild(script);
-		
 	}
+	load();	
+//	}
 }
 
 function loadCSS(filename, doc) {
