@@ -3,14 +3,7 @@
 Seth Tenenbaum
 development
 */
-var graphLookup = {};
-var graphics = graphLookup;
-var utype = {};
-var models = {}
-var universes = {};
-var lookups = {};
-var ptrLookup = {};
-lookups["graphLookup"] = graphLookup;
+
 
 //setPtrIndex should create an 'indexedGraph'
 // there should only be one universe.
@@ -475,7 +468,7 @@ Graph.prototype = {
 				var cop = cp[i];
 				
 				for (var lpa = 0; lpa < o[cop].length; lpa++) {
-					console.log("test....children");
+					//console.log("test....children");
 					var lpt = o[cop][lpa];
 					var lpj = lpt.join();
 					var db = false;
@@ -518,7 +511,7 @@ Graph.prototype = {
 			//var m = {};	
 			//m[ptr.join] = {};
 			var j = this.recurse(ptr2.concat([i]), [ptr2.concat([i]).join()]);
-			console.log(j);
+			//console.log(j);
 		}
 		
 		return pathList;
@@ -997,10 +990,10 @@ Graph.prototype = {
 	"getPtrValue":function(ptr, val) {
 		var obj = getObject(ptr, graphLookup);
 		var ar = [];
-		console.log("#####");
-		console.log(ptr);
+		//console.log("#####");
+		//console.log(ptr);
 		for (var i = 0; i < obj['item'].length; i++) {
-			console.log(obj['item'][i]);
+		//	console.log(obj['item'][i]);
 			if (obj['item'][i].value == val)
 				ar.push(obj['item'][i].ptr);
 
@@ -1035,7 +1028,4 @@ Graph.prototype = {
 		// reduce the actualy child/parent hash now
 }
 
-function getGraphObject(p) {
-	return getObject(p, graphLookup);
-}
 

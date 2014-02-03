@@ -7,6 +7,12 @@ function linkCurve() {
 //hardcoded to gfx type ptr
 linkCurve.prototype = {
 	"setup": function() {
+
+		linkLookup = {};
+		curveLookup = {};
+		lookups["curveLookup"] = curveLookup;
+
+
 		var xmlns = "http://www.w3.org/2000/svg";
 		var ver = "1.1";
 		var svg = document.createElementNS(xmlns, "svg");
@@ -21,6 +27,11 @@ linkCurve.prototype = {
 		// not sure if this is the best approach ... but the link curve needs to be quantized .. so we'll do it like this.. maybe figure smoetning to extend the functionality of the universe model to add link curves... 
 		events["curveLookup"] = new linkCurveHandler();		
 		document.body.appendChild(svg);
+
+		console.log(window.parent.window.graphLookup);
+
+
+
 	//	this.gfxSuffix = ['gfx', 'ptr'];
 		
 		//var elem = document.createElementNS(xmlns, "path");
@@ -115,9 +126,7 @@ linkCurve.prototype = {
 
 }
 
-var linkLookup = {};
-var curveLookup = {};
-lookups["curveLookup"] = curveLookup;
+
 // assumes parent is p and child is c... gotten from the ptr index
 function getCurve(p,c) {
 		

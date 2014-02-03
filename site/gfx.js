@@ -21,11 +21,7 @@ zIndex["dialogmenu"] = 150
 zIndex["renderedApps"] = 12000
 
 
-var graphics = graphLookup; // probably this should be a subset from gfxLookup // this is the completed image  
-var gfxLookup = {"type":{}, "id":{}}; // object references by id
-var events = {}
-lookups["gfxLookup"] = gfxLookup;
-gfxCounter = {};
+
 
 
 // this needs to be merged with the general graph
@@ -64,8 +60,8 @@ Gfx.prototype = {
 
 		this.id = mkguid();
 
-		if (!gfxLookup['type'][type])
-			gfxLookup['type'][type] = {};
+		//if (!gfxLookup['type'][type])
+		//	gfxLookup['type'][type] = {};
 
 		gfxLookup[this.id] = this;
 
@@ -80,12 +76,13 @@ Gfx.prototype = {
 
 		// baseElement is when there is an object within another object
 		// the external object's responsibility to set it 
+		var be = baseElement ? true : false;
 		if (!baseElement)
 			baseElement = document.body;
 		this.baseElement = baseElement;
 		//console.log(this.baseElement);
 		//if (!baseElement) {
-		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id}
+		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id, 'hasBaseElement':be}
 
 		this.gfxPtr = ptr.concat(['gfx', this.type]);
 		if (!Gfx.prototype.setted) 
@@ -95,8 +92,12 @@ Gfx.prototype = {
 	},
 	get graphGfxPtr() { return this.rootPtr.concat(['gfx', this.type]) },
 	get rootGfxObj() { return getObject(this.graphGfxPtr, graphLookup) },
-	set hasIndex() { this.rootGfxObj._index = false },
-	get hasIndex() { return this.rootGfxObj._index ? true : false }, 
+	set hasIndex() { this.rootGfxObj._index = false; console.log("yo"); },
+	get hasIndex() { if (this.rootGfxObj.hasOwnProperty("_index")) {
+				return this.rootGfxObj._index;
+			}
+			else return true; 
+	},
 	"getGfx":function(ptr) { 
 		var o = getGraphObject(ptr);
 		return o['gfx'][this.type];
@@ -108,6 +109,9 @@ Gfx.prototype = {
 			this.hideChildren(ptr);			
 		}
 	},
+	"hideItem":function(ptr) {
+	//	getGraphObject(ptr);
+	},
 	"ptrs":{},
 	"img":{},
 	"ptrModel":{},
@@ -118,7 +122,7 @@ Gfx.prototype = {
 		var type = this.type;
 		graphLookup[this.graphId].recurseItems(
 				function(ptr) {
-				       console.log(ptr);	
+			//	       console.log(ptr);	
 					var o = getGraphObject(ptr); 
 					if (!o.gfx)o.gfx = {};
 				       	o.gfx[type] = {} 
@@ -242,7 +246,7 @@ Gfx.prototype = {
 
 	"setGridLayout":function(ptr) {
 		var o = getObject(ptr, graphLookup);
-		o.layout = "grid";
+		o['gfx'][this.type].layout = "grid";
 		this.rebuild();
 	},
 	"setListLayout":function(ptr) {
@@ -252,7 +256,7 @@ Gfx.prototype = {
 	},
 	
 	"build":function(cb) {
-		graphics = graphLookup;
+		//graphics = graphLookup;
 		this.renderer.setElement(this.rootGfxObj);
                                         //obj ref, beginPtr
 		this.renderer.mkPtrImgs(this.rootGfxObj);
@@ -353,7 +357,16 @@ Gfx.prototype = {
 		// should be in gfx object
 		var o = getObject(ptr, graphLookup);
 		o.hideChildren = true;
-		console.log(o);
+	//	console.log(o);
+		//console.log("extasy");
+
+		this.rebuild();
+	},
+	"hideItem":function(ptr) {
+		// should be in gfx object
+		var o = getObject(ptr, graphLookup);
+		o.hideItem = true;
+	//	console.log(o);
 		//console.log("extasy");
 
 		this.rebuild();
@@ -476,7 +489,7 @@ Gfx.prototype = {
 		
 		return;
 		var t = this.model.loc;
-		var canvas = graphics[this.id].canvas;
+		var canvas = gfxLookup[this.id].canvas;
 		//console.log("moving...."+this.id);
 		canvas.style.top = t.y+"px";
 
@@ -524,6 +537,11 @@ Gfx.prototype = {
 	},
        	"setZ":function(z) {
 		this.rootGfxObj.loc.z = z;
+	},
+	"mkInputBox":function(ptr) {
+
+	},
+	"mkButton":function(ptr) {
 	},	
 	"setXYZ":function(x,y,z) {
 		var tml = this.rootGfxObj.loc

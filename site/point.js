@@ -22,7 +22,7 @@ function Point(options){
 //	pointLookup[parentId] = this;
 	
 
-	console.log("============cool beanz====================");
+	//console.log("============cool beanz====================");
 
 	
 	// assume no parent = origin
@@ -369,13 +369,17 @@ UIClass.prototype = {
 			var graph = new Graph();
 			graph.setFromJSON(json);
 			var g = new Gfx({"type":"point", "ptr":[graph.id], "renderer":htmlRenderer, "baseElement":renderedWindowElement});
-			g.hasIndex = false;
 			gfxLookup[g.id].initNodes();
-			console.log(graphLookup[graph.id]);	
+		//	console.log(graphLookup[g.id]);
+			g.hasIndex = false;	
+			//g.build();		// not right!
+
+		//	console.log(graphLookup[graph.id]);	
 			this.linkedGfxId = g.id
 			//this.node.ptr
 			this.linkedGraphId = graph.id;
 			this.createDom();
+			g.build();
 		}
 	},
 	"getLinkedPtr":function(ptr) { 
@@ -390,9 +394,10 @@ UIClass.prototype = {
 	"createDom":function() {
 
 		var ar = Graph.prototype.getPtrValue(this.superGroup, 'dialog');
-		console.log(this.getLinkedNode(this.superGroup));
+//		console.log(this.getLinkedNode(this.superGroup));
 		this.getLinkedNode(this.superGroup)['gfx']['point'].hideItem = true;
-
+		
+//		console.log(this.getLInkedPtr(this.superGroup));
 		for (var i=0; i < ar.length; i++) 
 			this.evaluateDialog(ar[i]);
 
@@ -401,20 +406,29 @@ UIClass.prototype = {
 	/* more code to throw out */
 
 	"evaluateDialog":function(dialogPtr) {
+		this.getLinkedNode(dialogPtr)['gfx']['point'].hideItem = true;
+		
 		var view = Graph.prototype.getPtrValue(dialogPtr, "view");
 		var grid = Graph.prototype.getPtrValue(view[0], "grid");
-		
+		//view[0].gfx.point.hideItem = true;	
 		//gfxLookup[this.linkedGfxId].
+		
+		this.getLinkedNode(view[0])['gfx']['point'].hideItem = true;
+		gfxLookup[this.linkedGfxId].hideChildren(this.getLinkedPtr(view[0]));
+		
 
 		if (grid) {
 			var rows = Graph.prototype.getPtrValue(dialogPtr, "row");
+			
+			gfxLookup[this.linkedGfxId].setGridLayout(this.getLinkedPtr(dialogPtr));
 			this.evaluateRows(rows);
 		}
 	},
 	"evaluateRows":function(rows) {
-		console.log(rows)
+		//console.log(rows)
 		for (var i =0 ; i < rows.length; i++) {
-			this.getLinkedNode(rows[i])['gfx']['point'].hideItem = true;			
+			this.getLinkedNode(rows[i])['gfx']['point'].hideItem = true;	
+			console.log(this.getLinkedNode(rows[i]));
 			var row = getObject(rows[i], graphLookup);
 		
 			for (var j=0; j < row['item'].length; j++) {
@@ -429,12 +443,13 @@ UIClass.prototype = {
 
 	"drawElement":function(rowItem) {
 	//	ptrObject.renderedUI = {};
+		//return;
 		gfxLookup[this.linkedGfxId];// this.getLinkedNode(ptrObject.ptr)['gfx']['point'].hideItem = true;
 		//ptrObject.ptr
 		//ptrObject.renderedUI.item = item;
 		var ri = this.getLinkedPtr(rowItem.ptr);
 		//
-		
+			
 		switch(rowItem.value) {
 			case 'label':
 				//var o = this.getLinkedPtr(rowItem);
@@ -450,7 +465,7 @@ UIClass.prototype = {
 			break;
 			case 'inputbox':
 				//this.getLinkedNode(dialogPtr)['gfx']['point']. = true;
-				gfxLookup[this.linkedGfxId].makeInputBox(rowItem.ptr);
+				gfxLookup[this.linkedGfxId].mkInputBox(ri);
 
 				gfxLookup[this.linkedGfxId].hideChildren(ri);
 				/*	
@@ -462,7 +477,7 @@ UIClass.prototype = {
 				*/
 			break;
 			case 'button':
-				gfxLookup[this.linkedGfxId].makeButton(rowItem.ptr);			
+				gfxLookup[this.linkedGfxId].mkButton(ri);			
 				gfxLookup[this.linkedGfxId].hideChildren(ri);
 
 			//	var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");	
@@ -651,9 +666,14 @@ Point.prototype.traverseProgram = function(ptr) {
 	//	alert(o.ptr.join());
 		var oc = copyArray(o.ptr);
 		oc = oc.concat(['index', i]);
-		
-		var sys = new System(oc, pathList);
-		sys.begin();
+		//console.log(oc);	
+		var lo = (getGraphObject(oc))
+		//console.log(o);
+		if (lo.children.length || lo.parents.length) {
+
+			var sys = new System(oc, pathList);
+			sys.begin();
+		}
 		//pt.evaluatePhrase();
 	}
 	if (delRoot) delete o.types.root;

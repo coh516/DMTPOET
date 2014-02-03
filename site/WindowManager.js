@@ -1,3 +1,19 @@
+function setupGlobals() {
+	gfxLookup = {};//{"type":{}, "id":{}}; // object references by id
+	lookups = {};
+	lookups["gfxLookup"] = gfxLookup;
+	events = {};
+	graphLookup = {};
+	lookups["graphLookup"] = graphLookup;
+}
+
+function launch() {
+
+	setupGlobals();
+	var wm = new WindowManager(); wm.setup()
+}
+
+
 function WindowManager() {
 
 }
@@ -20,7 +36,7 @@ WindowManager.prototype = {
 		// bug in the renderer doesnt allow the first element to be set as a grid.
 		graph.setFromJSON({"x":["l","pivot", "r"]});	
 		var g= new Gfx({"type":"windowmanager", "ptr":[graph.id], "renderer":htmlRenderer});
-		graph['gfx']['windowmanager'].hasIndex = false;
+		g.hasIndex = false;
 		g.build();
 		 graphLookup[graph.id]['gfx']['windowmanager'].layout = 'grid';
 		 graphLookup[graph.id]['item'][0]['gfx']['windowmanager'].hideItem = true;
@@ -31,10 +47,31 @@ WindowManager.prototype = {
 		 
 		g.rebuild();		
 		events['windowmanager'] = new staticEvents;
-		PtrGfx.prototype.baseElement = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
-		console.log("xx");
-		//fixme
-		renderedWindowElement = graphLookup[graph.id]['item'][0]['item'][2]['gfx']['windowmanager'].el
+
+		var fd = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
+		frame = document.createElement("iframe");
+		frame.onload = function() { 
+ 
+			frame.contentDocument.body.onmousedown="return;";
+			
+			loadCSS("graph.css", frame.contentDocument);
+			loadScripts(["utils.js", "point.js", "linkCurve.js", "events.js", "htmlRenderer.js", "gfx.js", "ptrGfx.js", "contextmenu.js", "launch.js"], frame.contentDocument, function() { frame.contentWindow.launch() });
+		
+		}
+		fd.appendChild(frame);
+	
+
+
+	//	var frame = document.createElement("iframe");
+	//	var fd = frame.contentDocument.bod
+		graphLookup[graph.id]['item'][0]['item'][2]['gfx']['windowmanager'].el//.appendChild(fd);
+
+
+
+	//	PtrGfx.prototype.baseElement.appendChild(fd);
+
+
+
 
 		//nodeEvents[graph.id, 'item' , 1, 'gfx', 'windowmanager'] = function
 	},

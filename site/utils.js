@@ -86,9 +86,17 @@ function getObject(ptrList, o, debug) {
 	return o;
 }
 
-function getPos(e) { 
+function getPos(e) {
+       //console.log(e);	
 	if (!document.body) return;
-	return {x:e.clientX+document.documentElement.scrollLeft, y:e.clientY+document.documentElement.scrollTop}
+	//console.log(e);
+
+//	console.log(document.documentElement.innerHTML);
+//	console.log(document.documentElement.scrollTop);
+//	if (window.document.parent != window.document)
+		return {x:e.clientX+window.scrollX, y:e.clientY+window.scrollY}
+	
+//	return {x:e.clientX+document.documentElement.scrollLeft, y:e.clientY+document.documentElement.scrollTop}
 	/*
 	var pos = {};
 	pos.x = e.hasOwnProperty('offsetX') ? e.offsetX : e.layerX;
@@ -203,3 +211,32 @@ function getElPos(obj) {
 	}
 	return {"x":curleft, "y":curtop}
 }
+
+function loadScripts(filenames, doc, callback) {
+	var files = 0;
+	for (var i=0; i < filenames.length; i++) {
+		var script = doc.createElement("script");	
+		script.setAttribute("src", filenames[i]);
+		script.onload = function() { 
+			files++;
+		       console.log(files+" "+filenames.length);	
+		       	
+			if (files == filenames.length) callback();
+		}
+		doc.getElementsByTagName('head')[0].appendChild(script);
+		
+	}
+}
+
+function loadCSS(filename, doc) {
+	var script = doc.createElement('link');
+	script.setAttribute('href', filename)
+	script.setAttribute('rel', 'stylesheet')
+	script.setAttribute('type', 'text/css');
+	doc.getElementsByTagName('head')[0].appendChild(script);
+}
+
+function getGraphObject(p) {
+	return getObject(p, graphLookup);
+}
+

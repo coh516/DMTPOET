@@ -111,7 +111,7 @@ function testCase() {
 	PtrGfx.prototype.connect(a3, a6);
 	PtrGfx.prototype.connect(a3, a4);
 
-	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
+//	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
 
 
 //	mids[0].rebuild();
@@ -120,25 +120,46 @@ function testCase() {
 
 function setupCanvas() {
 
-	var wm = new WindowManager();
+//	var wm = new WindowManager();
 
-	wm.setup();
+//	wm.setup();
 
 	stageMenu.setup();
+	console.log(this);
 
 	//stageMenu.baseNode
 	// should be ptrGfx.prototype.setupLinkCurve and ptrGfx.prototype.setupContextMenu
 
-//	ptrGfx.prototype.baseElement = stageMenu.baseElement;
-		events['ptr'] = nodeEvents;
-		linkCurve.prototype.setup();       	
-		contextMenu.setup();
-//	saveMenu.setup();
+	//	ptrGfx.prototype.baseElement = stageMenu.baseElement;
+	events['ptr'] = nodeEvents;
+	linkCurve.prototype.setup();       	
+	contextMenu.setup();
+	//	saveMenu.setup();
+	
+	
+
 }
 
+function loadGlobals() {
+	lookups = window.parent.window.lookups;
+	Graph = window.parent.window.Graph;
+	graphLookup = window.parent.window.graphLookup;
+	gfxLookup = window.parent.window.gfxLookup;
+	events = window.parent.window.events;
+	
+	graphics = graphLookup; // probably this should be a subset from gfxLookup // this is the completed image  
+	//var gfxLookup = {"type":{}, "id":{}}; // object references by id
+	//var events = {}
+	//lookups["gfxLookup"] = gfxLookup;
+	//gfxCounter = {};
+}
+
+
 function launch() {
-//setupcanvascode
+	loadGlobals();
+
 	setupCanvas();
 	testCase();
 }
 
+//launch();

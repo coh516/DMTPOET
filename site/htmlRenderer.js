@@ -18,7 +18,8 @@ htmlRenderer.prototype = {
 		var type = gfxRoot.type;
 		el.width = 400;
 		el.height = 400;
-		el.style.position = "absolute";
+		el.style.position = "absolute"; // gfxRoot.hasBaseElement ? "relative" : "absolute";
+//		el.style.position = "absolute";
 		el.setAttribute("class", type+"UL");
 			
 		var lz = Gfx.prototype.lastz+1;
@@ -94,7 +95,8 @@ htmlRenderer.prototype = {
 		//console.log(id);
 		for (var y=0; y < tl.length; y++) {
 			//console.log(tl);
-			if (gfxRoot.hasIndex !== false)
+			if (gfxLookup[gfxRoot.gfxId].hasIndex !== false)	
+
 			for (var idx =0; idx < tl[y]['index'].length; idx++) {
 				var group = tl[y]['index'][idx]['gfx'][gfxRoot.type]
 		
@@ -112,6 +114,7 @@ htmlRenderer.prototype = {
 			//console.log(tl[y]);
 			var gdg = group;
 			var div = group.div;
+			if (!div) continue;
 			var pos = getElPos(div);
 			var w = div.offsetWidth;
 			var h = div.offsetHeight;
@@ -259,7 +262,8 @@ htmlRenderer.prototype = {
 		ul.setAttribute("class", type+"ContainerUL");	
 		el = ul;
 		// should have something like 'usesPtrLinks' .. uggh .. dirty code.
-		if (gfxRoot.hasIndex !== false)	
+		//console.log(gfxRoot.hasIndex);
+		if (gfxLookup[gfxRoot.gfxId].hasIndex !== false)	
 		for (var i = links-1; i >=0; i--) {// links; i++) {
 			//if (!tlg.index) return;
 			//sketchy
@@ -342,6 +346,7 @@ htmlRenderer.prototype = {
 
 		label.setAttribute(type+"label", ptt);
 	
+		// should have an area here to append inner nodes
 
 
 		label.innerText = text;
@@ -361,9 +366,11 @@ htmlRenderer.prototype = {
 			ps.push[ptr[i]];
 		}
 		var layout = gfo.layout;
-		var o = {"layout":gfo.layout, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptra, "div":label, "ptrString":ps.join(), "cssType":gfxRoot.type, "gfxRoot":gfxRoot.rootPtr.concat(['gfx', gfxRoot.type]), "gfxId":gfxRoot.gfxId, "nodeRoot":ptr, "el":ul};
+		var o = {"layout":gfo.layout, "hideItem":gfo.hideItem, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptra, "div":label, "ptrString":ps.join(), "cssType":gfxRoot.type, "gfxRoot":gfxRoot.rootPtr.concat(['gfx', gfxRoot.type]), "gfxId":gfxRoot.gfxId, "nodeRoot":ptr, "el":ul};
 
-t
+		//tlg["gfx"][gfxRoot.type]
+		//for (var g = 
+
 		tlg["gfx"][gfxRoot.type] = o;
 		//gfo = o;
 		rect.y+=loh;
