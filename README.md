@@ -3,7 +3,7 @@ Document Management Template POET
 
 The DMT POET system is a linked document graph framework for managing complex business logic efficiently.  
 
-ThIs is used for generating user intefaces and binding them to document merge rules to generate documents automatically.
+This is used for creating user intefaces and binding them to document merge rules to generate documents automatically.
 
 Testing
 ===
