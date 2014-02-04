@@ -9,6 +9,10 @@
 			padding: 0px;
 			/*background-color: black;*/
       		}
+		span {
+			border-radius:4px;
+		}
+			
 	.windowmanagerContainerUL {
 		padding: 0px;	
 		margin: 0px;

@@ -146,7 +146,7 @@ function loadGlobals() {
 	graphLookup = window.parent.window.graphLookup;
 	gfxLookup = window.parent.window.gfxLookup;
 	events = window.parent.window.events;
-	
+	renderedWindowElement = window.parent.window.renderedWindowElement.contentDocument.body;
 	graphics = graphLookup; // probably this should be a subset from gfxLookup // this is the completed image  
 	//var gfxLookup = {"type":{}, "id":{}}; // object references by id
 	//var events = {}

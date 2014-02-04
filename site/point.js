@@ -369,7 +369,7 @@ UIClass.prototype = {
 			var graph = new Graph();
 			graph.setFromJSON(json);
 			var g = new Gfx({"type":"point", "ptr":[graph.id], "renderer":htmlRenderer, "baseElement":renderedWindowElement});
-			gfxLookup[g.id].initNodes();
+			gfxLookup[g.id].initNodes(); // sets up graph with gfx.point
 		//	console.log(graphLookup[g.id]);
 			g.hasIndex = false;	
 			//g.build();		// not right!
@@ -421,6 +421,9 @@ UIClass.prototype = {
 			var rows = Graph.prototype.getPtrValue(dialogPtr, "row");
 			
 			gfxLookup[this.linkedGfxId].setGridLayout(this.getLinkedPtr(dialogPtr));
+			console.log(this.getLinkedNode(dialogPtr));
+			gfxLookup[this.linkedGfxId].rebuild();
+		//	return;
 			this.evaluateRows(rows);
 		}
 	},

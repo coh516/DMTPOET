@@ -18,7 +18,7 @@ function WindowManager() {
 
 }
 //WindowManager.prototype = Object.create(Gfx.prototype);
-
+// need to clean this up
 WindowManager.prototype = {
 // i guess for the time being.. just draw a square in the upper left hand corner
 // one window 
@@ -50,7 +50,9 @@ WindowManager.prototype = {
 
 		var fd = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
 		frame = document.createElement("iframe");
-		frame.onload = function() { 
+		frame.onload = frameLoader;
+			
+		function frameLoader() { 
  
 			frame.contentDocument.body.onmousedown="return;";
 			
@@ -58,30 +60,37 @@ WindowManager.prototype = {
 			loadScripts(["utils.js", "point.js", "linkCurve.js", "events.js", "htmlRenderer.js", "gfx.js", "ptrGfx.js", "contextmenu.js", "launch.js"], frame.contentDocument, function() { frame.contentWindow.launch() });
 		
 		}
+
 		var resizeFrame = function() {
 		//	alert("xxxx");
 			//var st = this.frame.contentDocument.body.scrollTop;
 			var w = window.innerWidth/ 2;
-			var h = window.innerHeight-20;/// 2; i could get more scientific about it...
+			var h = window.innerHeight-this.frame.offsetTop;
 			this.frame.height = h;
 			this.frame.width = w;
-//			document.documentElement.scrollTop
-			
+//			document.documentElement.scrollTop	
 		}
+		function oc() { }
+	       //	oc.prototype = Object.create(resizeFrame);
 		var rf = resizeFrame.bind({'frame':frame});
-		document.body.onresize = rf;
-		document.body.onresize();
-		console.log(rf);
-		fd.appendChild(frame);
+		fd.appendChild(frame);		
+		rf();
+		//console.log(rf);
 	
 
 
-	//	var frame = document.createElement("iframe");
-	//	var fd = frame.contentDocument.bod
-		graphLookup[graph.id]['item'][0]['item'][2]['gfx']['windowmanager'].el//.appendChild(fd);
+		var frame2 = document.createElement("iframe");
+		
+		//frame2.onload = frameLoader;
+		var fd = graphLookup[graph.id]['item'][0]['item'][2]['gfx']['windowmanager'].el//.appendChild(fd);
 
-
-
+		fd.appendChild(frame2);
+		loadCSS("graph.css", frame2.contentDocument);
+		
+		var rf2 = resizeFrame.bind({'frame':frame2});
+		rf2();
+		window.onresize = function() { rf(), rf2() }
+		renderedWindowElement = frame2;	
 	//	PtrGfx.prototype.baseElement.appendChild(fd);
 
 
