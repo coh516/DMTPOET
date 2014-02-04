@@ -120,11 +120,11 @@ function testCase() {
 
 function setupCanvas() {
 
-//	var wm = new WindowManager();
+	var wm = new WindowManager();
 
-//	wm.setup();
+	wm.setup();
 
-	stageMenu.setup();
+	stageMenu.setup(); // >> this needs to be called from WindowManager
 	console.log(this);
 
 	//stageMenu.baseNode
@@ -132,7 +132,7 @@ function setupCanvas() {
 
 	//	ptrGfx.prototype.baseElement = stageMenu.baseElement;
 	events['ptr'] = nodeEvents;
-	linkCurve.prototype.setup();       	
+	linkCurve.prototype.setup(frame.contentWindow);       	
 	contextMenu.setup();
 	//	saveMenu.setup();
 	
@@ -141,6 +141,14 @@ function setupCanvas() {
 }
 
 function loadGlobals() {
+	gfxLookup = {};//{"type":{}, "id":{}}; // object references by id
+	lookups = {};
+	lookups["gfxLookup"] = gfxLookup;
+	events = {};
+	graphLookup = {};
+	lookups["graphLookup"] = graphLookup
+	snapGrids = {};
+	/*
 	lookups = window.parent.window.lookups;
 	Graph = window.parent.window.Graph;
 	graphLookup = window.parent.window.graphLookup;
@@ -148,6 +156,9 @@ function loadGlobals() {
 	events = window.parent.window.events;
 	renderedWindowElement = window.parent.window.renderedWindowElement.contentDocument.body;
 	graphics = graphLookup; // probably this should be a subset from gfxLookup // this is the completed image  
+	*/
+
+	
 	//var gfxLookup = {"type":{}, "id":{}}; // object references by id
 	//var events = {}
 	//lookups["gfxLookup"] = gfxLookup;

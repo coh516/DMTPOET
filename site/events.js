@@ -14,11 +14,16 @@ function withinRect(point, rect) {
 //	console.log("iswithin"+rect.right);
 	//console.log((point.x >= rect.x) +" "+(point.x <=rect.right)+" "+(point.y >= rect.y)+" "+(point.y <= rect.bottom))
 	return ( (point.x >= rect.x) && (point.x <rect.right) && (point.y >= rect.y) && (point.y < rect.bottom));
-}
 
-snapSpace = function() {
-	this.setupHandlers();
+}
+// this needs to point to the actual window.. 
+snapSpace = function(win) {
+//	alert("test");
+//	throw "error";
+//	this.setupHandlers(win);
 //	if (!snapSpace.prototype.snapLookup) snapSpace.prototype.snapLookup = {}
+	this.id = mkguid();
+	snapGrids[this.id] = this;
 	this.snapLookup = snapSpace.prototype.snapLookup; //enforce singleton
 };
 snapSpace.prototype = {
@@ -50,7 +55,7 @@ snapSpace.prototype = {
 		//	console.log("ptr:"+ptr+" "+objName);
 		//	console.log(rect); 
 		}
-		snapLookup = snapSpace.prototype.snapLookup;
+		var snapLookup = snapSpace.prototype.snapLookup;
 		var id = rect.ptr[0];
 
 		var my = snapSpace.prototype.maxY 
@@ -117,13 +122,16 @@ snapSpace.prototype = {
 					//console.log(a);
 					if (gfxLookup[a.rect.gfxId].isHidden()) continue;
 				 	var rect = a.rect; //getObject(a.rect, lookups[a.lookupName]);
-	
+					if (rect.div.ownerDocument.defaultView != e.view) {		
+						continue; 
+					}
 					if (withinRect({"x":pos.x, "y":pos.y}, rect)) {
 						// do further refinement of hit testing
 						//console.log(j+" "+jj+"_marijuana_"+x+"_"+y+" "+i);
 						//console.log("==x=x=x=xxxx===xx=");	
 						var z = rect.z;
 						if (!ar[z]) ar[z] = [];
+
 						var idx = rect.index !== undefined ? rect.index : "";
 						ar[z][i] = a;
 						//console.log(a);
@@ -150,11 +158,14 @@ snapSpace.prototype = {
 	"overs":{},
 
 	"mousemove":function(e) {
+		var grid = snapGrids[this.id];
+	//	console.log("testtttttttttttttttttt");
 		//e.stopPropagation();
 		//e.cancelBubble = true;
 		//if (!moving)
 		//console.log(e);
 		//console.log(getPos(e));
+		//console.log(this.id);
 		var regged = grid.findRegged(e)
 		//console.log(regged);
 		//var objLookup;
@@ -214,6 +225,7 @@ snapSpace.prototype = {
 				//console.log("me");
 				//console.log(grid.entered[me]);
 				var evt = events[gem.rect.ptr.join()];
+				console.log(gem.rect.ptr);
 				if (!evt) {
 					//console.log(gem);
 					//var uid = lookups[gem.lookupName][gem.rect.ptr[0]].universeid;
@@ -334,6 +346,7 @@ snapSpace.prototype = {
 	"moving":{},
 	"movers":{},
 	"mousedown":function(e) {
+		var grid = snapGrids[this.id];
 		moving=true;
 		// need to log the x,y to check for mouseup click
 		var pos = getPos(e);
@@ -350,7 +363,7 @@ snapSpace.prototype = {
 
 			//need to test whether or not to actually trigger a mouse move 
 
-			//console.log(grid.overs[g]);
+			//console.log(grid.overs[g];
 			var gog = grid.overs[g];
 
 //			var uid = lookups[gog.lookupName][gog.rect.ptr[0]].universeid;
@@ -375,6 +388,7 @@ snapSpace.prototype = {
 	"mouseout":function(e) {
 		//console.log(e);
 		//console.log("_-_-__-");
+		var grid = this.id;
 		if (!e.relatedTarget || e.relatedTarget.nodeName == "HTML") {
 			for (var g in grid.overs) {
 				var ggo = grid.overs[g];
@@ -383,6 +397,7 @@ snapSpace.prototype = {
 				//console.log(uid);
 				var evt = events[ggo.rect.ptr.join()];
 				var eventType = ggo.rect.cssType;
+				//console.log(ggo.rect);
 				if (!evt) {
 			//		console.log(ggo.lookupName);
 			//		console.log(uid);
@@ -398,6 +413,7 @@ snapSpace.prototype = {
 	"mouseup":function(e) {
 		// need to test if the item moved to detect a click 
 		// also need to detect right click...
+		var grid = snapGrids[this.id];
 		var pos = getPos(e);
 		var mc = Object.getOwnPropertyNames(grid.overs);
 		for (var g in grid.movers) {
@@ -430,6 +446,8 @@ snapSpace.prototype = {
 				if (events["screenClick"]) {
 					if (!events['ignoreScreenClick'])
 					//for (var ei = 0; ei < events["screenClick"].length; ei++)
+					//needs some extra logic to map which screen we're clicking..
+					
 					events["screenClick"](e);
 				}
 				//alert("clicked on blank canvas");
@@ -438,11 +456,12 @@ snapSpace.prototype = {
 		grid.movers= {}
 	},
 
-	"setupHandlers":function(e) { 
-		window.addEventListener("mousemove", snapSpace.prototype.mousemove, true);
-		window.addEventListener("mousedown", snapSpace.prototype.mousedown, true);
-		window.addEventListener("mouseup", snapSpace.prototype.mouseup, true);
-		document.addEventListener("mouseout", snapSpace.prototype.mouseout, true);
+	"setupHandlers":function(win) { 
+	//	alert("test");
+		win.addEventListener("mousemove", snapSpace.prototype.mousemove.bind({"id":this.id}), true);
+		win.addEventListener("mousedown", snapSpace.prototype.mousedown.bind({"id":this.id}), true);
+		win.addEventListener("mouseup", snapSpace.prototype.mouseup.bind({"id":this.id}), true);
+		win.document.addEventListener("mouseout", snapSpace.prototype.mouseout.bind({"id":this.id}), true);
 	},
 	"updateSnapObject":function(id, lookupName) {
 		//var id = ptr[0];
@@ -477,7 +496,7 @@ snapSpace.prototype = {
 	}
 }
 //moveHandler = new moveHandler();
-grid = new snapSpace();
+//grid = new snapSpace();
 //alert("test..");
 
 
@@ -983,6 +1002,8 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 		//console.log("--");
 		//console.log(obj);
 		//console.log("00-------------------00");
+//		if (gfxLookup[.gfxId].baseElement.ownerDocument.defaultView != e.view) return;
+		
 		var csstype = getCSS(obj);
 		if (obj.rect.type == "index") {
 			obj.rect.selected = !obj.rect.selected
@@ -1055,7 +1076,7 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 		//console.log(p);
 		var type = obj.rect.type	
 	//	if (type == "label") {
-		console.log("test....");
+		//console.log("test....");
 		p.div.setAttribute(csstype+type, "over");
 		//	console.log(ptr.div);
 	//	}else 

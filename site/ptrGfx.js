@@ -41,11 +41,11 @@ PtrGfx.prototype._moveCanvas = function() {
 function mkPtrGfx(obj) { 
 	var g = new PtrGfx();
 	//this gets set from WindowManager
-	//console.log(g.baseElement);
+//	console.log(g.baseElement);
 	var baseElement;
 	//console.log(PtrGfx.prototype);
 	if (!g.baseElement) baseElement = document.body; else baseElement = g.baseElement;
-	//console.log(baseElement);
+//	console.log(baseElement);
 	g.create({"type":"ptr", "ptr":[obj.id], "renderer":htmlRenderer, "baseElement":baseElement});
 	return g;
 }

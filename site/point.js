@@ -263,8 +263,8 @@ System.prototype = {
 		
 
 			if (isRoot || po.children.length == 0 && rpID != pID) {
-				{
-					if (po.parentId)
+				
+					if (po.parentId) {
 						pointLookup[po.parentId].phraseEnd = true;
 				}
 			} 
@@ -368,7 +368,7 @@ UIClass.prototype = {
 			//console.log(JSON.stringify(json));
 			var graph = new Graph();
 			graph.setFromJSON(json);
-			var g = new Gfx({"type":"point", "ptr":[graph.id], "renderer":htmlRenderer, "baseElement":renderedWindowElement});
+			var g = new Gfx({"type":"point", "ptr":[graph.id], "renderer":htmlRenderer, "baseElement":frame2.contentDocument.body});
 			gfxLookup[g.id].initNodes(); // sets up graph with gfx.point
 		//	console.log(graphLookup[g.id]);
 			g.hasIndex = false;	

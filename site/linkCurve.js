@@ -4,9 +4,10 @@
 function linkCurve() {
 
 }
-//hardcoded to gfx type ptr
+//hardcoded to gfx type ptr and singleton...
+//should be referenced as part of the graphics window
 linkCurve.prototype = {
-	"setup": function() {
+	"setup": function(win) {
 
 		linkLookup = {};
 		curveLookup = {};
@@ -26,7 +27,7 @@ linkCurve.prototype = {
 		linkCurve.prototype.svg = svg;
 		// not sure if this is the best approach ... but the link curve needs to be quantized .. so we'll do it like this.. maybe figure smoetning to extend the functionality of the universe model to add link curves... 
 		events["curveLookup"] = new linkCurveHandler();		
-		document.body.appendChild(svg);
+		win.document.body.appendChild(svg);
 
 		console.log(window.parent.window.graphLookup);
 

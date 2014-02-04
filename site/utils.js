@@ -94,7 +94,7 @@ function getPos(e) {
 //	console.log(document.documentElement.innerHTML);
 //	console.log(document.documentElement.scrollTop);
 //	if (window.document.parent != window.document)
-		return {x:e.clientX+window.scrollX, y:e.clientY+window.scrollY}
+		return {x:e.clientX+e.view.scrollX, y:e.clientY+e.view.scrollY}
 	
 //	return {x:e.clientX+document.documentElement.scrollLeft, y:e.clientY+document.documentElement.scrollTop}
 	/*

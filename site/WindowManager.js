@@ -1,16 +1,11 @@
 function setupGlobals() {
-	gfxLookup = {};//{"type":{}, "id":{}}; // object references by id
-	lookups = {};
-	lookups["gfxLookup"] = gfxLookup;
-	events = {};
-	graphLookup = {};
-	lookups["graphLookup"] = graphLookup;
+//;
 }
 
 function launch() {
 
-	setupGlobals();
-	var wm = new WindowManager(); wm.setup()
+//	setupGlobals();
+//	var wm = new WindowManager(); wm.setup()
 }
 
 
@@ -50,17 +45,17 @@ WindowManager.prototype = {
 
 		var fd = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
 		frame = document.createElement("iframe");
-		frame.onload = frameLoader;
-			
+		//frame.onload = frameLoader;
+		// shouldnt do it like this..	
+		/*
 		function frameLoader() { 
  
-			frame.contentDocument.body.onmousedown="return;";
+		
 			
-			loadCSS("graph.css", frame.contentDocument);
 			loadScripts(["utils.js", "point.js", "linkCurve.js", "events.js", "htmlRenderer.js", "gfx.js", "ptrGfx.js", "contextmenu.js", "launch.js"], frame.contentDocument, function() { frame.contentWindow.launch() });
 		
-		}
-
+		} // need a way to load the documents into the content windows, generically...
+		*/
 		var resizeFrame = function() {
 		//	alert("xxxx");
 			//var st = this.frame.contentDocument.body.scrollTop;
@@ -70,27 +65,42 @@ WindowManager.prototype = {
 			this.frame.width = w;
 //			document.documentElement.scrollTop	
 		}
-		function oc() { }
+		
 	       //	oc.prototype = Object.create(resizeFrame);
 		var rf = resizeFrame.bind({'frame':frame});
-		fd.appendChild(frame);		
+		fd.appendChild(frame);	
+
+		var grid1 = new snapSpace();
+		grid1.setupHandlers(frame.contentWindow);
+
+
+		loadCSS("graph.css", frame.contentDocument);
+		
+		frame.contentDocument.body.onmousedown="return;";
+		PtrGfx.prototype.baseElement = frame.contentDocument.body;	
 		rf();
 		//console.log(rf);
 	
 
 
-		var frame2 = document.createElement("iframe");
+		frame2 = document.createElement("iframe");
 		
 		//frame2.onload = frameLoader;
 		var fd = graphLookup[graph.id]['item'][0]['item'][2]['gfx']['windowmanager'].el//.appendChild(fd);
 
 		fd.appendChild(frame2);
+		frame2.contentDocument.body.onmousedown="return;";	
+		
 		loadCSS("graph.css", frame2.contentDocument);
 		
 		var rf2 = resizeFrame.bind({'frame':frame2});
 		rf2();
 		window.onresize = function() { rf(), rf2() }
-		renderedWindowElement = frame2;	
+		renderedWindowElement = frame2;
+	
+		console.log(frame.contentWindow);
+		var grid2 = new snapSpace();
+		grid2.setupHandlers(frame2.contentWindow);	
 	//	PtrGfx.prototype.baseElement.appendChild(fd);
 
 

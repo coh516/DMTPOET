@@ -31,7 +31,7 @@ var menuHandler = {
 		// need to figure how to connect the nodes and execute the point.....
 		this.gid = graph.id;
 
-		var g= new Gfx({"type":uniName, "ptr":[this.gid], "renderer":htmlRenderer});
+		var g= new Gfx({"type":uniName, "ptr":[this.gid], "renderer":htmlRenderer, "baseElement": frame.contentDocument.body});
 		g.hasIndex = false;
 		this.gfxId = g.id;
 		//g.create(graph.id);  //uniName, [gid], htmlRenderer);
@@ -156,7 +156,7 @@ var contextMenu = Object.create(menuHandler);
 
 
 
-contextMenu.setup = function() {
+contextMenu.setup = function(e) {
 
 	var json = ['expand', 'hide', 'rename', 'remove', 'add child', 'add sibling', 'converge', 'split', 'copy', {'set type':["root", "program", "value"]}, {'set layout':["grid", "list"]}, 'evaluate'];
 	var o = this.init(json, "contextmenu");
@@ -396,6 +396,8 @@ stageMenu.mksubmenu = function() {
 
 stageMenu.manageScreenClick = function(e) {
 	//if (!contextMenu.lastPtr) //return;
+	//(rect.div.ownerDocument.defaultView != e.view)
+	if (gfxLookup[this.gfxId].baseElement.ownerDocument.defaultView != e.view) return;
 	var sv = menuHandler.switchVisibility.bind({gid:this.gid, gfxId:this.gfxId});
 	//sv(e);
 	var ok = true;
