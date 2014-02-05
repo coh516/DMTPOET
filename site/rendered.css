@@ -1,0 +1,86 @@
+	      body {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select:none;
+        		margin: 0px;
+			padding: 0px;
+			/*background-color: black;*/
+      		}
+		span {
+			border-radius:4px;
+		}
+			
+	.pointContainerUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+	/*	background-color:yellow; */
+		list-style-type: none;	
+	}
+
+	.pointUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+		background-color:yellow;
+		list-style-type: none;
+		
+	}
+	
+	.pointLI {
+		margin: 0px;
+		padding: 0px;
+		list-style-type: none;
+		border: none; 
+	}
+
+
+
+	[pointlabel] {
+		display:inline-block;
+		cursor:pointer;
+		white-space: nowrap;
+	}
+	
+	[pointlabel=unselected] {
+		background-color: #cccccc;	
+	}
+
+	[pointlable=selected] {
+		background-color: #dddddd;
+	}
+
+
+	[gridtable =table] {
+		display:table;
+		padding:0px;
+	}
+	[gridtable=row] {
+		display:table-row;
+		padding:0px;
+	}
+	[gridtable=cell] {
+		padding:0px;
+		display:table-cell;
+	}
+/*	
+	.pointContainerUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+		list-style-type: none;
+
+		
+	}
+	.pointUL {
+		padding: 0px;	
+		margin: 0px;
+		border: none;
+		list-style-type: none;
+
+		
+	}
+	*/

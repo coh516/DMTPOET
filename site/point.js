@@ -177,7 +177,7 @@ Point.prototype = {
 	
 	"next":function() {
 		for (var i =0; i < this.children.length; i++) {
-			this.children[i].step();
+			pointLookup[this.children[i]].step();
 		}
 	},
 	"step":function() {
@@ -239,6 +239,7 @@ System.prototype = {
 
 			var po = pointLookup[pID];
 			po.rootPointID = rpID;
+			console.log (rpID);
 			var ponode = po.superNode; //getObject(po.ptr, graphLookup);
 				
 			// this might need to be stored in a phraseLookup[rootPointID]
@@ -256,7 +257,9 @@ System.prototype = {
 			if (ponode.types['root']) {
 
 				po.setBeginPhrase();
-				rpID = ponode.id;
+				rpID = po.id;
+				console.log(ponode);
+				console.log("----------------");
 				var isRoot = true;
 			}
 
@@ -342,9 +345,11 @@ UIClass.prototype = {
 			// needs to trace up until it finds a UI object
 			var rootPoint = pointLookup[this.rootNodeId];
 			console.log("------");
-			console.log(pa);
-				
-			switch ( pa.renderedUI.type ) {
+			console.log(this);
+			var li = this.getLinkedPtr(this.superGroup);
+			var memberOf = Graph.prototype.climbToValue(li,['button', 'input', 'label']);
+		       console.log(memberOf);	
+			switch (memberOf) {
 				case "button":
 					pa.renderedUI.domNode.onClick = this._next.bind(this.id);
 					break;
@@ -380,11 +385,13 @@ UIClass.prototype = {
 			this.linkedGraphId = graph.id;
 			this.createDom();
 			g.build();
+			this.next();
 		}
 	},
 	"getLinkedPtr":function(ptr) { 
 		var _ptr = copyArray(ptr);
-		_ptr[0] = this.linkedGraphId;
+
+		_ptr[0] = pointLookup[this.rootPointID].linkedGraphId;
 		return _ptr;
 	},
 	"getLinkedNode":function(ptr) {
@@ -421,7 +428,7 @@ UIClass.prototype = {
 			var rows = Graph.prototype.getPtrValue(dialogPtr, "row");
 			
 			gfxLookup[this.linkedGfxId].setGridLayout(this.getLinkedPtr(dialogPtr));
-			console.log(this.getLinkedNode(dialogPtr));
+			//console.log(this.getLinkedNode(dialogPtr));
 			gfxLookup[this.linkedGfxId].rebuild();
 		//	return;
 			this.evaluateRows(rows);
@@ -431,7 +438,7 @@ UIClass.prototype = {
 		//console.log(rows)
 		for (var i =0 ; i < rows.length; i++) {
 			this.getLinkedNode(rows[i])['gfx']['point'].hideItem = true;	
-			console.log(this.getLinkedNode(rows[i]));
+			//console.log(this.getLinkedNode(rows[i]));
 			var row = getObject(rows[i], graphLookup);
 		
 			for (var j=0; j < row['item'].length; j++) {
@@ -482,6 +489,7 @@ UIClass.prototype = {
 			case 'button':
 				gfxLookup[this.linkedGfxId].mkButton(ri);			
 				gfxLookup[this.linkedGfxId].hideChildren(ri);
+
 
 			//	var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");	
 				/*

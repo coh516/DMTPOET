@@ -91,7 +91,7 @@ WindowManager.prototype = {
 		fd.appendChild(frame2);
 		frame2.contentDocument.body.onmousedown="return;";	
 		
-		loadCSS("graph.css", frame2.contentDocument);
+		loadCSS("rendered.css", frame2.contentDocument);
 		
 		var rf2 = resizeFrame.bind({'frame':frame2});
 		rf2();

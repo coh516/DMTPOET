@@ -1000,7 +1000,17 @@ Graph.prototype = {
 		}
 		return ar;
 
+	},
+	"climbToValue":function(ptr, vals) {
+		var ca = copyArray(ptr);		
+		while (ca.length > 0) {
+			var cav = getGraphObject(ca).value;
+		        for (var i=0; i < vals.length;i++)
+				if (cav == vals[i]) return cav;
+			ca.pop();ca.pop();
+		}
 	}
+
 	/*
 	"getLoc":function(ptr, ar) {
 		var o = getObject(ptr, graphLookup);
@@ -1017,7 +1027,9 @@ Graph.prototype = {
 					}
 					this.recurse(item[i]['item']);
 				}
-				if (oi ==0)
+	function getGraphObject(p) {
+		return getObject(p, graphLookup);
+	}				if (oi ==0)
 				this.recurse(item[i]['item']);
 			}
 		}
@@ -1028,4 +1040,6 @@ Graph.prototype = {
 		// reduce the actualy child/parent hash now
 }
 
-
+	function getGraphObject(p) {
+		return getObject(p, graphLookup);
+	}

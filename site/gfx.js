@@ -92,7 +92,7 @@ Gfx.prototype = {
 	},
 	get graphGfxPtr() { return this.rootPtr.concat(['gfx', this.type]) },
 	get rootGfxObj() { return getObject(this.graphGfxPtr, graphLookup) },
-	set hasIndex() { this.rootGfxObj._index = false; console.log("yo"); },
+	set hasIndex() { this.rootGfxObj._index = false; },
 	get hasIndex() { if (this.rootGfxObj.hasOwnProperty("_index")) {
 				return this.rootGfxObj._index;
 			}

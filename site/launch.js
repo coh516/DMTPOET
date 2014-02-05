@@ -111,7 +111,7 @@ function testCase() {
 	PtrGfx.prototype.connect(a3, a6);
 	PtrGfx.prototype.connect(a3, a4);
 
-//	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
+	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
 
 
 //	mids[0].rebuild();

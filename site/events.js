@@ -225,7 +225,7 @@ snapSpace.prototype = {
 				//console.log("me");
 				//console.log(grid.entered[me]);
 				var evt = events[gem.rect.ptr.join()];
-				console.log(gem.rect.ptr);
+				//console.log(gem.rect.ptr);
 				if (!evt) {
 					//console.log(gem);
 					//var uid = lookups[gem.lookupName][gem.rect.ptr[0]].universeid;
