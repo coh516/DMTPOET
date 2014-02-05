@@ -9,6 +9,18 @@ function launch() {
 }
 
 
+	function getSBSize(w) {
+		var d = w.document, b = d.body, r = [ 0, 0 ], t;
+		if (b) {
+			t = d.createElement('div');
+			t.style.cssText = 'position:absolute;overflow:scroll;top:-100px;left:-100px;width:100px;height:100px;';
+			b.insertBefore(t, b.firstChild);
+			r = [ t.offsetHeight - t.clientHeight, t.offsetWidth - t.clientWidth ];
+			b.removeChild(t);
+		}
+		return r;
+	}
+
 function WindowManager() {
 
 }
@@ -17,7 +29,7 @@ function WindowManager() {
 WindowManager.prototype = {
 // i guess for the time being.. just draw a square in the upper left hand corner
 // one window 
-//
+
 	"setup":function() {
 		// element should be id'...
 		//this.element = document.createElement("span");
@@ -39,8 +51,10 @@ WindowManager.prototype = {
 		 
 		 //a quick lookup system like wm['x'][0]['f'][0]['pivot'] would be ok
 	//	 var [graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].join()
-		 
-		g.rebuild();		
+		pivot = graphLookup[graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].el
+		g.rebuild();
+		pivot.style.width = '14px'
+		
 		events['windowmanager'] = new staticEvents;
 
 		var fd = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
@@ -49,7 +63,7 @@ WindowManager.prototype = {
 		// shouldnt do it like this..	
 		/*
 		function frameLoader() { 
- 
+		c 
 		
 			
 			loadScripts(["utils.js", "point.js", "linkCurve.js", "events.js", "htmlRenderer.js", "gfx.js", "ptrGfx.js", "contextmenu.js", "launch.js"], frame.contentDocument, function() { frame.contentWindow.launch() });
@@ -57,12 +71,17 @@ WindowManager.prototype = {
 		} // need a way to load the documents into the content windows, generically...
 		*/
 		var resizeFrame = function() {
-		//	alert("xxxx");
-			//var st = this.frame.contentDocument.body.scrollTop;
-			var w = window.innerWidth/ 2;
-			var h = window.innerHeight-this.frame.offsetTop;
+			var pvt = graphLookup[graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].el.offsetWidth;
+			var r = getSBSize(window);
+			var w = (window.innerWidth-pvt)/2
+			var h = window.innerHeight-this.frame.offsetTop+window.scrollY;//-r[0];
 			this.frame.height = h;
-			this.frame.width = w;
+		
+			this.frame.width = w-r[1];
+
+			//var h2  = window.document.body.scrollHeight - window.innerHeight;
+			//this.frame.height -=h2;	
+	//		alert(h2);
 //			document.documentElement.scrollTop	
 		}
 		
@@ -96,6 +115,7 @@ WindowManager.prototype = {
 		var rf2 = resizeFrame.bind({'frame':frame2});
 		rf2();
 		window.onresize = function() { rf(), rf2() }
+		window.onscroll = window.onresize;
 		renderedWindowElement = frame2;
 	
 		console.log(frame.contentWindow);

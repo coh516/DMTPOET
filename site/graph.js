@@ -1006,7 +1006,7 @@ Graph.prototype = {
 		while (ca.length > 0) {
 			var cav = getGraphObject(ca).value;
 		        for (var i=0; i < vals.length;i++)
-				if (cav == vals[i]) return cav;
+				if (cav == vals[i]) return {"ptr":ca, "val":cav}
 			ca.pop();ca.pop();
 		}
 	}

@@ -750,15 +750,15 @@ function staticEvents() { }
 staticEvents.prototype = Object.create(userEvents.prototype);
 
 staticEvents.prototype.checkPtr = function(ptr) {
-	return (nodeEvents.hasOwnProperty(ptr))
+	return (ptrEvents.hasOwnProperty(ptr))
 }
 staticEvents.prototype["handleMouseDown"] =  function(obj, e) {
 	//for (var i = 0; i < obj.rect.events.mouseDown.length; i++) {
-	console.log(obj.rect.ptr);
+//	console.log(obj.rect.ptr);
 	if (this.checkPtr(obj.rect.ptr.join()))
 	
-	if (nodeEvents[obj.rect.ptr.join()].mouseDown)
-		nodeEvents[obj.rect.ptr].mouseDown(e);
+	if (ptrEvents[obj.rect.ptr.join()].handleMouseDown)
+		ptrEvents[obj.rect.ptr].handleMouseDown();
 	//}
 	//staticEvents[
 }
@@ -767,40 +767,43 @@ staticEvents.prototype[	"handleMouseDrag"]= function(obj, e) {
 	if (this.checkPtr(obj.rect.ptr.join()))
 
 	
-	if (nodeEvents[obj.rect.ptr.join()].handleMouseDrag)	
-		obj.rect.events.handleMouseDrag(e);
+	if (ptrEvents[obj.rect.ptr.join()].handleMouseDrag)	
+		ptrEvents[obj.rect.ptr].handleMouseDrag();
 }
 
 staticEvents.prototype[	"handleMouseMove"]= function(obj, e) {
+//	console.log(obj.rect.ptr.join());
 	if (this.checkPtr(obj.rect.ptr.join()))
 
 	
-	if (nodeEvents[obj.rect.ptr.join()].handleMouseMove)
-		obj.rect.events.handleMouseDrag(e);
+	if (ptrEvents[obj.rect.ptr.join()].handleMouseMove)
+		ptrEvents[obj.rect.ptr].handleMouseMove();
 }
 
 staticEvents.prototype[	"handleMouseClick"]= function(obj, e) {
-	if (this.checkPtr(obj.rect.ptr.join()))
-
+//	alert("test..");
+	console.log(obj.rect.ptr.join());
+	if (this.checkPtr(obj.rect.ptr.join())) {
 	
-	if (nodeEvents[obj.rect.ptr.join()].handleMouseClick)
-		obj.rect.events.handleMouseDrag(e);
+	if (ptrEvents[obj.rect.ptr.join()].handleMouseClick)
+		ptrEvents[obj.rect.ptr].handleMouseClick();
+	}
 }
 
 staticEvents.prototype[	"handleMouseOut"]=function(obj, e) {
 	if (this.checkPtr(obj.rect.ptr.join()))
 
-	if (nodeEvents[obj.rect.ptr.join()].handleMouseOut)
-		obj.rect.events.handleMouseDrag(e);	
+	if (ptrEvents[obj.rect.ptr.join()].handleMouseOut)
+		ptrEvents[obj.rect.ptr].handleMouseOut();	
 }
 staticEvents.prototype[	"handleMouseEnter"]=function(obj, e) {
 	if (this.checkPtr(obj.rect.ptr.join()))
 
-	if (nodeEvents[obj.rect.ptr.join()].handleMouseEnter)
-		obj.rect.events.handleMouseEnter(e);	
+	if (ptrEvents[obj.rect.ptr.join()].handleMouseEnter)
+		ptrEvents[obj.rect.ptr].handleMouseEnter();	
 }
 
-
+ptrEvents = {};
 //console.log(contextEventHandler.prototype);
 
 // todo manage ptr to events //

@@ -241,7 +241,5 @@ function loadCSS(filename, doc) {
 	doc.getElementsByTagName('head')[0].appendChild(script);
 }
 
-function getGraphObject(p) {
-	return getObject(p, graphLookup);
-}
+
 

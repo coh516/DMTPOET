@@ -169,8 +169,9 @@ Point.prototype = {
 
 	},
 	
-	"_next":function(pointId) {
-		var o = pointLookup[pointId]
+	"_next":function() {
+		alert("test from _");
+		var o = pointLookup[this.id]
 		o.next();
 
 	},
@@ -333,7 +334,10 @@ UIClass.prototype = {
 		
 
 	},
-
+	"addUIEvent":function(ptr, type, obj) {
+		if (!ptrEvents[ptr.join()]) ptrEvents[ptr.join()] = {};
+		ptrEvents[ptr.join()][type] = obj;
+	},
 
 	// this needs to be moved to the UIRenderer class....
 	"evaluate":function() {
@@ -346,21 +350,23 @@ UIClass.prototype = {
 			var rootPoint = pointLookup[this.rootNodeId];
 			console.log("------");
 			console.log(this);
-			var li = this.getLinkedPtr(this.superGroup);
+			var li = this.getLinkedPtr(this.superGroup).concat(['gfx', 'point']);
 			var memberOf = Graph.prototype.climbToValue(li,['button', 'input', 'label']);
-		       console.log(memberOf);	
-			switch (memberOf) {
+		       	console.log(li);
+			switch (memberOf.val) {
 				case "button":
-					pa.renderedUI.domNode.onClick = this._next.bind(this.id);
+				//	nodeEvents[li.
+					console.log(this.id);
+					this.addUIEvent(memberOf.ptr.concat(['gfx', 'point']), 'handleMouseClick', this._next.bind({"id":this.id}));
 					break;
 				case "input":
 					this.value = pa.renderUI.domNode.value;
 					break;
 			}
-			var c = this.getNextChild();
+			//var c = this.getNextChild();
 			//	alert("evaluaiting..");
-			console.log(c);
-			c.evaluate()
+			//console.log(c);
+			//c.evaluate()
 
 
 //			}
@@ -383,6 +389,8 @@ UIClass.prototype = {
 			this.linkedGfxId = g.id
 			//this.node.ptr
 			this.linkedGraphId = graph.id;
+			events['point'] = staticEvents.prototype;
+			
 			this.createDom();
 			g.build();
 			this.next();
