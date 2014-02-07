@@ -43,7 +43,6 @@ snapSpace.prototype = {
 	// objName needs to go... useless shit
 	"regObject":function(ptr, objName, eventObject, refinementFunction) { // using bounding box from the gfx renderer
 
-
 		// it would be smarter to just store references to the ptr and object lookup names
 		// rather than copying them to a single lookup table ....
 		// needs to be fixed.......... 
@@ -72,6 +71,8 @@ snapSpace.prototype = {
 		var snaps = [];	
  
 		//quantizer
+//		console.log(ptr +" "+leftMostX);
+		//
 		for (var x = leftMostX; x <= rect.right; x += this.snapWidth) {
 
 			if (snapLookup[x] === undefined)
@@ -754,7 +755,7 @@ staticEvents.prototype.checkPtr = function(ptr) {
 }
 staticEvents.prototype["handleMouseDown"] =  function(obj, e) {
 	//for (var i = 0; i < obj.rect.events.mouseDown.length; i++) {
-//	console.log(obj.rect.ptr);
+	console.log(obj.rect.ptr);
 	if (this.checkPtr(obj.rect.ptr.join()))
 	
 	if (ptrEvents[obj.rect.ptr.join()].handleMouseDown)

@@ -30,7 +30,7 @@ WindowManager.prototype = {
 // i guess for the time being.. just draw a square in the upper left hand corner
 // one window 
 
-	"setup":function() {
+	"setup":function(ptrStuff) {
 		// element should be id'...
 		//this.element = document.createElement("span");
 //		this.uni = new universe(); // no need to typecast the universe
@@ -57,7 +57,7 @@ WindowManager.prototype = {
 		
 		events['windowmanager'] = new staticEvents;
 
-		var fd = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
+		var fd1 = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
 		frame = document.createElement("iframe");
 		//frame.onload = frameLoader;
 		// shouldnt do it like this..	
@@ -77,50 +77,60 @@ WindowManager.prototype = {
 			var h = window.innerHeight-this.frame.offsetTop+window.scrollY;//-r[0];
 			this.frame.height = h;
 		
-			this.frame.width = w-r[1];
+			this.frame.width = w-r[1];	
+		}
 
-			//var h2  = window.document.body.scrollHeight - window.innerHeight;
-			//this.frame.height -=h2;	
-	//		alert(h2);
-//			document.documentElement.scrollTop	
+		var resizePivot = function() {
+
+
 		}
 		
 	       //	oc.prototype = Object.create(resizeFrame);
 		var rf = resizeFrame.bind({'frame':frame});
-		fd.appendChild(frame);	
+		fd1.appendChild(frame);	
 
 		var grid1 = new snapSpace();
 		grid1.setupHandlers(frame.contentWindow);
 
 
-		loadCSS("graph.css", frame.contentDocument);
-		
-		frame.contentDocument.body.onmousedown="return;";
-		PtrGfx.prototype.baseElement = frame.contentDocument.body;	
-		rf();
-		//console.log(rf);
 	
-
-
 		frame2 = document.createElement("iframe");
 		
 		//frame2.onload = frameLoader;
-		var fd = graphLookup[graph.id]['item'][0]['item'][2]['gfx']['windowmanager'].el//.appendChild(fd);
+		var fd2 = graphLookup[graph.id]['item'][0]['item'][2]['gfx']['windowmanager'].el//.appendChild(fd);
 
-		fd.appendChild(frame2);
-		frame2.contentDocument.body.onmousedown="return;";	
+		fd2.appendChild(frame2);
+		frame2.contentDocument.body.onmousedown="return;";
+	//	return;
+
+			renderedWindowElement = frame2;
+	
+		loadScripts([{"rendered.css":frame2.contentDocument},{"graph.css":frame.contentDocument}], function() {
+
+			frame.contentDocument.body.onmousedown="return;";
+			PtrGfx.prototype.baseElement = frame.contentDocument.body;	
+			rf();
+			ptrStuff();
+
+
 		
-		loadCSS("rendered.css", frame2.contentDocument);
-		
+
+			console.log(frame.contentWindow);
+			var grid2 = new snapSpace();
+			grid2.setupHandlers(frame2.contentWindow);
+		})
+
 		var rf2 = resizeFrame.bind({'frame':frame2});
 		rf2();
-		window.onresize = function() { rf(), rf2() }
-		window.onscroll = window.onresize;
-		renderedWindowElement = frame2;
 	
-		console.log(frame.contentWindow);
-		var grid2 = new snapSpace();
-		grid2.setupHandlers(frame2.contentWindow);	
+		//console.log(rf);
+	
+	
+	
+		window.onresize = function() { rf(), rf2() }
+	
+		window.onscroll = window.onresize;
+		
 	//	PtrGfx.prototype.baseElement.appendChild(fd);
 
 

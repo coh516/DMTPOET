@@ -212,13 +212,14 @@ function getElPos(obj) {
 	return {"x":curleft, "y":curtop}
 }
 
-function loadScripts(filenames, doc, callback) {
+function loadScripts(filenames, callback) {
 	var files = 0;
 //	should make a json loader like {"file1":["file2",{"f1":["file3"]}]} to manage dependcies
 //	and load asyncronlously .. bit of a pain in the ass.. save 4 a rainy day
 	function load() {
-		var script = doc.createElement("script");	
-		script.setAttribute("src", filenames[files]);
+		var key = Object.keys(filenames[files])[0];
+		var script = loadFile(key, filenames[files][key])
+
 		script.onload = function() { 
 			files++;
 		       console.log(files+" "+filenames.length);	
@@ -227,18 +228,35 @@ function loadScripts(filenames, doc, callback) {
 			else load();
 		}
 
-		doc.getElementsByTagName('head')[0].appendChild(script);
 	}
 	load();	
 //	}
 }
+function loadFile(filename, doc) {
+	var pattern = /\.js$/i;
+	var script;
+	if (filename.match(pattern))
+		script = loadJS(filename, doc);
+	else 
+	       	script = loadCSS(filename, doc);
 
+	doc.getElementsByTagName('head')[0].appendChild(script);
+	return script;
+
+}
+
+function loadJS(filename, doc) {
+	var script = doc.createElement("script");
+	script.setAttribute("src", filenames[files]);
+	return script;
+}
 function loadCSS(filename, doc) {
 	var script = doc.createElement('link');
 	script.setAttribute('href', filename)
 	script.setAttribute('rel', 'stylesheet')
 	script.setAttribute('type', 'text/css');
-	doc.getElementsByTagName('head')[0].appendChild(script);
+	return script;
+//	script.onload = callback
 }
 
 

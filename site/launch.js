@@ -118,22 +118,25 @@ function testCase() {
 
 }
 
-function setupCanvas() {
+function setupCanvas(cb) {
 
 	var wm = new WindowManager();
 
-	wm.setup();
+	wm.setup(function(){
 
-	stageMenu.setup(); // >> this needs to be called from WindowManager
-	console.log(this);
+		stageMenu.setup(); // >> this needs to be called from WindowManager
+		console.log(this);
 
-	//stageMenu.baseNode
-	// should be ptrGfx.prototype.setupLinkCurve and ptrGfx.prototype.setupContextMenu
+		//stageMenu.baseNode
+		// should be ptrGfx.prototype.setupLinkCurve and ptrGfx.prototype.setupContextMenu
 
-	//	ptrGfx.prototype.baseElement = stageMenu.baseElement;
-	events['ptr'] = nodeEvents;
-	linkCurve.prototype.setup(frame.contentWindow);       	
-	contextMenu.setup();
+		//	ptrGfx.prototype.baseElement = stageMenu.baseElement;
+		events['ptr'] = nodeEvents;
+		linkCurve.prototype.setup(frame.contentWindow);       	
+		contextMenu.setup();
+		cb();
+		
+	});
 	//	saveMenu.setup();
 	
 	
@@ -169,8 +172,7 @@ function loadGlobals() {
 function launch() {
 	loadGlobals();
 
-	setupCanvas();
-	testCase();
+	setupCanvas(function() { testCase()});
 }
 
 //launch();

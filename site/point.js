@@ -5,6 +5,7 @@
 // there needs to a way of caching the ptr subnodes
 //
 var pointLookup = {}
+// should be arrays
 var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass};
 
 function Point(options){ 
@@ -558,7 +559,7 @@ UIClass.prototype = {
 				var n = Graph.prototype.getPtrValue(ri, 'text');
 				var txt = getGraphObject(n[0]).item[0].value;
 				_rowItem.value = txt;
-				gfxLookup[this.linkedGfxId].rebuild();
+			//	gfxLookup[this.linkedGfxId].rebuild();
 
 				//ri.value = n[0].item[0].value
 				//rowItem.value = n.item[0]
@@ -597,7 +598,8 @@ UIClass.prototype = {
 
 			break;
 		}
-		gfxLookup[this.linkedGfxId].hideChildren(_rowItem.ptr);				
+//		gfxLookup[this.linkedGfxId].hideChildren(_rowItem.ptr);
+
 	},
 
 
@@ -623,7 +625,12 @@ function DateClass() {
 }
 
 DateClass.prototype = {
-	"timeStamp":function(point, callback) {
+
+	"evaluate":function() {
+		this.timeStamp();
+	},
+
+	"timeStamp":function() {
 		//this.direction = this.inheritDirection(); //"push";
 		//;// point.nextPoint;// = "set"; // setting data dispatches data to be set by another function
 		this.value = new Date().toString();
