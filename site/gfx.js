@@ -59,6 +59,8 @@ Gfx.prototype = {
 		var ng = 0;
 
 		this.id = mkguid();
+		//the link curve still needs to be refactored to be 
+		//managed by seperate id's...
 
 		//if (!gfxLookup['type'][type])
 		//	gfxLookup['type'][type] = {};
@@ -83,6 +85,9 @@ Gfx.prototype = {
 		//console.log(this.baseElement);
 		//if (!baseElement) {
 		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id, 'hasBaseElement':be}
+
+		// setting type here might have been unnessary
+		
 
 		this.gfxPtr = ptr.concat(['gfx', this.type]);
 		if (!Gfx.prototype.setted) 
@@ -156,13 +161,18 @@ Gfx.prototype = {
 			//window.removeEventListener('keypress', stageMenu.checkForEnter, true);
 		}
 	},
+	//maybe extend this for UI gfx
+	"makeStandardInputBox":function() {
+
+
+	},
 	"deselectInputBox": function() {
 		//alert("TEST..");
 		//var t = gfxLookup.isRenaming;
 		var rect = Gfx.prototype.isRenaming.rect;
 		var ptr = rect.ptr;
 		//alert(ptr);
-		if (ptr) {;
+		if (ptr) {
 			
 			var o = getObject(ptr, graphLookup);
 			//once again.. need to store id's...
@@ -188,8 +198,9 @@ Gfx.prototype = {
 	// will refactor in a minute....
 	"mkInputBox":function(rect) {
 		// push textmenu div :)
-		console.log(ptr + "<<<<>>>>>");	
-		var id = ptr[0];
+		//alert("test..");
+	//	console.log(ptr + "<<<<>>>>>");	
+	//	var id = rect.ptr[0];
 		console.log(rect);
 		var o = getGraphObject(rect.ptr)//, graphLookup);
 		var item = getGraphObject(rect.nodeRoot);
@@ -197,8 +208,8 @@ Gfx.prototype = {
 		var d = o.div;
 		d.innerText = "";
 
-		var ib = document.createElement("input");
-		var ibc = document.createElement("input");
+		var ib = d.ownerDocument.createElement("input");
+		var ibc = d.ownerDocument.createElement("input");
 
 		ib.type = "text";
 		ibc.type = "text";
@@ -217,7 +228,7 @@ Gfx.prototype = {
 		ibc.style.zIndex =  zIndex["svg"]+10
 			ibc.style.top = xy.y+"px";
 		ibc.style.left = xy.x+"px";
-		document.body.appendChild(ibc)
+		d.ownerDocument.body.appendChild(ibc)
 			//console.log(graphics[id]);
 			o.inputBox = ibc;
 		o.hiddenInputBox = ib;
@@ -225,7 +236,7 @@ Gfx.prototype = {
 		this.reindex();
 		//console.log(this.lastPtr);
 		//console.log("&*8&&&**************************&$&$");
-		console.log(id + "<thumb");
+		//console.log(id + "<thumb");
 	
 		// this is such a hack becuase it requires focus.. whatever.
 		Gfx.prototype.isRenaming = {"rect":rect, "gfxId":this.id};
@@ -538,9 +549,10 @@ Gfx.prototype = {
        	"setZ":function(z) {
 		this.rootGfxObj.loc.z = z;
 	},
-	"mkInputBox":function(ptr) {
 
-	},
+	//"mkInputBox":function(ptr) {
+
+	//},
 	"mkButton":function(ptr) {
 	},	
 	"setXYZ":function(x,y,z) {

@@ -220,6 +220,8 @@ contextMenu.showLastPtr = function(rect) {
 }
 
 contextMenu.renamePtr = function() {
+//	alert('xxx');
+	console.log(gfxLookup[this.lastRect.gfxId]);
 	gfxLookup[this.lastRect.gfxId].mkInputBox(this.lastRect);
 //	gfxLookup[this.lastRect.gfxId].renamePtr(this.lastRect.nodeRoot);
 }

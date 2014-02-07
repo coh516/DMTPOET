@@ -197,7 +197,11 @@ Point.prototype = {
 			}
 
 		}
-		else this.evaluate();	
+
+		else {
+			console.log(this);
+			this.evaluate();	
+		}
 	}
 
 }
@@ -350,14 +354,21 @@ UIClass.prototype = {
 			var rootPoint = pointLookup[this.rootNodeId];
 			console.log("------");
 			console.log(this);
-			var li = this.getLinkedPtr(this.superGroup).concat(['gfx', 'point']);
-			var memberOf = Graph.prototype.climbToValue(li,['button', 'input', 'label']);
+			var li = this.superGroup;// i hate that i can't do li.climbToValue .. need to work on that..
+			var memberOf = Graph.prototype.climbToValue(li,['button', 'inputbox', 'label']);
 		       	console.log(li);
+			//return;
 			switch (memberOf.val) {
 				case "button":
 				//	nodeEvents[li.
-					console.log(this.id);
-					this.addUIEvent(memberOf.ptr.concat(['gfx', 'point']), 'handleMouseClick', this._next.bind({"id":this.id}));
+					//alert('test');
+					console.log(this.ptr[0]);
+					console.log(memberOf.ptr);
+					console.log(getGraphObject[memberOf.ptr]);
+					var glp = this.getLinkedPtr(memberOf.ptr);
+					console.log(glp.concat(['gfx', 'point']).join());
+					ptrEvents[glp.concat(['gfx', 'point']).join()]= {'handleMouseClick': this._next.bind({"id":this.id})};
+					//this.addUIEvent(glp.concat(['gfx', 'point']), 'handleMouseClick', this._next.bind({"id":this.id}));
 					break;
 				case "input":
 					this.value = pa.renderUI.domNode.value;
@@ -378,9 +389,9 @@ UIClass.prototype = {
 			var json =  graphLookup[this.ptrId].toJSON();
 			//console.log(JSON.stringify(json));
 			var graph = new Graph();
-			graph.setFromJSON(json);
+			//graph.setFromJSON(["Dialog"]);
 			var g = new Gfx({"type":"point", "ptr":[graph.id], "renderer":htmlRenderer, "baseElement":frame2.contentDocument.body});
-			gfxLookup[g.id].initNodes(); // sets up graph with gfx.point
+		//	gfxLookup[g.id].initNodes(); // sets up graph with gfx.point
 		//	console.log(graphLookup[g.id]);
 			g.hasIndex = false;	
 			//g.build();		// not right!
@@ -389,28 +400,50 @@ UIClass.prototype = {
 			this.linkedGfxId = g.id
 			//this.node.ptr
 			this.linkedGraphId = graph.id;
+			/*
+			var go = getGraphObject(this.ptr);
+			if (!go['points']) go['points'] = {};
+			if (!go['points'][thisid] = {};
+			var gop = go['points'][thisid];
+			gop['linkedGfxId'] = g.id;
+			gop['linkedGraphId'] = graph.id;
+			*/
+			//
+		//	return;
 			events['point'] = staticEvents.prototype;
 			
 			this.createDom();
 			g.build();
 			this.next();
+
+			// the parent objects should have a pointIndex layer that connects to the point item child items.
+
 		}
 	},
+	// this is stupid, there should be a bi-directional linked nodes...
+	// requires more thought.. this is too hacked.
 	"getLinkedPtr":function(ptr) { 
-		var _ptr = copyArray(ptr);
-
-		_ptr[0] = pointLookup[this.rootPointID].linkedGraphId;
-		return _ptr;
+		//var _ptr = copyArray(ptr);
+		
+		//_ptr[0] = pointLookup[this.rootPointID].linkedGraphId;
+		console.log(getGraphObject(this.ptr));
+		return getGraphObject(ptr).point.linkedPtr;
 	},
 	"getLinkedNode":function(ptr) {
 		return getGraphObject(this.getLinkedPtr(ptr));
 	},
 	// this is a much better way of rendering rather than htmlrenderer
+	"initGfx":function(obj) {
+		var o = getGraphObject(obj);
+		if (!o['gfx']) o.gfx = {};
+		o.gfx.point = {};
+	},
 	"createDom":function() {
 
 		var ar = Graph.prototype.getPtrValue(this.superGroup, 'dialog');
+		
 //		console.log(this.getLinkedNode(this.superGroup));
-		this.getLinkedNode(this.superGroup)['gfx']['point'].hideItem = true;
+		//this.getLinkedNode(this.superGroup)['gfx']['point'].hideItem = true;
 		
 //		console.log(this.getLInkedPtr(this.superGroup));
 		for (var i=0; i < ar.length; i++) 
@@ -421,60 +454,99 @@ UIClass.prototype = {
 	/* more code to throw out */
 
 	"evaluateDialog":function(dialogPtr) {
-		this.getLinkedNode(dialogPtr)['gfx']['point'].hideItem = true;
-		
+		//this.getLinkedNode(dialogPtr)['gfx']['point'].hideItem = true;
+		// this is stupid, 'row' represents row.	
 		var view = Graph.prototype.getPtrValue(dialogPtr, "view");
 		var grid = Graph.prototype.getPtrValue(view[0], "grid");
 		//view[0].gfx.point.hideItem = true;	
 		//gfxLookup[this.linkedGfxId].
 		
-		this.getLinkedNode(view[0])['gfx']['point'].hideItem = true;
-		gfxLookup[this.linkedGfxId].hideChildren(this.getLinkedPtr(view[0]));
+		//this.getLinkedNode(view[0])['gfx']['point'].hideItem = true;
+		//gfxLookup[this.linkedGfxId].hideChildren(this.getLinkedPtr(view[0]));
+		var _dialog = Graph.prototype.appendChild([this.linkedGraphId], 'dialog');
+		console.log(_dialog);
+		this.initGfx(_dialog.ptr);
+		_dialog.gfx.point.hideItem = true;
+		var o = getGraphObject(dialogPtr);
+		if (!o.point) o.point = {};
+		//var go = getGraphObject[this.graphId,'item'];
+		o.point.linkedPtr = _dialog.ptr;//[this.graphId,'item', go.length-1];
+	
 		
 
 		if (grid) {
-			var rows = Graph.prototype.getPtrValue(dialogPtr, "row");
+			var rows = Graph.prototype.getPtrValue(dialogPtr, 'row');
+		
+//			var n = Graph.prototype.getPtrValue(ri, 'rows');
 			
-			gfxLookup[this.linkedGfxId].setGridLayout(this.getLinkedPtr(dialogPtr));
+			gfxLookup[this.linkedGfxId].setGridLayout(_dialog.ptr);
+			console.log(this.linkedGraphId);
+			//gfxLookup[this.linkedGfxId].setGridLayout(this.getLinkedPtr(dialogPtr));
 			//console.log(this.getLinkedNode(dialogPtr));
-			gfxLookup[this.linkedGfxId].rebuild();
+		//	gfxLookup[this.linkedGfxId].rebuild();
 		//	return;
-			this.evaluateRows(rows);
+		//	{"view":"grid"}
+			this.evaluateRows(rows, _dialog);
 		}
 	},
-	"evaluateRows":function(rows) {
+	"evaluateRows":function(rows, _dialog) {
 		//console.log(rows)
+		// should draw a new row ... the copy, paste, hide needs to be updated..
 		for (var i =0 ; i < rows.length; i++) {
-			this.getLinkedNode(rows[i])['gfx']['point'].hideItem = true;	
+			var _row = Graph.prototype.appendChild(_dialog.ptr, 'row');
+			//var ga = [this.graphId, 'item', 0, 'item'];
+			//var  gl = getGraphObject(ga).length;
+			console.log(_row);
+			this.initGfx(_row.ptr);  
+			//o.gfx.point.hidenItem = true;
+			//rows[i]['point'] = {"linkedNode":
+			_row['gfx']['point'].hideItem = true;	
 			//console.log(this.getLinkedNode(rows[i]));
-			var row = getObject(rows[i], graphLookup);
-		
-			for (var j=0; j < row['item'].length; j++) {
-				var rowItem = row['item'][j];
+			var ro = getObject(rows[i], graphLookup);
+			//var ro = getObject(rows[i]);
+			if (!ro.point) ro.point= {};
+			ro.point.linkedPtr = _row.ptr; 
+			// it should use the standard index model and make unhide
 
-				this.drawElement(rowItem)
+
+			for (var j=0; j < ro['item'].length; j++) {
+				var rowItem = ro['item'][j];
+
+				this.drawElement(rowItem, _row)
 					//li.innerText = row[items];
 			}
 		}
 	
 	},
 
-	"drawElement":function(rowItem) {
+	"drawElement":function(rowItem, _row) {
 	//	ptrObject.renderedUI = {};
 		//return;
 		gfxLookup[this.linkedGfxId];// this.getLinkedNode(ptrObject.ptr)['gfx']['point'].hideItem = true;
 		//ptrObject.ptr
 		//ptrObject.renderedUI.item = item;
-		var ri = this.getLinkedPtr(rowItem.ptr);
+		//var ri = this.getLinkedPtr(rowItem.ptr);
 		//
-			
+		var ri = rowItem.ptr;
+		var _rowItem = Graph.prototype.appendChild(_row.ptr, 'rowItem');
+		this.initGfx(_rowItem.ptr);
+		var rig = getGraphObject(ri);
+		if (!rig.point) rig.point = {};
+		rig.point.linkedPtr = _rowItem.ptr;
+			// once again, this should be part of the standard index model
+		//console.log("yo yo yo");	
 		switch(rowItem.value) {
 			case 'label':
 				//var o = this.getLinkedPtr(rowItem);
 				//gfxLookup[this.linkedGfxId];
 				//the id shouldnt be there...
-				var p1 = rowItem.ptr[0] 
-				gfxLookup[this.linkedGfxId].hideChildren(ri);				
+				//var go = Graph.prototype.appendChild([this.graphId,'item',0], 'row');
+				
+				var n = Graph.prototype.getPtrValue(ri, 'text');
+				var txt = getGraphObject(n[0]).item[0].value;
+					
+				_rowItem.value = txt;
+				//var p1 = rowItem.ptr[0] 
 				//var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");
 				//
 			//	ptrObject.renderedUI.linkedPtrGfx = ptrObject.renderedUI;
@@ -483,9 +555,21 @@ UIClass.prototype = {
 			break;
 			case 'inputbox':
 				//this.getLinkedNode(dialogPtr)['gfx']['point']. = true;
-				gfxLookup[this.linkedGfxId].mkInputBox(ri);
+				var n = Graph.prototype.getPtrValue(ri, 'text');
+				var txt = getGraphObject(n[0]).item[0].value;
+				_rowItem.value = txt;
+				gfxLookup[this.linkedGfxId].rebuild();
 
-				gfxLookup[this.linkedGfxId].hideChildren(ri);
+				//ri.value = n[0].item[0].value
+				//rowItem.value = n.item[0]
+				//this.getLinkedPtr(n.item[0].ptr
+				//gfxLookup[this.linkedGfxId].mkInputBox(_rowItem.gfx.point);
+
+				// need to fix this so it returns a pointer back to the graph prototype
+				// so i can do dialog.getVal('row').getVal('text');
+				
+
+				
 				/*	
 				var ib = document.createElement("input");
 				li.appendChild(ib);
@@ -495,9 +579,12 @@ UIClass.prototype = {
 				*/
 			break;
 			case 'button':
-				gfxLookup[this.linkedGfxId].mkButton(ri);			
-				gfxLookup[this.linkedGfxId].hideChildren(ri);
-
+			//	gfxLookup[this.linkedGfxId].mkButton(ri);
+				var n = Graph.prototype.getPtrValue(ri, 'text');
+				try { 
+				var txt = getGraphObject(n[0]).item[0].value;			
+				_rowItem.value = txt;
+				}catch(e){};
 
 			//	var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");	
 				/*
@@ -510,6 +597,7 @@ UIClass.prototype = {
 
 			break;
 		}
+		gfxLookup[this.linkedGfxId].hideChildren(_rowItem.ptr);				
 	},
 
 

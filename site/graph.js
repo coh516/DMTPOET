@@ -787,7 +787,7 @@ Graph.prototype = {
 										co.parents[p][pc]--;
 									}
 								}
-							
+								//maybe returning this thing is smarter to do..	
 								if (f)
 							       	f({"oldParent":c[ci], "oldChild": cop, "newChild":co.parents[p]});
 							}
@@ -822,15 +822,34 @@ Graph.prototype = {
 		this.removeType(ca, pa, "parents", f);
 		
 	},
+	"appendChild":function(ptr, value, linkedHandler) {
+		if (ptr.length == 1) {
+			
+			var g = graphLookup[ptr[0]];
+			if (!g.item) 
+				g.item = [{"value":value, "item":[], "ptr":[ptr[0], 'item', 0]}]
+			else g.item.push({"value":value, "item":[], "ptr":[ptr[0], 'item', g.item.length]})
+			return g.item[g.item.length-1];
+		}
+		var a = copyArray(ptr);
+		//a.pop();a.pop();
+		//var index = a.length-1;
+		//a.pop();
+		var lbl = getObject(a, graphLookup);
+		lbl.item.push({'item':[], 'value':value, 'ptr':a.concat(['item', lbl.item.length])})
+		return lbl.item[lbl.item.length-1];
 
+		
+	},
+	//really insertChildAtBegining
 	"addChild":function(ptr, value, linkHandler) {
 
-
 		var go = getObject(ptr, graphLookup);
-
+		if (go.item)
 		if (go.item[0]) 
 			this.changePtr(ptr.concat(['item', 0]),  "addChild", linkHandler); 
-
+		else go.item = [];
+		//return;
 		var index = ptr[ptr.length-1];
 
 		var lbl = getObject(ptr, graphLookup);
@@ -840,6 +859,8 @@ Graph.prototype = {
 		var ptrc = copyArray (ptr);
 
 		var idx = ptr[ptr.length];
+
+		console.log(getGraphObject(ptr));
 
 		// now all the pointer elements need to be refactored
 		//

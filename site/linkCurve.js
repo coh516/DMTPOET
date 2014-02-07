@@ -235,6 +235,11 @@ function reduceAfterIndex(ptr) {
 }
 
 function deleteLineFromClick() {
+
+	// should keep link to gfx ['index', 0, 'gfx', 'ptr']
+	// for now, assume gfx,ptr
+
+
 	var pj = this.pj
 	var cj = this.cj;
 
@@ -247,8 +252,12 @@ function deleteLineFromClick() {
 	var ll = linkLookup[pj][cj];
 
 	var cl = curveLookup[pj][cj];
-	ll.parentNode.removeChild(ll);	
-//	console.log(ll);
+
+//	if (!cl)// alert("wtf");
+
+//	ll.parentNode.removeChild(ll);
+	ll.parentNode.removeChild(ll);
+	console.log(ll);
 //	console.log("---------------------");
 //	console.log(cl);
 	//var p = getObject(cl.o1, graphLookup);
@@ -291,9 +300,18 @@ function deleteLineFromClick() {
 	
 	if (co.parents.length == 0 && co.children.length == 0) {
 	}
+	console.log(cl);
+	
+	/* needs to be fixed better to attach links to other than ptr graphics */
 
-	gfxLookup[cl.o1[0]].rebuild();
-	gfxLookup[cl.o2[0]].rebuild();
+	//better method rather than hardlinking gfx.ptr .. ptr should link to gfx.ptr obj instead
+
+	var gfxId1 = graphLookup[cl.o1[0]].gfx.ptr.gfxId;
+	var gfxId2 = graphLookup[cl.o1[0]].gfx.ptr.gfxId;
+
+
+	gfxLookup[gfxId1].rebuild();
+	gfxLookup[gfxId2].rebuild();
 	// reduce po.children[index > idx] 
 	//
 	

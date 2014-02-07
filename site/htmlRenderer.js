@@ -87,7 +87,7 @@ htmlRenderer.prototype = {
 
 	// really should use a reverse decorator that traces into the last node, then
 	// recurses back out
-
+	// i think the type is unneeded, has no purpose other than complicated things
 	//perhaps i could break this code into the mkptrimg code 
 	"_reindex":function(tl, gfxRoot) {
 		//alert(id);
