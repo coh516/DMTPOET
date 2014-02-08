@@ -52,10 +52,14 @@ WindowManager.prototype = {
 		 //a quick lookup system like wm['x'][0]['f'][0]['pivot'] would be ok
 	//	 var [graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].join()
 		pivot = graphLookup[graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].el
-		g.rebuild();
+		g.build();
 		pivot.style.width = '14px'
-		
-		events['windowmanager'] = new staticEvents;
+		var grid0 = new snapSpace();
+		grid0.setupHandlers(window);
+		events['windowmanager'] = staticEvents.prototype;// // = function() { console.log('staticEvents.prototype') }
+		ptrEvents[[graph.id,'item',0,'item',1,'gfx','windowmanager'].join()] = {"handleMouseDown":function() {
+			console.log("xxxx");
+		}}
 
 		var fd1 = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
 		frame = document.createElement("iframe");
@@ -70,8 +74,11 @@ WindowManager.prototype = {
 		
 		} // need a way to load the documents into the content windows, generically...
 		*/
+	//	return;
 		var resizeFrame = function() {
 			var pvt = graphLookup[graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].el.offsetWidth;
+			//gfxLookup[g.id].rebuild();
+			//requires update to just node offsets..
 			var r = getSBSize(window);
 			var w = (window.innerWidth-pvt)/2
 			var h = window.innerHeight-this.frame.offsetTop+window.scrollY;//-r[0];

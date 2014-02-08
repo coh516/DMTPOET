@@ -307,13 +307,16 @@ contextMenu.remove = function() {
 	gfxLookup[this.lastRect.gfxId].rebuild();
 
 }
+// should be in gfx
 contextMenu.setNodeType = function(type) {
 	/*
 	var a = copyArray(this.lastPtr);
 	a.pop();
 	var id = a[0];
 	var o = getObject(a, graphLookup)
-	*/
+	*/ // gotta fix this fucking api 
+	PtrGfx.prototype.setNodeType(this.lastRect, type);
+	/*
 	var o = getGraphObject(this.lastRect.nodeRoot)
 //	var p = getGraphObject(this.lastRect.)
 //	console.log("xxxxxxxxxxxxxxxxxxxxx");
@@ -334,7 +337,7 @@ contextMenu.setNodeType = function(type) {
 	this.lastRect.div.setAttribute(csstype+type, t ? "label": false);
 
 	this.lastRect.el.setAttribute(csstype+type, t ? "section":false);
-
+	*/
 	
 
 }

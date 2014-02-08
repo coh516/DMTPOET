@@ -371,6 +371,18 @@ htmlRenderer.prototype = {
 		//tlg["gfx"][gfxRoot.type]
 		//for (var g = 
 
+
+
+		if (!tlg.types) tlg.types = {}
+		//tlg.types[type] = !tlg.types[type] 
+		var csstype = o.cssType; 
+	//	var t = tlg.types[type];
+		for (var type in tlg.types) {
+			if (tlg.types[type]) {
+				o.div.setAttribute(csstype+type,  "label");
+				o.el.setAttribute(csstype+type, "section");
+			}
+		}
 		tlg["gfx"][gfxRoot.type] = o;
 		//gfo = o;
 		rect.y+=loh;

@@ -46,7 +46,7 @@ snapSpace.prototype = {
 		// it would be smarter to just store references to the ptr and object lookup names
 		// rather than copying them to a single lookup table ....
 		// needs to be fixed.......... 
-
+	//	console.log("test...");
 		var lookup = lookups[objName]
 		//console.log(ptr);
 		var rect = getObject(ptr, lookup);
@@ -84,7 +84,7 @@ snapSpace.prototype = {
 					snapLookup[x][y] = {};
 
 				snapLookup[x][y][rect.ptr.join()] = {"rect":rect, "lookupName":objName};
-				//{"type":"index", "ptr":ptr, "index":i};
+			//console.log({"type":"index", "ptr":ptr});
 				var snap = {"ptr":rect.ptr.join(), "x":x, "y":y};
 	
 				snaps.push(snap);
@@ -97,7 +97,7 @@ snapSpace.prototype = {
 	},
 
 	"findRegged":function(e) {
-
+	//	console.log("test");
 		var pos = getPos(e);
 		if (!pos) return;
 		var x = Math.floor(pos.x/this.snapWidth) * this.snapWidth;
@@ -108,7 +108,7 @@ snapSpace.prototype = {
 
 		var sz = 0;
 		var ar = {};
-
+		var snapLookup = snapSpace.prototype.snapLookup;
 		if (snapLookup.hasOwnProperty(x)) {
 			if (snapLookup[x].hasOwnProperty(y)) {
 				// do something with the object
@@ -511,7 +511,7 @@ function userEvents() {
 
 userEvents.prototype = {
 	"handleMouseEnter":function(obj, e) {
-		//console.log(gfx);
+	//	console.log(obj);
 		var id = obj.rect.ptr[0];
 		//var lookup = lookups[obj.lookupName];
 		//var mlu = models[lookup[id].universeid];
@@ -755,7 +755,7 @@ staticEvents.prototype.checkPtr = function(ptr) {
 }
 staticEvents.prototype["handleMouseDown"] =  function(obj, e) {
 	//for (var i = 0; i < obj.rect.events.mouseDown.length; i++) {
-	console.log(obj.rect.ptr);
+//	console.log(obj.rect.ptr);
 	if (this.checkPtr(obj.rect.ptr.join()))
 	
 	if (ptrEvents[obj.rect.ptr.join()].handleMouseDown)
@@ -773,7 +773,7 @@ staticEvents.prototype[	"handleMouseDrag"]= function(obj, e) {
 }
 
 staticEvents.prototype[	"handleMouseMove"]= function(obj, e) {
-//	console.log(obj.rect.ptr.join());
+	//console.log(obj.rect.ptr.join());
 	if (this.checkPtr(obj.rect.ptr.join()))
 
 	
@@ -783,7 +783,7 @@ staticEvents.prototype[	"handleMouseMove"]= function(obj, e) {
 
 staticEvents.prototype[	"handleMouseClick"]= function(obj, e) {
 //	alert("test..");
-	console.log(obj.rect.ptr.join());
+//	console.log(obj.rect.ptr.join());
 	if (this.checkPtr(obj.rect.ptr.join())) {
 	
 	if (ptrEvents[obj.rect.ptr.join()].handleMouseClick)

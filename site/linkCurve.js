@@ -280,7 +280,7 @@ function deleteLineFromClick() {
 	
 	if (po.children.length == 0 && po.parents.length == 0) {
 		var ppo = getObject(pp, graphLookup);
-
+		alert("test..");
 		reduceAfterIndex(cl.o1);
 		ppo.splice(pi, 1); 
 
@@ -288,7 +288,7 @@ function deleteLineFromClick() {
 	}
 	if (co.parents.length == 0 && co.children.length == 0) {
 		var cco = getObject(cc, graphLookup);
-		
+		//alert("test2..");
 		reduceAfterIndex(cl.o2);
 
 		cco.splice(ci, 1);
@@ -307,7 +307,7 @@ function deleteLineFromClick() {
 	//better method rather than hardlinking gfx.ptr .. ptr should link to gfx.ptr obj instead
 
 	var gfxId1 = graphLookup[cl.o1[0]].gfx.ptr.gfxId;
-	var gfxId2 = graphLookup[cl.o1[0]].gfx.ptr.gfxId;
+	var gfxId2 = graphLookup[cl.o2[0]].gfx.ptr.gfxId;
 
 
 	gfxLookup[gfxId1].rebuild();

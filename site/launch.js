@@ -91,8 +91,13 @@ function testCase() {
 //	o.gfx.ptr.layout = "list";
 //	mids[0].rebuild();
 //	mids[0].rebuild();
+// needs a modern selector interface
 	
+	mids[1].rebuild();
+	var dbDialog = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'gfx', 'ptr'];
 
+	PtrGfx.prototype.setNodeType(getGraphObject(dbDialog), 'program');
+		
 
 	PtrGfx.prototype.connect(uiroot, uisub);
 	PtrGfx.prototype.connect(uisub, uitext);
