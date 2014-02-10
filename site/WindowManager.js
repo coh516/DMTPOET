@@ -1,5 +1,6 @@
 function setupGlobals() {
 //;
+//there needs to be a way to load all the data up without requiring object initialization
 }
 
 function launch() {
@@ -60,7 +61,7 @@ WindowManager.prototype = {
 		ptrEvents[[graph.id,'item',0,'item',1,'gfx','windowmanager'].join()] = {"handleMouseDown":function() {
 			console.log("xxxx");
 		}}
-
+		
 		var fd1 = graphLookup[graph.id]['item'][0]['item'][0]['gfx']['windowmanager'].el;
 		frame = document.createElement("iframe");
 		//frame.onload = frameLoader;
@@ -76,15 +77,17 @@ WindowManager.prototype = {
 		*/
 	//	return;
 		var resizeFrame = function() {
+			// memory leaks
 			var pvt = graphLookup[graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].el.offsetWidth;
-			//gfxLookup[g.id].rebuild();
 			//requires update to just node offsets..
 			var r = getSBSize(window);
 			var w = (window.innerWidth-pvt)/2
 			var h = window.innerHeight-this.frame.offsetTop+window.scrollY;//-r[0];
 			this.frame.height = h;
 		
-			this.frame.width = w-r[1];	
+			this.frame.width = w-r[1];
+			gfxLookup[g.id].reindex();
+			
 		}
 
 		var resizePivot = function() {

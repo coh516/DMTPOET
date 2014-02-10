@@ -10,8 +10,12 @@ htmlRenderer.prototype = {
 		
 		var ptrRoot = gfxRoot.rootPtr;
 		var go = getObject(ptrRoot, graphLookup);
+		var baseDocument = gfxRoot['baseElement'].ownerDocument;
+		console.log(gfxRoot['baseElement'].ownerDocument);	
+		
 		if (!gfxRoot.el) {
-			gfxRoot.el = document.createElement("ul"); //primary internal node
+			console.log(baseDocument);
+			gfxRoot.el =baseDocument.createElement("ul"); //primary internal node
 			var appendEl = true;
 		}
 		var el = gfxRoot.el;
@@ -187,6 +191,7 @@ htmlRenderer.prototype = {
 
 	// need to figure out a way to chunk this into smaller pieces
 	"mkPtrImg":function(itemPtr, x, y, rect, gfxRoot, lastNode, lastNodeType, cb) {
+		var baseDocument = gfxRoot['baseElement'].ownerDocument;
 
 		var tlg = getObject(itemPtr, graphLookup);
 		var text = tlg["value"];
@@ -256,7 +261,7 @@ htmlRenderer.prototype = {
 		} else links = 1;
 		var tof; // = layout;
 	
-		var ul = document.createElement("ul");
+		var ul = baseDocument.createElement("ul");
 
 		el.appendChild(ul);
 		ul.setAttribute("class", type+"ContainerUL");	
@@ -274,7 +279,7 @@ htmlRenderer.prototype = {
 				graphLookup[id].addIndex(itemPtr);
 			//alert('etst');
 			
-			var li =  document.createElement("li");	
+			var li =  baseDocument.createElement("li");	
 			li.setAttribute("class", type+"LinksLI");
 
 			if (x == 0) li.style.marginLeft = "0px"; // calculate indent from small box
@@ -292,7 +297,7 @@ htmlRenderer.prototype = {
 			// that this whole case doesnt apply.......
 			li.appendChild(c);
 			*/
-			var d = document.createElement("span");
+			var d = baseDocument.createElement("span");
 			//	console.log("yooo");	
 			d.setAttribute(type+"index", "unselected")
 			li.appendChild(d);
@@ -328,15 +333,24 @@ htmlRenderer.prototype = {
 		ptt = show ? "unselected" : "hidechildren";
 
 
+		var li = baseDocument.createElement("li"); // should be ul if has children
 
-		var li = document.createElement("li"); // should be ul if has children
 		li.setAttribute("class", type+"LI");
 
 
 
 		ul.appendChild(li);
-
-		label = document.createElement("span");
+		console.log(gfo.objType);
+		var tgt = tlg["gfx"][gfxRoot.type];
+		if (tgt.objType == 'inputBox') {
+		//	alert("xxx");
+			label = baseDocument.createElement("input");	
+			label.value = text;	
+		}else {
+			label = baseDocument.createElement("span");
+			label.innerText = text;
+		}
+			
 
 		//console.log(tlg)
 		if (!tlg["gfx"][gfxRoot.type].hideItem)
@@ -348,8 +362,7 @@ htmlRenderer.prototype = {
 	
 		// should have an area here to append inner nodes
 
-
-		label.innerText = text;
+	//	label.innerText = text;
 
 		if (x == 0) {
 			li.style.marginLeft = "0px"; 
@@ -366,7 +379,9 @@ htmlRenderer.prototype = {
 			ps.push[ptr[i]];
 		}
 		var layout = gfo.layout;
-		var o = {"layout":gfo.layout, "hideItem":gfo.hideItem, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptra, "div":label, "ptrString":ps.join(), "cssType":gfxRoot.type, "gfxRoot":gfxRoot.rootPtr.concat(['gfx', gfxRoot.type]), "gfxId":gfxRoot.gfxId, "nodeRoot":ptr, "el":ul};
+		var nodeType = gfo.nodeType; 
+	
+		var o = {"layout":gfo.layout, "hideItem":gfo.hideItem, "visible":true, "type":"label", "height":loh, "right":low+pos.x, "width":low, "x":pos.x, "y":pos.y, "z": zi, "bottom":loh+pos.y, "ptr":ptra, "div":label, "ptrString":ps.join(), "cssType":gfxRoot.type, "gfxRoot":gfxRoot.rootPtr.concat(['gfx', gfxRoot.type]), "gfxId":gfxRoot.gfxId, "nodeRoot":ptr, "el":ul, 'objType':gfo.objType};
 
 		//tlg["gfx"][gfxRoot.type]
 		//for (var g = 
@@ -386,7 +401,7 @@ htmlRenderer.prototype = {
 		tlg["gfx"][gfxRoot.type] = o;
 		//gfo = o;
 		rect.y+=loh;
-
+		
 
 		labelHeight = label.offsetHeight;
 	
@@ -411,7 +426,7 @@ htmlRenderer.prototype = {
 		}
 		if (!_lastNodeType) _lastNodeType = "list";
 		if (gfo.layout == 'grid') {
-			var table = document.createElement('div');
+			var table = baseDocument.createElement('div');
 			table.setAttribute("gridtable","table");
 			_lastNode = table;
 			_lastNodeType = 'grid';

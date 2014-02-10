@@ -15,7 +15,7 @@ function testCase() {
 	    	//	{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"load"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}},
 	    		{"DB":{"internals":{"dialogs":["name", "timestamp", "graph"]}}},
 			["timeStamp"],
-			["serializeUniverse"],
+			{"serializeUniverse":"ptr"},
 
 
 			["acid1"],["acid2"],["acid3"],["acid4"],["acid5"],["acid6"]
@@ -70,7 +70,7 @@ function testCase() {
 	var dbgraph = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 2, 'index', 0];
 
 	var timestamp = [gids[2].id, 'item', 0, 'index', 0];
-	var su = [gids[3].id, 'item', 0, 'index', 0];
+	var su = [gids[3].id, 'item', 0, 'item', 0, 'index', 0];
 
 
 	var a1 = [gids[4].id, 'item', 0, 'index', 0];

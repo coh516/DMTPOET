@@ -260,4 +260,74 @@ function loadCSS(filename, doc) {
 }
 
 
+function mergeJson(objAr) {
+	var newObj = {};
+	for (var i=0; i < objAr; i++) {
+		if (typeof objAr[i] === 'string')
+			objAr[i] = [objAr[i]];
+
+		if (Array.isArray(objAr[i])) {
+			newObj = [];
+		}
+	}
+	var notObj = {};
+	// to be a real json merger, obj needs to be an array so it can compare the placement of the index of the elements
+	var _recurse=function(obj, no) {
+		for (var key in obj) {					
+			if (typeof obj[key]  !== 'object') {
+				if (Array.isArray(no[key])) {
+					no[key].push(obj[key])
+				}
+				else
+					if (no[key])
+						no[key] = [no[key]].concat(obj[key]);
+					else no[key] = obj[key];
+				return;
+			}
+
+
+			if (!no.hasOwnProperty(key)) {
+				if (Array.isArray(obj[key]))
+					no[key] = [];
+				else no[key] = {};
+			}//else 
+			//	if (Array.isArray(obj[key]) && typeof no[key] == 'object')
+			//		no[key] = [ no[key] ]
+					
+			//console.log(no[key]);
+			if (Array.isArray(obj[key])) {
+
+				for (var i =0; i < obj[key].length; i++) {
+					
+					if (Array.isArray(obj[key][i])) {
+						if (!no[key].hasOwnProperty(i))
+							no[key][i] = [];
+						_recurse(obj[key][i], no[key][i])
+					}else
+				
+					if (typeof obj[key][i] === 'object') {
+						if (!no[key].hasOwnProperty(i))
+							no[key][i] = {};
+						_recurse(obj[key][i], no[key][i])
+					}
+					
+					//if (no[key]
+					if (typeof obj[key][i] !== 'object') 
+					//	if (no[key].indexOf(obj[key][i]) < 0 ) 
+						       	no[key].push(obj[key][i]);
+					
+					
+				}
+			}
+			else  _recurse(obj[key], no[key]);
+		}
+		//no[key] = out;
+		//return out;
+	}
+
+	for (var i=0; i < objAr.length; i++) 
+		_recurse(objAr[i], newObj);
+
+	return newObj;
+}
 

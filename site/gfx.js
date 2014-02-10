@@ -31,6 +31,8 @@ zIndex["renderedApps"] = 12000
 
 //used to be gfx(objType, id....
 //there shouldnt be any html / dom references in here
+//should be able to reinitialize a graphics object from the graph object
+
 
 function Gfx(obj) {
 	// shouldnt call this on new .
@@ -86,8 +88,7 @@ Gfx.prototype = {
 		//if (!baseElement) {
 		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id, 'hasBaseElement':be}
 
-		// setting type here might have been unnessary
-		
+		// not sure if setting the type is necessary
 
 		this.gfxPtr = ptr.concat(['gfx', this.type]);
 		if (!Gfx.prototype.setted) 
@@ -115,7 +116,8 @@ Gfx.prototype = {
 		}
 	},
 	"hideItem":function(ptr) {
-	//	getGraphObject(ptr);
+		// should test suffix
+		getGraphObject(ptr);
 	},
 	"ptrs":{},
 	"img":{},
@@ -161,10 +163,19 @@ Gfx.prototype = {
 			//window.removeEventListener('keypress', stageMenu.checkForEnter, true);
 		}
 	},
-	//maybe extend this for UI gfx
-	"makeStandardInputBox":function() {
-
-
+	//maybe extend this for UI gfx	
+	"getValue":function(ptr) {
+		var v = getGraphObject(ptr.concat(['gfx', this.type])).div.value;
+		return v ? v : getGraphObject(ptr).value;
+		
+	},
+	"setInputBox":function(ptr) {
+	
+		getGraphObject(ptr.concat(['gfx', this.type])).objType = 'inputBox';
+	       this.rebuild();	
+	},
+	"setLabel":function(ptr) {
+	getGraphObject(ptr.concat['gfx', this.type]).objType = 'label';
 	},
 	"deselectInputBox": function() {
 		//alert("TEST..");

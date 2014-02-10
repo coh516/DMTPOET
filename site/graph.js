@@ -1064,3 +1064,4 @@ Graph.prototype = {
 	function getGraphObject(p) {
 		return getObject(p, graphLookup);
 	}
+GP = Graph.prototype

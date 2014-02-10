@@ -48,7 +48,7 @@ function Point(options){
 	
 	// if theres no parentId, assume this to be the initial point
 	this.children = [];
-
+//	this.values = [];
 
 	//var nodeTypes = {"program":programComponents.prototype, "value":valueComponents.prototype};
 
@@ -61,17 +61,18 @@ function Point(options){
 	
 	//var a1 = getObject([pp[0], pp[1], pp[2]], graphLookup);
 	//nodeName = a1.value;
-	pp.pop();
-	pp.pop();
+//	pp.pop();
+//	pp.pop();
 
 	// in the future, program variables should automatically be detected by seperate linkage patch
-	//
-//	this.programVars = {};
+	var pp = copyArray(this.superGroup);
+//	this.programVar = {};
 	while (pp.length > 0 ) {
 		var ppo = getObject(pp, graphLookup);
 		if (ppo.hasOwnProperty('types'))
 		if (ppo.types['program']) {
-				this.programVars = ppo;
+				//console.log("=========================*****");
+				this.programVar = ppo.ptr;
 				break;
 		}
 		pp.pop();
@@ -130,7 +131,7 @@ Point.prototype = {
 	/*
 	"evaluate": function(){
 		//this.initPhrase();
-		console.log(this.superGroup);
+		/console.log(this.superGroup);
 		this.evaluatePhrase();
 	},
 	*/
@@ -171,7 +172,7 @@ Point.prototype = {
 	},
 	
 	"_next":function() {
-		alert("test from _");
+		//alert("test from _");
 		var o = pointLookup[this.id]
 		o.next();
 
@@ -186,23 +187,38 @@ Point.prototype = {
 		var rootPoint = pointLookup[this.rootPointID];
 		
 		if (this.programVar) {
+			//alert(this.programVar);
+		 
+			var popped = rootPoint.phraseVars[this.programVar].pop();
+			rootPoint.poppedPhraseVars[this.programVar].push(popped);
 
-			if (!rootPoint.phraseVars.programVar)			
-				rootPoint.phraseVars[this.programVar] =  rootPoint.phraseVars[this.programVar].length;
-			else 
-				rootPoint.phraseVars[this.programVar]--;
+			//console.log(popped +" "+ this.id);
+			//ppv.push(popped);
+			//var 
+			//if (!rootPoint.poppedPhraseVars[this.programVar])
+			//	rootPoint
+			//alert(rootPoint.phraseVars[this.programVar].length);
 
-			if (rootPoint.phraseVars[this.programVar] == 0) {
+			if (rootPoint.phraseVars[this.programVar].length == 0) {
+				//alert("ja");
+				rootPoint.phraseVars[this.programVar] = copyArray( rootPoint.poppedPhraseVars[this.programVar])
+				
+				rootPoint.poppedPhraseVars[this.programVar]
 				var pv = rootPoint['phraseVars'][this.programVar];
-				this.evaluate( rootPoint['phraseVars'][this.programVar]);
+				this.evaluate(rootPoint.phraseVars[this.programVar]);
+				rootPoint.poppedPhraseVars[this.programVar] = [];
+					
 			}
 
 		}
 
 		else {
-			console.log(this);
+			console.log(getGraphObject(this.ptr));
 			this.evaluate();	
 		}
+	},
+	"memberOf":function(a) {
+		return Graph.prototype.climbToValue(this.superGroup, a);
 	}
 
 }
@@ -252,16 +268,18 @@ System.prototype = {
 			//if (rootPoint.programVars)
 		//	if (!rootPoint.phraseVars)
 		//		rootPoint.phraseVars
-
-			if (po.programVar)
-			if (!rootPoint.phraseVars[po.programVar]) {
-				rootPoint.phraseVars[po.programVar] = [];
-				rootPoint.phraseVars[po.programVar].push(pId);
-			}
+			console.log(rootPoint.phraseVars);
+			if (po.programVar) {
+				if (!rootPoint.phraseVars[po.programVar]) {
+					rootPoint.phraseVars[po.programVar] = [];
+					rootPoint.poppedPhraseVars = {}; rootPoint.poppedPhraseVars[po.programVar] = [];
+				}
+				rootPoint.phraseVars[po.programVar].push(pID);
+			}			
 			
 			if (ponode.types)
 			if (ponode.types['root']) {
-
+			//	alert("test");
 				po.setBeginPhrase();
 				rpID = po.id;
 				console.log(ponode);
@@ -341,6 +359,7 @@ UIClass.prototype = {
 	},
 	"addUIEvent":function(ptr, type, obj) {
 		if (!ptrEvents[ptr.join()]) ptrEvents[ptr.join()] = {};
+		// setting type here might have been unnessary
 		ptrEvents[ptr.join()][type] = obj;
 	},
 
@@ -348,7 +367,9 @@ UIClass.prototype = {
 	"evaluate":function() {
 
 		// only at the phrase begin stage should this ever draw a ui
-		if (!this.phraseBegin) { 
+		if (!this.phraseBegin) {
+		       // shoulnd't be done this way.. should look to see if there is already an instance of this object 	
+		       // UILookup[nodeID] would be better 
 			var pi = pointLookup[this.parentId]
 			var pa = getObject(this.superGroup, graphLookup); 
 			// needs to trace up until it finds a UI object
@@ -368,11 +389,20 @@ UIClass.prototype = {
 					console.log(getGraphObject[memberOf.ptr]);
 					var glp = this.getLinkedPtr(memberOf.ptr);
 					console.log(glp.concat(['gfx', 'point']).join());
+					// fix this to actually correspond to the proper area
 					ptrEvents[glp.concat(['gfx', 'point']).join()]= {'handleMouseClick': this._next.bind({"id":this.id})};
 					//this.addUIEvent(glp.concat(['gfx', 'point']), 'handleMouseClick', this._next.bind({"id":this.id}));
 					break;
-				case "input":
-					this.value = pa.renderUI.domNode.value;
+				case "inputbox":
+					var glp = this.getLinkedPtr(memberOf.ptr);
+					console.log(glp);
+					glp = glp.concat(['gfx', 'point']);
+					var z = getGraphObject(glp);
+					console.log(glp);glp.pop();glp.pop();
+					
+					this.value =  gfxLookup[z.gfxId].getValue(glp);////pa.renderUI.domNode.value;
+					this.next();
+					
 					break;
 			}
 			//var c = this.getNextChild();
@@ -415,7 +445,7 @@ UIClass.prototype = {
 			
 			this.createDom();
 			g.build();
-			this.next();
+		this.next();
 
 			// the parent objects should have a pointIndex layer that connects to the point item child items.
 
@@ -557,6 +587,8 @@ UIClass.prototype = {
 			case 'inputbox':
 				//this.getLinkedNode(dialogPtr)['gfx']['point']. = true;
 				var n = Graph.prototype.getPtrValue(ri, 'text');
+				console.log(n);
+				gfxLookup[this.linkedGfxId].setInputBox(_rowItem.ptr);
 				var txt = getGraphObject(n[0]).item[0].value;
 				_rowItem.value = txt;
 			//	gfxLookup[this.linkedGfxId].rebuild();
@@ -600,7 +632,7 @@ UIClass.prototype = {
 		}
 //		gfxLookup[this.linkedGfxId].hideChildren(_rowItem.ptr);
 
-	},
+	}
 
 
 	/*
@@ -647,12 +679,26 @@ function UniverseClass() {
 }
 
 UniverseClass.prototype =  {
+	"evaluate":function(){
+		var a = this.memberOf(['serializeUniverse'])
+		switch (a) {
+			case "serializeUniverse": {
+				var val = GP.getPtrValue(this.point.ptr);
+				this.value = val;
+			}
+		}
+		// goals:
+		// serialize all portions of the application 
+		// load up the entire setting ...
+		// require no object instantiation 
+		this.next();
+		
+	},
 	"serializePtrGraph":function(point) {
 		this.direction = this.inheritDirection();
 		this.value = graphLookup;
 		//this.onCondition();
 	//}
-		next();
 	}
 }
 
@@ -708,8 +754,73 @@ DBClass.prototype = {
 	
 	},
 	*/
+	"getDB":function() {
+		var x = copyArray(this.superGroup);
+		var m = x.length;
+		for (var i = m; i >5; i--) {
+			x.pop();
+		}
+		console.log(x);
+		return getGraphObject(x).value;
+	},
 
-	"evaluate":function(points) {
+	"getCollection":function() {
+		var x = copyArray(this.superGroup);
+		var m = x.length;
+		var values = [];
+		for (var i = m; i >7; i--) {
+			x.pop();
+		}
+		return getGraphObject(x).value;	
+	},
+	"getObject":function() {
+		var x = copyArray(this.superGroup);
+		var m = x.length;
+		var values = [];
+		values.push(getGraphObject(x).value);
+		for (var i = m; i >=7; i--) {
+			x.pop();
+			x.pop();
+			values.push(getGraphObject(x).value);
+		}
+		var rv = values.reverse();
+		var x = {};
+		var z = x;
+		var p;
+		for (var i =0 ; i < rv.length; i++) {
+			x[rv[i]] = {};
+			p = x;
+			x = x[rv[i]];
+
+		}
+	//	console.log(z);
+		return {"obj":z, "lastObj":p, "lastKey":rv[rv.length-1]};
+
+	},
+	"evaluate":function(vals) {
+		//console.log(vals);
+		
+		db = {"dbName":this.getDB(), "collection":this.getCollection()}
+	//	console.log(db);
+	//	return;
+		//dbo[
+		var oa = [];
+		for (var i = 0; i < vals.length; i++) {
+			var pv = pointLookup[vals[i]].getPriorNode().value
+			var o = pointLookup[vals[i]].getObject();
+			o.lastObj[o.lastKey] = pv;
+			oa.push(o.obj);
+		}
+		console.log(oa);
+		var merged = mergeJson(oa);
+		console.log(merged);
+
+
+
+
+
+		//o.obj
+		/*
 		var obj = {};
 		for (var i =0; i < points.length; i++) {
 			var pt = points[i];
@@ -732,7 +843,7 @@ DBClass.prototype = {
 	//		dal.saveData(obj[o]);
 	//	}
 
-
+	*/
 		/*
 		if ((this.ptr.length-2/2) == 3) {
 

@@ -755,7 +755,7 @@ staticEvents.prototype.checkPtr = function(ptr) {
 }
 staticEvents.prototype["handleMouseDown"] =  function(obj, e) {
 	//for (var i = 0; i < obj.rect.events.mouseDown.length; i++) {
-//	console.log(obj.rect.ptr);
+	console.log(obj.rect.ptr);
 	if (this.checkPtr(obj.rect.ptr.join()))
 	
 	if (ptrEvents[obj.rect.ptr.join()].handleMouseDown)
