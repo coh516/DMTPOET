@@ -279,10 +279,11 @@ function mergeJson(objAr) {
 					no[key].push(obj[key])
 				}
 				else
-					if (no[key])
-						no[key] = [no[key]].concat(obj[key]);
-					else no[key] = obj[key];
-				return;
+				//	if (no[key])
+				//		no[key] = [no[key]].concat(obj[key]);
+				//	else 
+						no[key] = obj[key];
+				continue;
 			}
 
 
@@ -319,6 +320,7 @@ function mergeJson(objAr) {
 					
 				}
 			}
+		//	if (obj[key])
 			else  _recurse(obj[key], no[key]);
 		}
 		//no[key] = out;

@@ -778,11 +778,13 @@ DBClass.prototype = {
 		var m = x.length;
 		var values = [];
 		values.push(getGraphObject(x).value);
-		for (var i = m; i >=7; i--) {
+	
+		while (x.length >7) {
 			x.pop();
 			x.pop();
 			values.push(getGraphObject(x).value);
 		}
+
 		var rv = values.reverse();
 		var x = {};
 		var z = x;
@@ -793,7 +795,6 @@ DBClass.prototype = {
 			x = x[rv[i]];
 
 		}
-	//	console.log(z);
 		return {"obj":z, "lastObj":p, "lastKey":rv[rv.length-1]};
 
 	},
@@ -811,9 +812,10 @@ DBClass.prototype = {
 			o.lastObj[o.lastKey] = pv;
 			oa.push(o.obj);
 		}
-		console.log(oa);
+		oa.push(db);
 		var merged = mergeJson(oa);
-		console.log(merged);
+		
+		console.log(JSON.stringify(merged));
 
 
 
