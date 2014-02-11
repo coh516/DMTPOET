@@ -24,6 +24,7 @@ As of Jan 2, 2004, The two stage document graph model is completed.
 - ~~requires a window management layer to view the rendered document~~
   - ~~necessary refactor for the gfx layer to further abstract the coupling of the node pointer from the node itself~~
     - ~~removed universe, graphs are id'd and graphics are now typed~~
+    - graphs should be typed also
 
 =======
 
