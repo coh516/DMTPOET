@@ -53,10 +53,12 @@ universe.prototype = {
 */
 
 
-function Graph() {
+function Graph(type) {
 	this.id = mkguid();
 	this.object = {};
 	graphLookup[this.id] = this;
+	if (!typedGraphs[type]) typedGraphs[type] = []
+		typedGraphs[type].push(this.id);
 	//models[id]  = this;
 	//var thisGraph = models[uuid]["graph"];
 	//thisGraph[this.id] = {"id":{}}

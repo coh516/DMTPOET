@@ -679,12 +679,36 @@ function UniverseClass() {
 }
 
 UniverseClass.prototype =  {
+
+	"removeDomNodes":function(type) { 
+		var ga = graphLookup[typedGraphs[type]];
+		for (var i = 0; i < ga.length; i++) {
+			var json = graphLookup[ga[i].id].toJSON();
+			var copy = new Graph();
+			copy.setFromJSON(json);
+			copy.recurseItems(function(ptr, item) { 
+				// traverse non 'items'
+				var traverseNodules = function(o) {
+					for (each key in item) {
+						//if (
+					}
+				}
+				//if (item['item'][
+		
+			})
+			
+		}
+		
+
+	},
+
+
 	"evaluate":function(){
 		var a = this.memberOf(['serializeUniverse'])
 		switch (a) {
 			case "serializeUniverse": {
-				var val = GP.getPtrValue(this.point.ptr);
-				this.value = val;
+				var val = getGraphObject(this.point.ptr);
+				this.value =  
 			}
 		}
 		// goals:

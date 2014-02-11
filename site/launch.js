@@ -149,6 +149,7 @@ function setupCanvas(cb) {
 }
 
 function loadGlobals() {
+	typedGraphs = {};
 	gfxLookup = {};//{"type":{}, "id":{}}; // object references by id
 	lookups = {};
 	lookups["gfxLookup"] = gfxLookup;
