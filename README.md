@@ -33,6 +33,8 @@ License
 ===
 GPL V3
 
-
+Author
+===
+Seth Tenenbaum
 
 
