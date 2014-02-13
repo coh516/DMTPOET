@@ -688,13 +688,17 @@ UniverseClass.prototype =  {
 			copy.setFromJSON(json);
 			copy.recurseItems(function(ptr, item) { 
 				// traverse non 'items'
-				var traverseNodules = function(o) {
+				var traverseNodules = function(item) {
 					for (each key in item) {
-						//if (
+						if (key[item].nodeType)
+							delete key[item];
+						if (key != 'item') {
+							traverseNodules(item[key]);
+						}
 					}
 				}
-				//if (item['item'][
-		
+				traverseNodules(item);
+				//if (item['item'][	
 			})
 			
 		}
