@@ -28,7 +28,10 @@ As of Jan 2, 2014, The two stage document graph model is completed.
 
 =======
 
->
+Author
+===
+Seth Tenenbaum
+
 License
 ===
 GPL V3
