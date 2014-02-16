@@ -13,14 +13,16 @@ node dmt
 ```
 and open on localhost 6789 to test out ... 
 
-Status
+Status and Milestones
 ===
 
 As of Jan 2, 2014, The two stage document graph model is completed.  
+As of Feb 16, 2014, The Gui renderer and data modeler is completed.
 
-- the ui should be built from both node based partial template structures and point modules
+- necessary refactor required to separate the graph data from the graph instance function in the graphLookup object to serialize the typed set
+- the ui should be built from both node based partial template structures and point modules ** last thing on my mind**
 - needs a simplified selector object interface 
-- necessary refactor to seperate the graph data from the graph instance function in the graphLookup object to serialize the typed set
+
 - ~~traverser is still not done~~
 - ~~requires a window management layer to view the rendered document~~
   - ~~necessary refactor for the gfx layer to further abstract the coupling of the node pointer from the node itself~~
