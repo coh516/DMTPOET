@@ -22,7 +22,7 @@ function testCase() {
 
 	    ];
 	for (var i =0; i < jobjects.length; i++ ) {
-		gids[i] = new Graph(); //uni.addGraph();
+		gids[i] = new Graph('ptr'); //uni.addGraph();
 		// var json = {"UI":{"save/load dialogue":[{"label":[{"text":"save"}, {"events":"onClick"}]}, {"label":[{"text":"load"}, {"events":"onClick"}]}]}}
 		//
 		var json = jobjects[i];

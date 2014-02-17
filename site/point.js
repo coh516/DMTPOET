@@ -90,7 +90,7 @@ Point.prototype = {
 	"setBeginPhrase": function() {
 
 		this.phraseBegin = true;
-		console.log(this.ptr);
+		//console.log(this.ptr);
 		this.phraseVars = {};
 		//mixin(Phrase.prototype, this);
 	},
@@ -213,7 +213,7 @@ Point.prototype = {
 		}
 
 		else {
-			console.log(getGraphObject(this.ptr));
+			//console.log(getGraphObject(this.ptr));
 			this.evaluate();	
 		}
 	},
@@ -261,14 +261,14 @@ System.prototype = {
 
 			var po = pointLookup[pID];
 			po.rootPointID = rpID;
-			console.log (rpID);
+			//console.log (rpID);
 			var ponode = po.superNode; //getObject(po.ptr, graphLookup);
 				
 			// this might need to be stored in a phraseLookup[rootPointID]
 			//if (rootPoint.programVars)
 		//	if (!rootPoint.phraseVars)
 		//		rootPoint.phraseVars
-			console.log(rootPoint.phraseVars);
+			//console.log(rootPoint.phraseVars);
 			if (po.programVar) {
 				if (!rootPoint.phraseVars[po.programVar]) {
 					rootPoint.phraseVars[po.programVar] = [];
@@ -282,8 +282,8 @@ System.prototype = {
 			//	alert("test");
 				po.setBeginPhrase();
 				rpID = po.id;
-				console.log(ponode);
-				console.log("----------------");
+				//console.log(ponode);
+				//console.log("----------------");
 				var isRoot = true;
 			}
 
@@ -331,9 +331,9 @@ System.prototype = {
 		this.rootPoint = new Point({"ptr":this.rootPtr, "childNumber":0, "pathList":pathList});
 	
 		recurse(this.rootPoint.id, this.rootPoint.id);
-		console.log("-----------------------evaluting");
+		//console.log("-----------------------evaluting");
 //		this.rootPoint.evaluate();
-		console.log(this.rootPoint);
+		//console.log(this.rootPoint);
 		this.rootPoint.evaluate();
 		//this.renderPhrase();
 
@@ -374,32 +374,39 @@ UIClass.prototype = {
 			var pa = getObject(this.superGroup, graphLookup); 
 			// needs to trace up until it finds a UI object
 			var rootPoint = pointLookup[this.rootNodeId];
-			console.log("------");
-			console.log(this);
+			//console.log("------");
+			//console.log(this);
 			var li = this.superGroup;// i hate that i can't do li.climbToValue .. need to work on that..
 			var memberOf = Graph.prototype.climbToValue(li,['button', 'inputbox', 'label']);
-		       	console.log(li);
+		       	//console.log(li);
 			//return;
 			switch (memberOf.val) {
 				case "button":
 				//	nodeEvents[li.
 					//alert('test');
-					console.log(this.ptr[0]);
-					console.log(memberOf.ptr);
-					console.log(getGraphObject[memberOf.ptr]);
+					//console.log(this.ptr[0]);
+					//console.log(memberOf.ptr);
+					//console.log(getGraphObject[memberOf.ptr]);
 					var glp = this.getLinkedPtr(memberOf.ptr);
-					console.log(glp.concat(['gfx', 'point']).join());
+					//console.log(glp.concat(['gfx', 'point']).join());
 					// fix this to actually correspond to the proper area
 					ptrEvents[glp.concat(['gfx', 'point']).join()]= {'handleMouseClick': this._next.bind({"id":this.id})};
 					//this.addUIEvent(glp.concat(['gfx', 'point']), 'handleMouseClick', this._next.bind({"id":this.id}));
 					break;
 				case "inputbox":
+					console.log(memberOf.ptr);
+					console.log("--------------=");
 					var glp = this.getLinkedPtr(memberOf.ptr);
-					console.log(glp);
+					//console.log(glp);
 					glp = glp.concat(['gfx', 'point']);
+					console.log(glp);
 					var z = getGraphObject(glp);
-					console.log(glp);glp.pop();glp.pop();
-					
+					//console.log(glp);
+					glp.pop();glp.pop();
+					console.log(z.gfxId);
+					// sort of dumb, I need the gfxId from the hardcoded point... 
+					//
+					console.log(graphLookup[z.gfxId]);
 					this.value =  gfxLookup[z.gfxId].getValue(glp);////pa.renderUI.domNode.value;
 					this.next();
 					
@@ -495,7 +502,7 @@ UIClass.prototype = {
 		//this.getLinkedNode(view[0])['gfx']['point'].hideItem = true;
 		//gfxLookup[this.linkedGfxId].hideChildren(this.getLinkedPtr(view[0]));
 		var _dialog = Graph.prototype.appendChild([this.linkedGraphId], 'dialog');
-		console.log(_dialog);
+		//.console.log(_dialog);
 		this.initGfx(_dialog.ptr);
 		_dialog.gfx.point.hideItem = true;
 		var o = getGraphObject(dialogPtr);
@@ -511,7 +518,7 @@ UIClass.prototype = {
 //			var n = Graph.prototype.getPtrValue(ri, 'rows');
 			
 			gfxLookup[this.linkedGfxId].setGridLayout(_dialog.ptr);
-			console.log(this.linkedGraphId);
+			//console.log(this.linkedGraphId);
 			//gfxLookup[this.linkedGfxId].setGridLayout(this.getLinkedPtr(dialogPtr));
 			//console.log(this.getLinkedNode(dialogPtr));
 		//	gfxLookup[this.linkedGfxId].rebuild();
@@ -527,7 +534,7 @@ UIClass.prototype = {
 			var _row = Graph.prototype.appendChild(_dialog.ptr, 'row');
 			//var ga = [this.graphId, 'item', 0, 'item'];
 			//var  gl = getGraphObject(ga).length;
-			console.log(_row);
+			//console.log(_row);
 			this.initGfx(_row.ptr);  
 			//o.gfx.point.hidenItem = true;
 			//rows[i]['point'] = {"linkedNode":
@@ -587,7 +594,7 @@ UIClass.prototype = {
 			case 'inputbox':
 				//this.getLinkedNode(dialogPtr)['gfx']['point']. = true;
 				var n = Graph.prototype.getPtrValue(ri, 'text');
-				console.log(n);
+				//console.log(n);
 				gfxLookup[this.linkedGfxId].setInputBox(_rowItem.ptr);
 				var txt = getGraphObject(n[0]).item[0].value;
 				_rowItem.value = txt;
@@ -680,40 +687,59 @@ function UniverseClass() {
 
 UniverseClass.prototype =  {
 
-	"removeDomNodes":function(type) { 
-		var ga = graphLookup[typedGraphs[type]];
+	"removeDomNodes":function(type) {
+	       	var arr = [];	
+		//console.log(type);
+		
+		var ga = typedGraphs[type];
 		for (var i = 0; i < ga.length; i++) {
-			var json = graphLookup[ga[i].id].toJSON();
-			var copy = new Graph();
+			console.log(ga[i]);
+			var json = graphLookup[ga[i]].toJSON();
+			var copy = new Graph('ptrCopy');
 			copy.setFromJSON(json);
-			copy.recurseItems(function(ptr, item) { 
+			//copy.recurseItems(function(ptr, item) { 
 				// traverse non 'items'
 				var traverseNodules = function(item) {
-					for (each key in item) {
-						if (key[item].nodeType)
-							delete key[item];
-						if (key != 'item') {
+					console.log(item);
+					for (var key in item) {
+						console.log(key);
+						if (item[key].nodeType)
+							delete item[key];
+						if (typeof item[key] === 'object')
+						//if (key != 'item') {
 							traverseNodules(item[key]);
-						}
+						//}
 					}
 				}
-				traverseNodules(item);
+			//	console.log('xxxxxxxxxxxxxxxxxx');
+				traverseNodules(graphLookup[copy.id]);
 				//if (item['item'][	
-			})
-			
+			//})
+			arr.push(graphLookup[copy.id]);
 		}
+		return arr;
+
+
 		
 
 	},
 
 
 	"evaluate":function(){
-		var a = this.memberOf(['serializeUniverse'])
-		switch (a) {
-			case "serializeUniverse": {
-				var val = getGraphObject(this.point.ptr);
-				this.value =  
-			}
+		var a = this.memberOf(['serializeUniverse']);
+		console.log(a);
+		switch (a.val) {
+			case "serializeUniverse":
+			       console.log("---------------------------ooooo---");
+
+		       		console.log(this.ptr);	       
+				var val = getGraphObject(this.superGroup).value;
+				console.log(getGraphObject(this.superGroup));
+				console.log(val);
+				this.removeDomNodes(val);
+				break;
+				//this.value =  
+			//}
 		}
 		// goals:
 		// serialize all portions of the application 
@@ -899,7 +925,7 @@ DBClass.prototype = {
 
 
 Point.prototype.traverseProgram = function(ptr) {
-	console.log(ptr);
+	//console.log(ptr);
 	var pathList = Graph.prototype.getPaths(ptr);
 
 	var o = getGraphObject(ptr);
@@ -915,7 +941,7 @@ Point.prototype.traverseProgram = function(ptr) {
 		delRoot = true;
 	}
 
-	console.log(o);
+	//console.log(o);
 //	return;
 	for (var i = 0 ; i < o.index.length; i++) {
 	//	alert(o.ptr.join());

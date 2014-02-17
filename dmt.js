@@ -19,7 +19,7 @@ function setupFileServer(request, response) {
 	request.addListener('end', function () {
 		file.serve(request, response, function(err, result) {
 			if (err) {
-				console.log("error"+request.url+" "+err.message);
+				console.log("error"+request.url+" "+err.message+" "+Date());
 			}
 	        });
         }).resume();

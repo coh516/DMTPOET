@@ -219,6 +219,8 @@ Graph.prototype = {
 				var lv = value;			
 			}
 		}
+		// need to start refactoring the data object from the graph function
+
 		this["item"] = nobj;
 		this.recurseItems(function(ptr, obj) {
 		 ////      ptrLookup[obj.ptr.join()] = new ptr(obj); // begin caching the ptr object 

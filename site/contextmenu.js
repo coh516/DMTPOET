@@ -422,7 +422,7 @@ stageMenu.manageScreenClick = function(e) {
 
 stageMenu.mkNewNode = function(e) {
 //	var pid = universes["ptr"][0];
-	var graph = new Graph();// pid.addGraph();
+	var graph = new Graph('ptr');// pid.addGraph();
 	var json = ['acid'];
 	graph.setFromJSON(json, true);
 	//graphLookup[gid].indexPtr = true;

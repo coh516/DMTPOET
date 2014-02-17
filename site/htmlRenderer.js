@@ -11,10 +11,10 @@ htmlRenderer.prototype = {
 		var ptrRoot = gfxRoot.rootPtr;
 		var go = getObject(ptrRoot, graphLookup);
 		var baseDocument = gfxRoot['baseElement'].ownerDocument;
-		console.log(gfxRoot['baseElement'].ownerDocument);	
+		//console.log(gfxRoot['baseElement'].ownerDocument);	
 		
 		if (!gfxRoot.el) {
-			console.log(baseDocument);
+			//console.log(baseDocument);
 			gfxRoot.el =baseDocument.createElement("ul"); //primary internal node
 			var appendEl = true;
 		}
@@ -340,7 +340,7 @@ htmlRenderer.prototype = {
 
 
 		ul.appendChild(li);
-		console.log(gfo.objType);
+		//console.log(gfo.objType);
 		var tgt = tlg["gfx"][gfxRoot.type];
 		if (tgt.objType == 'inputBox') {
 		//	alert("xxx");
