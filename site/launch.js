@@ -155,6 +155,7 @@ function loadGlobals() {
 	lookups["gfxLookup"] = gfxLookup;
 	events = {};
 	graphLookup = {};
+	graphObjLookup = {};
 	lookups["graphLookup"] = graphLookup
 	snapGrids = {};
 	/*

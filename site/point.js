@@ -424,7 +424,7 @@ UIClass.prototype = {
 			// it should duplicate the graph and use a modified renderer
 		
 		//	this.createDom();
-			var json =  graphLookup[this.ptrId].toJSON();
+			var json =  graphObjLookup[this.ptrId].toJSON();
 			//console.log(JSON.stringify(json));
 			var graph = new Graph();
 			//graph.setFromJSON(["Dialog"]);
@@ -687,40 +687,20 @@ function UniverseClass() {
 
 UniverseClass.prototype =  {
 
-	"removeDomNodes":function(type) {
+	"cloneNodes":function(type) {
 	       	var arr = [];	
 		//console.log(type);
 		
 		var ga = typedGraphs[type];
 		for (var i = 0; i < ga.length; i++) {
-			console.log(ga[i]);
-			var json = graphLookup[ga[i]].toJSON();
-			var copy = new Graph('ptrCopy');
-			copy.setFromJSON(json);
-			//copy.recurseItems(function(ptr, item) { 
-				// traverse non 'items'
-				var traverseNodules = function(item) {
-					console.log(item);
-					for (var key in item) {
-						console.log(key);
-						if (item[key].nodeType)
-							delete item[key];
-						if (typeof item[key] === 'object')
-						//if (key != 'item') {
-							traverseNodules(item[key]);
-						//}
-					}
-				}
-			//	console.log('xxxxxxxxxxxxxxxxxx');
-				traverseNodules(graphLookup[copy.id]);
-				//if (item['item'][	
-			//})
-			arr.push(graphLookup[copy.id]);
+			var g = new Graph(type+'copy');
+			graphObjLookup[ga[i]].cloneTo(g.id); // this shouldn't be part of the graph object
+			
+			arr.push(graphLookup[g.id]);
 		}
+
+		//console.log(arr);
 		return arr;
-
-
-		
 
 	},
 
@@ -736,7 +716,7 @@ UniverseClass.prototype =  {
 				var val = getGraphObject(this.superGroup).value;
 				console.log(getGraphObject(this.superGroup));
 				console.log(val);
-				this.removeDomNodes(val);
+				this.value = this.cloneNodes(val);
 				break;
 				//this.value =  
 			//}

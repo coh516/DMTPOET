@@ -56,16 +56,17 @@ universe.prototype = {
 function Graph(type) {
 	this.id = mkguid();
 	this.object = {};
-	graphLookup[this.id] = this;
+	graphLookup[this.id] = {};//this;
 	if (!typedGraphs[type]) typedGraphs[type] = []
 		typedGraphs[type].push(this.id);
 	//models[id]  = this;
 	//var thisGraph = models[uuid]["graph"];
 	//thisGraph[this.id] = {"id":{}}
-	//this.object = 
+	//graphDataLookup[this.id] = {};
+	//this.data = graphDataLookup[this.id];
+	//
+	graphObjLookup[this.id] = this;
 	this.ptr = {};
-
-
 
 }
 
@@ -220,14 +221,42 @@ Graph.prototype = {
 			}
 		}
 		// need to start refactoring the data object from the graph function
-
-		this["item"] = nobj;
+"9ba450d0-87c5-d50d-af1c-7fcbf74ee40d"
+		graphLookup[this.id]["item"] = nobj;
 		this.recurseItems(function(ptr, obj) {
 		 ////      ptrLookup[obj.ptr.join()] = new ptr(obj); // begin caching the ptr object 
 		       obj.ptr = ptr 
 		},[this.id, "item"])
 	
 	},
+	"cloneTo":function(nid) {
+		
+		var _clone = function(item, item2) {
+			//console.log(item);
+			for (var key in item) {
+				//console.log("key: "+key);
+				//if (!item[key]) console.log(item);
+	
+				if (typeof item[key] !== 'object')
+					item2[key] = item[key];
+				if (Array.isArray(item[key]))
+					item2[key] = [];
+				else if (typeof item[key] === 'object' && !item[key].nodeType)
+					item2[key] = {};
+
+				if (typeof item[key] === 'object' && item[key] != undefined && !item[key].nodeType) {
+				//	console.log("traversing into key "+ key);
+					//console.log(item[key]);	
+					_clone(item[key], item2[key]);
+				}
+			}
+		}
+		_clone(graphLookup[this.id], graphLookup[nid]);
+	
+
+	},
+
+
 	"_setPtrIndex":function(o,b) {
 		for (var y=0; y < o.length; y++) {
 	
@@ -246,7 +275,7 @@ Graph.prototype = {
 		o.index.push ({"parents":[], "children":[]});
 	},
 	"setPtrIndex":function(b) {
-		this._setPtrIndex(this["item"], b);
+		this._setPtrIndex(graphLookup["item"], b);
 		this.indexPtr = true;
 	},
 	//this should be in gfx
@@ -596,13 +625,13 @@ Graph.prototype = {
 		//console.log("___________ptr from getItemListFromPtr____________________");	
 		//console.log("to::::");
 		//console.log(to);
-		graphLookup[this.id]._recurseItems(to, ptr, Graph.prototype._getItemList);
+		graphObjLookup[this.id]._recurseItems(to, ptr, Graph.prototype._getItemList);
 		return Graph.prototype.itemListArray;
 	},
 	"getItemList":function(ptr) {
 		if (ptr) return this.getItemListFromPtr(ptr);
 		Graph.prototype.itemListArray = [];
-		graphLookup[this.id].recurseItems(Graph.prototype._getItemList)
+		graphObjLookup[this.id].recurseItems(Graph.prototype._getItemList)
 		return Graph.prototype.itemListArray;	
 	},
 	"_recurseItems":function(tl, a, f, props, propsArr) {
@@ -677,7 +706,7 @@ Graph.prototype = {
 		if (op == "addChild") idv =-1;
 
 		//alert(pl);
-		var gil = graphLookup[this.id].getItemList(pl);
+		var gil = graphObjLookup[this.id].getItemList(pl);
 		console.log(pl);
 		console.log("gil....");
 		console.log(gil);

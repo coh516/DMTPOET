@@ -231,14 +231,14 @@ contextMenu.addSibling = function() {
 //	var a = copyArray(this.lastRect.nodeRoot);
 	//a.pop();//;a.pop();
 	//this makes no sense .. cleanUpLines should be part of gfx.......
-	graphLookup[id].addSibling(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
+	graphObjLookup[id].addSibling(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
 	gfxLookup[this.lastRect.gfxId].rebuild();	
 }
 
 contextMenu.addChild = function() {
 	var id = this.lastRect.ptr[0];
 
-	graphLookup[id].addChild(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
+	graphObjLookup[id].addChild(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
 	//console.log("loooochi");
 	gfxLookup[this.lastRect.gfxId].rebuild();
 	/*
@@ -302,7 +302,7 @@ contextMenu.cleanUpLines = function(o) {
 contextMenu.remove = function() {
 	var id = this.lastRect.ptr[0];
 
-	graphLookup[id].deleteNode(this.lastRect.nodeRoot, contextMenu.cleanUpLines);
+	graphObjLookup[id].deleteNode(this.lastRect.nodeRoot, contextMenu.cleanUpLines);
 	//console.log("loooochi");
 	gfxLookup[this.lastRect.gfxId].rebuild();
 

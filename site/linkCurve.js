@@ -97,7 +97,7 @@ linkCurve.prototype = {
 		// check parent and child 'gfx' to see if there is a curve object in there...
 	},
 	"drawCurve": function (c) {
-		var o = graphLookup[c[0]];
+		var o = graphObjLookup[c[0]];
 		//o.svgPath = document.createElement("path");
 		//var svg = linkCurve.prototype.svg;
 		o.recurseItems(linkCurve.prototype._drawCurve);

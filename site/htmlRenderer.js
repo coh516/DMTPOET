@@ -273,10 +273,10 @@ htmlRenderer.prototype = {
 			//if (!tlg.index) return;
 			//sketchy
 			if (!tlg.index)
-				graphLookup[id].addIndex(itemPtr);
+				graphObjLookup[id].addIndex(itemPtr);
 
 			else if (!tlg.index[i])
-				graphLookup[id].addIndex(itemPtr);
+				graphObjLookup[id].addIndex(itemPtr);
 			//alert('etst');
 			
 			var li =  baseDocument.createElement("li");	

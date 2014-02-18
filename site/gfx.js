@@ -198,7 +198,7 @@ Gfx.prototype = {
 			p.pop(); 
 			var id = ptr[0];
 		
-			graphLookup[id].renamePtr(rect.nodeRoot, it);
+			graphObjLookup[id].renamePtr(rect.nodeRoot, it);
 			Gfx.prototype.isRenaming = false;
 			delete events[id];
 			gfxLookup[rect.gfxId].rebuild();
@@ -260,7 +260,7 @@ Gfx.prototype = {
 	// sublings = columns, children = rows
 	"switchType":function(ptr, type) {
 		var o = getObject(ptr, graphLookup);
-		graphLookup[ptr[0]].switchType(ptr, type);
+		graphObjLookup[ptr[0]].switchType(ptr, type);
 		this.rebuild();
 		
 
