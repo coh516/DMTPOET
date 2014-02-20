@@ -73,8 +73,8 @@ function main() {
 		var data= JSON.parse(this.post['/post']);
 		// most likely will change
 		if (data['storeData']) {
-			console.log(JSON.stringify(data));
-			storeData(data);
+		//	console.log(JSON.stringify(data));
+			dal.storeData(data['storeData'],  this.spit);
 		}
 		if (data['getData']) {
 

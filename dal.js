@@ -47,10 +47,10 @@ exports.getData = function(e, callback) {
 
 
 exports.storeData = function(e, cb) {
-	
+    console.log("------------------------");
     if (!e.hasOwnProperty("db") || !e.hasOwnProperty("collection")) {
 	    console.log("no");
-	    callback(false);
+	    cb(false);
     //return {rc: false, msg: "No type provided"};
     }
     
@@ -64,11 +64,11 @@ exports.storeData = function(e, cb) {
                     if(err) {
                         //console.log(err);
                         client.close();
-                        cb ({'err': err, rc: false});
+                        cb ('fail');
                         return;
                     }else {
                     	//console.log(e);
-                    	cb();
+                    	cb('complete');
                     	client.close();
                     	return;
                     }
@@ -76,10 +76,11 @@ exports.storeData = function(e, cb) {
     };
     
     client.open(function(err, p_client) {
+	    console.log("client opening...");
 	    var db1 = client.db(e.db);
             // this is the collection we go for
            // console.log("_____"+e.collection);
-            client.collection(e.collection, doInsert);
+            db1.collection(e.collection, doInsert);
             });
    // return {rc: true};
 }

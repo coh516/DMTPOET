@@ -94,7 +94,16 @@ Point.prototype = {
 		this.phraseVars = {};
 		//mixin(Phrase.prototype, this);
 	},
+	"isLastNode":function() {
+		if (!this.children.length)
+			return true;
+		for (var i =0; i < this.children.length; i++) {
+			if (!this.children[i].isRoot)
+				return false;
+		}
+		return true;
 
+	},
 	"getRootNode": function(){
 		var rootPtr = [this.ptr[0], this.ptr[1], this.ptr[2]];
 	},
@@ -622,8 +631,8 @@ UIClass.prototype = {
 			//	gfxLookup[this.linkedGfxId].mkButton(ri);
 				var n = Graph.prototype.getPtrValue(ri, 'text');
 				try { 
-				var txt = getGraphObject(n[0]).item[0].value;			
-				_rowItem.value = txt;
+					var txt = getGraphObject(n[0]).item[0].value;			
+					_rowItem.value = txt;
 				}catch(e){};
 
 			//	var val = graph.prototype.getPtrValue(ptrObject.ptr, "text");	
@@ -695,8 +704,10 @@ UniverseClass.prototype =  {
 		for (var i = 0; i < ga.length; i++) {
 			var g = new Graph(type+'copy');
 			graphObjLookup[ga[i]].cloneTo(g.id); // this shouldn't be part of the graph object
-			
-			arr.push(graphLookup[g.id]);
+			var o = {};
+			o[g.id] = graphLookup[g.id];
+
+			arr.push(o);
 		}
 
 		//console.log(arr);
@@ -707,15 +718,15 @@ UniverseClass.prototype =  {
 
 	"evaluate":function(){
 		var a = this.memberOf(['serializeUniverse']);
-		console.log(a);
+		//console.log(a);
 		switch (a.val) {
 			case "serializeUniverse":
-			       console.log("---------------------------ooooo---");
+			       //console.log("---------------------------ooooo---");
 
-		       		console.log(this.ptr);	       
+		       		//console.log(this.ptr);	       
 				var val = getGraphObject(this.superGroup).value;
-				console.log(getGraphObject(this.superGroup));
-				console.log(val);
+				//console.log(getGraphObject(this.superGroup));
+				//console.log(val);
 				this.value = this.cloneNodes(val);
 				break;
 				//this.value =  
@@ -813,7 +824,7 @@ DBClass.prototype = {
 		var values = [];
 		values.push(getGraphObject(x).value);
 	
-		while (x.length >7) {
+		while (x.length >9) {
 			x.pop();
 			x.pop();
 			values.push(getGraphObject(x).value);
@@ -832,10 +843,9 @@ DBClass.prototype = {
 		return {"obj":z, "lastObj":p, "lastKey":rv[rv.length-1]};
 
 	},
-	"evaluate":function(vals) {
-		//console.log(vals);
-		
-		db = {"dbName":this.getDB(), "collection":this.getCollection()}
+	"doInsert":function(vals) {
+
+		var db = {"db":this.getDB(), "collection":this.getCollection()}
 	//	console.log(db);
 	//	return;
 		//dbo[
@@ -844,49 +854,23 @@ DBClass.prototype = {
 			var pv = pointLookup[vals[i]].getPriorNode().value
 			var o = pointLookup[vals[i]].getObject();
 			o.lastObj[o.lastKey] = pv;
-			oa.push(o.obj);
+			oa.push({"document":o.obj});
 		}
 		oa.push(db);
 		var merged = mergeJson(oa);
 		
-		console.log(JSON.stringify(merged));
+		console.log(merged);
+		postJSON({"storeData":merged}, this.onComplete);
 
-
-
-
-
-		//o.obj
-		/*
-		var obj = {};
-		for (var i =0; i < points.length; i++) {
-			var pt = points[i];
-			var po = getObject(pt.ptr);
-			
-			dbName = ptr.ptr[pt.ptr[0]][pt.ptr[1]][pt.ptr[2]];
-			obj[dbName] = {}
-			collectionName =  ptr.ptr[pt.ptr[0]][pt.ptr[1]][pt.ptr[2]][pt.ptr[3]][pt.ptr[4]][pt.ptr[5]];
-			if (!obj[dbName][collectionName]) obj[dbName][collectionName] = {};
-			objName =  ptr.ptr[pt.ptr[0]][pt.ptr[1]][pt.ptr[2]][pt.ptr[3]][pt.ptr[4]][pt.ptr[5]][pt.ptr[6]][pt.ptr[7]]
-			if (!obj[dbName][collectionName][objName]) obj[dbName][collectionName][objName] = [];
-			//should look back ....
-			obj[dbName][collectionName][objName].push(parentLookup[this.parentId].value);
-			// should be good for now ...
-			pt.node.database = pointLookup[this.parentId].value;
-		}
-	//	for (var o in obj) {
-		console.log("here we go...");
-		postUp({"storeData":obj});
-	//		dal.saveData(obj[o]);
-	//	}
-
-	*/
-		/*
-		if ((this.ptr.length-2/2) == 3) {
-
-			
-
-		}
-		*/
+	},
+	"onComplete":function(text) {
+		console.log(text)
+	},
+	"evaluate":function(vals) {
+		//console.log(vals);
+		console.log(this);
+		if (this.isLastNode)
+			this.doInsert(vals);
 
 	},
 	"onIterationComplete":function() {

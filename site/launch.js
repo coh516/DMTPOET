@@ -15,10 +15,10 @@ function testCase() {
 	    	//	{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"load"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}},
 	    		{"DB":{"internals":{"dialogs":["name", "timestamp", "graph"]}}},
 			["timeStamp"],
-			{"serializeUniverse":"ptr"},
+			{"serializeUniverse":"ptr"}//,
 
 
-			["acid1"],["acid2"],["acid3"],["acid4"],["acid5"],["acid6"]
+		//	["acid1"],["acid2"],["acid3"],["acid4"],["acid5"],["acid6"]
 
 	    ];
 	for (var i =0; i < jobjects.length; i++ ) {
@@ -46,19 +46,18 @@ function testCase() {
 		//gf.build();
 		gf.build();
 		gojs.push(gf);
-	
 	}
 	mids[0].moveTo(450, 20, 100);
 	mids[2].moveTo(200, 20);	
 	mids[3].moveTo(200, 300);
-
+/*
 	mids[4].moveTo(650, 500);
 	mids[5].moveTo(580, 450);
 	mids[6].moveTo(510, 480);
 	mids[7].moveTo(510, 350);
 	mids[8].moveTo(450, 350);
 	mids[9].moveTo(450, 400);
-
+*/
 
 	var uiroot = [gids[0].id, 'item', 0, 'index', 0];
 	var uisub = [gids[0].id, 'item', 0, 'item', 0, 'item', 1, 'item', 2, 'item', 0, 'item', 0, 'index', 0];
@@ -72,7 +71,7 @@ function testCase() {
 	var timestamp = [gids[2].id, 'item', 0, 'index', 0];
 	var su = [gids[3].id, 'item', 0, 'item', 0, 'index', 0];
 
-
+/*
 	var a1 = [gids[4].id, 'item', 0, 'index', 0];
 	var a2 = [gids[5].id, 'item', 0, 'index', 0];
 	var a3 = [gids[6].id, 'item', 0, 'index', 0];
@@ -80,7 +79,7 @@ function testCase() {
 	var a5 = [gids[8].id, 'item', 0, 'index', 0];
 	var a6 = [gids[9].id, 'item', 0, 'index', 0];
 //	var a7 = [gids[10], 'item', 0, 'index', 0];
-	
+*/	
 
 
 	var o = getObject([gids[0].id, 'item', 0, 'item', 0], graphLookup);
@@ -107,7 +106,7 @@ function testCase() {
 	PtrGfx.prototype.connect(uisub, su);
 	PtrGfx.prototype.connect(su, dbgraph);
 	
-
+/*
 	PtrGfx.prototype.connect(a1, a2);
 
 	PtrGfx.prototype.connect(a2, a3);
@@ -115,7 +114,7 @@ function testCase() {
 	PtrGfx.prototype.connect(a4, a5);
 	PtrGfx.prototype.connect(a3, a6);
 	PtrGfx.prototype.connect(a3, a4);
-
+*/
 	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
 
 

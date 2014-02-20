@@ -13,6 +13,11 @@ function s2o(o) {
     } 	
 }
 
+
+function postJSON(data, callback, packet) {
+	postUp(JSON.stringify(data), callback, packet);
+}
+
 function postUp(data, callback, packet) {
 	this.callback = callback;
 	this.packet = packet;

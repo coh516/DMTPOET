@@ -78,10 +78,15 @@ WindowManager.prototype = {
 	//	return;
 		var resizeFrame = function() {
 			// memory leaks
+			
 			var pvt = graphLookup[graph.id]['item'][0]['item'][1]['gfx']['windowmanager'].el.offsetWidth;
 			//requires update to just node offsets..
 			var r = getSBSize(window);
-			var w = (window.innerWidth-pvt)/2
+			if (!this.type)
+				var w = (window.innerWidth-pvt)/3
+			else
+				var w = window.innerWidth-pvt-((window.innerWidth-pvt)/3)
+
 			var h = window.innerHeight-this.frame.offsetTop+window.scrollY;//-r[0];
 			this.frame.height = h;
 		
@@ -96,7 +101,7 @@ WindowManager.prototype = {
 		}
 		
 	       //	oc.prototype = Object.create(resizeFrame);
-		var rf = resizeFrame.bind({'frame':frame});
+		var rf = resizeFrame.bind({'frame':frame, "type":1});
 		fd1.appendChild(frame);	
 
 		var grid1 = new snapSpace();
@@ -130,7 +135,7 @@ WindowManager.prototype = {
 			grid2.setupHandlers(frame2.contentWindow);
 		})
 
-		var rf2 = resizeFrame.bind({'frame':frame2});
+		var rf2 = resizeFrame.bind({'frame':frame2, "type":0});
 		rf2();
 	
 		//console.log(rf);
