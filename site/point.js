@@ -240,7 +240,7 @@ function System(ptr, pathList) {
 //	pt.setBeginPhrase();
 	//this.evaluatePhrase();
 	this.traversedNodes = {};
-	pt.nextPhrases = [];
+//	pt.nextPhrases = [];
 	this.endPhrases = [];
 	this.beginPhrases = [];
 	this.id = mkguid();

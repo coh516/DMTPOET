@@ -72,6 +72,7 @@ function main() {
 	//	try {
 		var data= JSON.parse(this.post['/post']);
 		// most likely will change
+		// controller
 		if (data['storeData']) {
 		//	console.log(JSON.stringify(data));
 			dal.storeData(data['storeData'],  this.spit);

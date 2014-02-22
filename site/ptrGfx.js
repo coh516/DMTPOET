@@ -1,10 +1,10 @@
 function PtrGfx()  {}
 
 PtrGfx.prototype = Object.create(Gfx.prototype);
-
+// this should be a function of the html renderer 
 PtrGfx.prototype.connect = function(c1, c2) {
 
-		pt = Graph.prototype.connect(c1, c2);
+		var pt = Graph.prototype.connect(c1, c2);
 
 		if (!pt) return;
 

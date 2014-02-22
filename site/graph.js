@@ -66,6 +66,7 @@ function Graph(type) {
 	//this.data = graphDataLookup[this.id];
 	//
 	graphObjLookup[this.id] = this;
+	if (type) graphLookup[this.id]['typedGraph'] = type; 
 	this.ptr = {};
 
 }
@@ -197,7 +198,7 @@ Graph.prototype = {
 	},
 
 	// rebuilding to standardize the gfx ptr 
-	"setFromJSON": function(obj) {
+	"setFromJSON": function(obj, mkIndex) {
 		// this should use the same model as the graphics
 		//
 		// recurse through object,
@@ -221,11 +222,15 @@ Graph.prototype = {
 			}
 		}
 		// need to start refactoring the data object from the graph function
-"9ba450d0-87c5-d50d-af1c-7fcbf74ee40d"
 		graphLookup[this.id]["item"] = nobj;
 		this.recurseItems(function(ptr, obj) {
 		 ////      ptrLookup[obj.ptr.join()] = new ptr(obj); // begin caching the ptr object 
-		       obj.ptr = ptr 
+		       obj.ptr = ptr;
+		       if (mkIndex) {
+			//	this.addIndex(ptr);
+		       		obj.index = [];
+				obj.index.push ({"parents":[], "children":[]});
+		       }	
 		},[this.id, "item"])
 	
 	},
@@ -254,6 +259,12 @@ Graph.prototype = {
 		_clone(graphLookup[this.id], graphLookup[nid]);
 	
 
+	},
+	"switchType":function(type, ptr) {
+	       var o = getGraphObject(ptr);	
+		if (!o['types'])
+			o['types'] = {};
+		o['types'][type] = !o['types'][type];
 	},
 
 

@@ -261,8 +261,9 @@ function deleteLineFromClick() {
 //	console.log("---------------------");
 //	console.log(cl);
 	//var p = getObject(cl.o1, graphLookup);
-       	var p = graphLookup[cl.o1[0]];
-	var c = graphLookup[cl.o2[0]];
+       	var p = graphObjLookup[cl.o1[0]];
+	var c = graphObjLookup[cl.o2[0]];
+	console.log(p);
 	p.removeLink(cl.o1, cl.o2);
 
 	// reduce indexed parents
@@ -280,7 +281,6 @@ function deleteLineFromClick() {
 	
 	if (po.children.length == 0 && po.parents.length == 0) {
 		var ppo = getObject(pp, graphLookup);
-		alert("test..");
 		reduceAfterIndex(cl.o1);
 		ppo.splice(pi, 1); 
 
@@ -486,21 +486,32 @@ curveLine.prototype = {
 
 		if (g1xy.y < g2xy.y) {
 			var y0 = g1xy.y;
-			var y1 = g1xy.y+d
-			var y2 = g2xy.y-d;
+			var y1 = g1xy.y;
+			var y2 = g2xy.y;
 			var y3 = g2xy.y;	
 		}else {	
 			var y0 = g2xy.y;
-			var y1 = g1xy.y-d;
-			var y2 = g2xy.y+d;
+			var y1 = g1xy.y;
+			var y2 = g2xy.y;
 			var y3 = g1xy.y;
 		}
+		// and within same element...
+		if (g1xy.x == g2xy.x) {
+			x1-=15
+			x2-=15
+		}
+
+		if (g1xy.y == g2xy.y) {
+			y1-=15
+			y2-=15
+		}
+
 		//var d = "M150 0 L75 200 L225 200 Z";
 		//instead of setting the height and width from scrollbars, it should be from
 		//content instead (getMaxRegdItem) or something
 		linkCurve.prototype.svg.setAttribute("height", snapSpace.prototype.maxY); 
 		linkCurve.prototype.svg.setAttribute("width", snapSpace.prototype.maxX);
-		var d = ["M", g1xy.x, g1xy.y,  "C", x1, g1xy.y, ",", x2, g2xy.y, ",", g2xy.x, g2xy.y]; 
+		var d = ["M", g1xy.x, g1xy.y,  "C", x1, y1, ",", x2, y2, ",", g2xy.x, g2xy.y]; 
 		var p = linkLookup[this.pj][this.cj];
 		//console.log(d);
 		this.rect = {"div":p, "x": x0, "y": y0, "z": 1, "right":x3, "bottom":y3, "height":Math.abs(g1xy.y-g2xy.y), "width":Math.abs(g2xy.x-g1xy), "ptr":[this.pj, this.cj]};
