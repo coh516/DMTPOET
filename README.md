@@ -24,7 +24,8 @@ As of Feb 16, 2014, The Gui renderer and data modeler is completed.
 - ~~necessary refactor required to separate the graph data from the graph instance function in the graphLookup object to serialize the typed set~~
 - the ui should be built from both node based partial template structures and point modules ** last thing on my mind**
 - needs a simplified selector object interface
-- need to allow editing of multiple graph types 
+- need to allow editing of multiple graph types
+- need to fix the rendering of the link node lines... it should be updated and rerendered from the graph
 - ~~traverser is still not done~~
 - ~~requires a window management layer to view the rendered document~~
   - ~~necessary refactor for the gfx layer to further abstract the coupling of the node pointer from the node itself~~
