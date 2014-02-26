@@ -6,7 +6,7 @@
 //
 var pointLookup = {}
 // should be arrays
-var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass};
+var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "filter":FilteredObject};
 
 function Point(options){ 
 
@@ -40,7 +40,7 @@ function Point(options){
 	p2.pop();p2.pop();
 	this.superGroup = p2; //getObject(p2, graphLookup);
 
-	this.label = this.superGroup.value;
+	this.label = getGraphObject(this.superGroup).value;
 
 
 
@@ -57,6 +57,7 @@ function Point(options){
 	this.programName = a1.value;
 
 	var tpg = programs[this.programName];
+	//console.log(this.programName);
 	mixin(tpg.prototype, this)	
 	
 	//var a1 = getObject([pp[0], pp[1], pp[2]], graphLookup);
@@ -145,7 +146,9 @@ Point.prototype = {
 	},
 	*/
 	"getPriorNode":function(){
-		return pointLookup[this.parentId];
+		if (this.parentId != this.id)
+			return pointLookup[this.parentId];
+		else return undefined
 	},
 
 	"getNextSibling":function() {
@@ -194,12 +197,16 @@ Point.prototype = {
 	},
 	"step":function() {
 		var rootPoint = pointLookup[this.rootPointID];
-		
+	////	console.log("test.....");
+	//	console.log(this);	
 		if (this.programVar) {
 			//alert(this.programVar);
-		 
-			var popped = rootPoint.phraseVars[this.programVar].pop();
-			rootPoint.poppedPhraseVars[this.programVar].push(popped);
+			// get programIndex 
+			
+		    	var pi = this.programVarIndex;//programIndex()	
+			if (!pi) pi = 0;
+			var popped = rootPoint.phraseVars[this.programVar][pi].pop();
+			rootPoint.poppedPhraseVars[this.programVar][pi].push(popped);
 
 			//console.log(popped +" "+ this.id);
 			//ppv.push(popped);
@@ -207,15 +214,17 @@ Point.prototype = {
 			//if (!rootPoint.poppedPhraseVars[this.programVar])
 			//	rootPoint
 			//alert(rootPoint.phraseVars[this.programVar].length);
-
-			if (rootPoint.phraseVars[this.programVar].length == 0) {
+			//console.log("one lovr!!!");
+			//console.log(rootPoint.phraseVars[this.programVar]);
+			if (rootPoint.phraseVars[this.programVar][pi].length == 0) {
 				//alert("ja");
-				rootPoint.phraseVars[this.programVar] = copyArray( rootPoint.poppedPhraseVars[this.programVar])
+				//console.log("jah.... rastafari");
+				rootPoint.phraseVars[this.programVar][pi] = copyArray( rootPoint.poppedPhraseVars[this.programVar][pi])
 				
-				rootPoint.poppedPhraseVars[this.programVar]
-				var pv = rootPoint['phraseVars'][this.programVar];
-				this.evaluate(rootPoint.phraseVars[this.programVar]);
-				rootPoint.poppedPhraseVars[this.programVar] = [];
+				//rootPoint.poppedPhraseVars[this.programVar]
+				var pv = rootPoint['phraseVars'][this.programVar][pi];
+				this.evaluate(rootPoint.phraseVars[this.programVar][pi]);
+				rootPoint.poppedPhraseVars[this.programVar][pi] = [];
 					
 			}
 
@@ -228,7 +237,38 @@ Point.prototype = {
 	},
 	"memberOf":function(a) {
 		return Graph.prototype.climbToValue(this.superGroup, a);
-	}
+	},
+	"programIndex":function() {
+		//var pt = this;
+		var index = -1;
+		//var priorNode = pt.getPriorNode();
+		//var cur = this.getPriorNode();
+		var cur = this;
+		// test to see if this is actually a freshie
+		//if (cur.programVar && last.programVar) 
+		//	return -1;
+		
+		while (cur){
+			var iz = false;
+			if (cur.programVar) { // && last.programVar) {
+				index++;
+				iz=true;
+			}
+			//console.log(last.programName);
+			//if (cur.isRoot) break;
+			//var last = cur;
+			var cur = cur.getPriorNode();
+			// this totally doesnt make any sense... but it fits the paradizzle 
+			//if (!iz && !cur && last.programVar)
+			//	index++;
+			//if (!cur) return index;
+			
+		}
+		return index;
+	}//,
+	//"programParam":
+
+
 
 }
 // perhaps a 'lookup' bass class should be defined
@@ -262,8 +302,8 @@ System.prototype = {
 		//rootPhrase = this;
 		var pathList = this.pathList;
 		var parents = {};
-
-		var recurse = function(pID, rpID) {
+		// use progz cuz z is cooler than s
+		var recurse = function(pID, rpID, progz) {
 
 
 			var rootPoint = pointLookup[rpID];
@@ -279,11 +319,37 @@ System.prototype = {
 		//		rootPoint.phraseVars
 			//console.log(rootPoint.phraseVars);
 			if (po.programVar) {
+				//console.log(po.id);
 				if (!rootPoint.phraseVars[po.programVar]) {
+					// need to traverse back to the last time this subject was en route
 					rootPoint.phraseVars[po.programVar] = [];
-					rootPoint.poppedPhraseVars = {}; rootPoint.poppedPhraseVars[po.programVar] = [];
+					
+					// need to patch the current stage of the phrase var.......
+					// phraseVarStages
+					if (!rootPoint.poppedPhraseVars)
+						rootPoint.poppedPhraseVars = {}; 
+					rootPoint.poppedPhraseVars[po.programVar] = [];
 				}
-				rootPoint.phraseVars[po.programVar].push(pID);
+				// programIndex sucks, it's so fucking slow... compound slowness...
+				if (!progz.hasOwnProperty(po.programVar)) 
+					progz[po.programVar] = 0;
+				else progz[po.programVar]++;
+
+				var pi = progz[po.programVar];//po.programIndex();
+
+				var pia = rootPoint.poppedPhraseVars[po.programVar];
+				var ppp = rootPoint.phraseVars[po.programVar];
+				//console.log(getGraphObject(po.programVar).value);
+				//console.log(ppp);
+				po.programVarIndex = pi;
+				if (!pia[pi]) {
+					pia[pi] = [];
+					ppp[pi] = [];
+				}
+				ppp[pi].push(pID);
+				//console.log(pi+"  <tractor trailor"+pID+"  >>"+po.label);
+
+				//rootPoint.phraseVars[po.programVar][pi].push(pID);
 			}			
 			
 			if (ponode.types)
@@ -311,7 +377,9 @@ System.prototype = {
 				var np = new Point({"ptr":pathList[po.ptr][i], "parentId":pID, "childNumber":i});
 				//console.log(.children);
 				//console.log("^%%^^^%%%^^%%%%%^");
-				recurse(np.id, rpID);
+				var zp = {};
+				for (var g in progz) zp[g] = progz[g];
+				recurse(np.id, rpID, zp);
 
 			}
 			/*
@@ -339,7 +407,7 @@ System.prototype = {
 
 		this.rootPoint = new Point({"ptr":this.rootPtr, "childNumber":0, "pathList":pathList});
 	
-		recurse(this.rootPoint.id, this.rootPoint.id);
+		recurse(this.rootPoint.id, this.rootPoint.id, {});
 		//console.log("-----------------------evaluting");
 //		this.rootPoint.evaluate();
 		//console.log(this.rootPoint);
@@ -357,6 +425,7 @@ function UIClass() {
 //  UIClass.prototype = Object.create(baseProgram.prototype);
 // use the UI class fro UIRenderer ..
 UIClass.prototype = {
+
 	"getNameSpace":function() {
 		//need to look back to find 'grid' location
 		
@@ -747,7 +816,18 @@ UniverseClass.prototype =  {
 	}
 }
 
+function FilteredObject() {
 
+
+}
+
+FilteredObject.prototype = {
+	"evaluate":function() {
+		console.log("yo, i'm filtering the last part, ill street shit")
+
+	}
+
+}
 
 function DBClass() {
 
@@ -863,14 +943,45 @@ DBClass.prototype = {
 		postJSON({"storeData":merged}, this.onComplete);
 
 	},
+	"getData":function(vals){
+		// should be able to recognize regex commands
+		console.log(vals);
+	},
 	"onComplete":function(text) {
 		console.log(text)
 	},
+
 	"evaluate":function(vals) {
 		//console.log(vals);
-		console.log(this);
-		if (this.isLastNode)
+		//alert("test..");
+		// get operation ... 
+		// should have support for regex look behinds too
+		console.log(this.superGroup.length+" "+this.label);
+		if (this.superGroup.length == 7) {
+			// iterate through entire collection...
+			console.log(this.label);
+		//	alert("test...")
+			// same as db[this.label].find() 
+			return;	
+		}
+
+
+		var iln = true;
+		for (var i=0; i < vals.length; i++)
+		if (!pointLookup[vals[i]].isLastNode) {
+			iln = false;
+			break;
+		}
+		if (iln)
 			this.doInsert(vals);
+		else {
+			//look back to see what this is supposed to do
+			// if last caller was a generic object, do the find..
+			// if the last caller was db objet, do a foreach over the last object, making sure each call is 
+			// consistent
+			// if the last object was a non db program, do a find
+			this.getData(vals);
+		}
 
 	},
 	"onIterationComplete":function() {
@@ -885,6 +996,17 @@ DBClass.prototype = {
 	"getValueNode":function() {
 		
 	}
+}
+
+function GraphRenderer() {}
+
+GraphRenderer.prototype =  {
+	"evaluate":function() {
+		var graph = this.getPriorNode().value;
+		console.log(graph);
+
+	}
+
 }
 
 
@@ -909,11 +1031,13 @@ Point.prototype.traverseProgram = function(ptr) {
 //	return;
 	for (var i = 0 ; i < o.index.length; i++) {
 	//	alert(o.ptr.join());
+		//console.log("system "+ i);
 		var oc = copyArray(o.ptr);
 		oc = oc.concat(['index', i]);
 		//console.log(oc);	
 		var lo = (getGraphObject(oc))
 		//console.log(o);
+		//console.log(oc);
 		if (lo.children.length || lo.parents.length) {
 
 			var sys = new System(oc, pathList);

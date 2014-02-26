@@ -49,6 +49,7 @@ function copyArray(a) {
 	}
 	return g;
 }
+
 function ptrJoin(a) {
 	return '['+a.join('][')+']'
 }
@@ -141,6 +142,11 @@ function clonePt(pt) {
 	return {"index":pt.index, "ptr":pt.ptr, "index":pt.index
 }
 */
+function copyObject(o) {
+    function F() {}
+    F.prototype = o;
+    return new F();
+}
 
 function obj2ptr(item, gid, id, il) {
 	pos = 0;

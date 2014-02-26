@@ -10,9 +10,10 @@ function mkLoadGraph() {
 	var gojs = [];
 	var mids = [];
 	var jobjects = [
-		{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"save as"}]}, {"dropdown":["text", '_id']}, {"button":[{"type":"handleMouseClick"}]}]}]}},
-		{"DB":{"internals":{"dialogs":["_id", "name", "graph"]}}},
-		["drawPtrGraph"]
+		{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"load graph"}]}, {"dropdown":["text", '_id']}, {"button":[{"type":"handleMouseClick"}, {"text":"submit"}]}]}]}},
+		{"DB":{"internals":{"dialogs":["_id", "name", "graph", 'timestamp']}}},
+		["drawPtrGraph"],
+		{"filter":[{'value':"greatest"}, 'packet']}
 	];
 	for (var i =0; i < jobjects.length; i++ ) {
 		gids[i] = new Graph('ptr'); //uni.addGraph();
@@ -33,10 +34,13 @@ function mkLoadGraph() {
 		gf.build();
 		gojs.push(gf);
 	}
+	var uiroot2 = [gids[0].id, 'item', 0, 'index', 1];
+	
 	var uiroot = [gids[0].id, 'item', 0, 'index', 0];
 	var uibtn = [gids[0].id, 'item', 0, 'item', 0, 'item', 1, 'item', 2, 'item', 0, 'item', 0, 'index', 0];
 	var uidrptxt = [gids[0].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 0, 'index', 0];
 	var uidrpid = [gids[0].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 1, 'index', 0];
+	var uidrpid2 = [gids[0].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 1, 'index', 1];
 
 	var o = getObject([gids[0].id, 'item', 0, 'item', 0], graphLookup);
 	// probably better way of doing this...
@@ -46,22 +50,52 @@ function mkLoadGraph() {
 	mids[0].moveTo(250, 20, 100);
 	mids[1].moveTo(0, 20);	
 	mids[2].moveTo(0, 300);
+	mids[3].moveTo(150, 150);
+	mids[3].rebuild();
 
+	var dbdlg = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
 
 	var dbname = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 1, 'index', 0];
-	var dbid =  [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
+	var dbid1=  [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
+	var dbid2 =  [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 0, 'index', 1];
+	
 	var dbgraph = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 2, 'index', 0];
-
+	var dbts = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 3, 'index', 0]
 	var su = [gids[2].id, 'item', 0, 'index', 0];
 
 	var dbDialog = [gids[1].id, 'item', 0, 'item', 0, 'item', 0];
+
+	var ftrval = [gids[3].id, 'item', 0, 'item',0, 'index', 0];
+	var ftrpkt = [gids[3].id, 'item', 0, 'item', 1, 'index', 0];
+	var ftrgr = [gids[3].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0]
+	
+
 	Graph.prototype.switchType('program', dbDialog);		
 
+	//**
+	// i shouldnt be calling this directly, I should be calling the Graph.prototype.connect
+	// there is an inheritant issue with the way the link curve is handled.
+	// linkCurve needs to be part of the htmlRenderer 
+	// because of that, it can't render the graph directly..... 
+	Graph.prototype.switchType('program', [gids[3].id, 'item', 0]);
+	
 	PtrGfx.prototype.connect(uiroot, uibtn);
-	PtrGfx.prototype.connect(uibtn, uidrptxt);
-	PtrGfx.prototype.connect(uidrptxt, dbname);
-	PtrGfx.prototype.connect(dbname, uidrpid);
-	PtrGfx.prototype.connect(uidrpid, dbid);
+	PtrGfx.prototype.connect(uiroot2, dbdlg);
+	PtrGfx.prototype.connect(dbdlg, dbts);
+	//PtrGfx.prototype.connect(dbid1, uidrpid);
+	PtrGfx.prototype.connect(dbdlg, dbid1);
+	PtrGfx.prototype.connect(dbdlg, dbname);
+	PtrGfx.prototype.connect(dbname, ftrval);
+	PtrGfx.prototype.connect(ftrval, uidrptxt);
+	PtrGfx.prototype.connect(dbid1, ftrpkt);
+	PtrGfx.prototype.connect(ftrpkt, uidrpid);
+	PtrGfx.prototype.connect(dbts, ftrgr);
+	PtrGfx.prototype.connect(uibtn, uidrpid2);
+	PtrGfx.prototype.connect(uidrpid2, dbid2);
+	PtrGfx.prototype.connect(dbid2, dbgraph);
+	PtrGfx.prototype.connect(dbgraph, su)
+
+	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
 
 
 
@@ -244,7 +278,9 @@ function loadGlobals() {
 function launch() {
 	loadGlobals();
 
-	setupCanvas(function() { mkSaveButton(), mkLoadGraph()});
+	setupCanvas(function() { 
+	//	mkSaveButton(), 
+		mkLoadGraph()});
 }
 
 //launch();
