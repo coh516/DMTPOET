@@ -6,7 +6,7 @@
 //
 var pointLookup = {}
 // should be arrays
-var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "filter":FilteredObject};
+var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "filter":FilteredObject, 'Object':GenericObject};
 
 function Point(options){ 
 
@@ -55,7 +55,8 @@ function Point(options){
 	var pp = copyArray(this.ptr);
 	var a1 = getObject([pp[0], pp[1], pp[2]], graphLookup);
 	this.programName = a1.value;
-
+	if (!programs[this.programName])
+		this.programName = 'Object';
 	var tpg = programs[this.programName];
 	//console.log(this.programName);
 	mixin(tpg.prototype, this)	
@@ -103,6 +104,10 @@ Point.prototype = {
 				return false;
 		}
 		return true;
+
+	},
+	"getNode":function() {
+		return graphObjLookup[this.ptr[0]];
 
 	},
 	"getRootNode": function(){
@@ -502,7 +507,7 @@ UIClass.prototype = {
 			// it should duplicate the graph and use a modified renderer
 		
 		//	this.createDom();
-			var json =  graphObjLookup[this.ptrId].toJSON();
+			//var json =  graphObjLookup[this.ptrId].toJSON();
 			//console.log(JSON.stringify(json));
 			var graph = new Graph();
 			//graph.setFromJSON(["Dialog"]);
@@ -815,6 +820,17 @@ UniverseClass.prototype =  {
 	//}
 	}
 }
+function GenericObject() {
+
+}
+
+GenericObject.prototype = {
+	"evaluate":function(){
+		// need to return the object, 
+		this.value = graphObjLookup[this.ptrId].toJSON(0, this.superGroup);
+		
+	}
+}
 
 function FilteredObject() {
 
@@ -958,28 +974,45 @@ DBClass.prototype = {
 		// should have support for regex look behinds too
 		console.log(this.superGroup.length+" "+this.label);
 		if (this.superGroup.length == 7) {
+			var firstChild = pointLookup[this.children[0].id];
 			// iterate through entire collection...
+			if ((pointLookup[this.children[0]].ptrId == this.ptrId) && pointLookup[this.children[0]].superGroup.length > 7)
+				// do a forEach
+				//postJSON("getData":{"collection":this.getCollection(), "db":this.getDB(), "find":''});
+			if (firstChild.programName == 'find') {
+				var node = firstChild.getNode();
+				var o = node.toJSON();
+				var find = o['find'];
+			}
 			console.log(this.label);
 		//	alert("test...")
 			// same as db[this.label].find() 
 			return;	
 		}
-
+		// construct all the odd ways to define a save or insert or get...
 
 		var iln = true;
+		var saves = true;
 		for (var i=0; i < vals.length; i++)
 		if (!pointLookup[vals[i]].isLastNode) {
 			iln = false;
 			break;
+		}else {
+		if (!pointLookup[vals[i]].getPriorNode().programName == 'store')
+			saves = false;
+			break;
+			// if updating by id, then use doSave
 		}
-		if (iln)
+		if (iln || saves)
 			this.doInsert(vals);
 		else {
+			// if last node
 			//look back to see what this is supposed to do
 			// if last caller was a generic object, do the find..
 			// if the last caller was db objet, do a foreach over the last object, making sure each call is 
 			// consistent
 			// if the last object was a non db program, do a find
+
 			this.getData(vals);
 		}
 

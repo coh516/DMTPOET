@@ -171,30 +171,55 @@ Graph.prototype = {
 	// should put 'getter' functions instead of graphics data
 	// should keep this area just text and arrays of text
 	
-	"_toJSON": function(ptr) {
+	"_toJSON": function(ptr, test) {
 		var o = getObject(ptr, graphLookup);
 		var a = [];
+		var out = null;
+		var lv = false;
+		var le = null;
 		if (o["item"])
 		for (var i = 0; i < o["item"].length; i++) {
 			var item = o["item"][i];
 			var pc = ptr.concat(["item",i]);
 			var b = {};
-			if (item["item"].length) {
-				val = Graph.prototype._toJSON(pc);
-				 b[item.value] = val;
+
+			lv = false;
+
+			if (test) {
+				// needs debugging.....
+				console.log(JSON.stringify(test));
+				console.log(JSON.stringify(pc));
+				if (JSON.stringify(test) == JSON.stringify(pc))
+					lv = true;
 			}
-			else 
+			if (item["item"].length) {
+				val = Graph.prototype._toJSON(pc, test).val;
+				 b[item.value] = val;
+				 if (lv) {
+					 out = val;// b[item.value];
+					 le = null;
+				 }
+			}
+			else { 
 				b = item.value;
+				if (lv) {
+					out = a;
+					le = a.length-1;
+				}
+			}
 	
 			a.push(b);
+
+			
+		
 		}
 
-		return a;
+		return {'val':a, 'pointer':out, 'lastElement':le};
 	},
-	"toJSON": function(ptr) {
+	"toJSON": function(ptr, test) {
 		if (!ptr) var ptr = [this.id];
 		
-		return Graph.prototype._toJSON(ptr);
+		return Graph.prototype._toJSON(ptr, test);
 	},
 
 	// rebuilding to standardize the gfx ptr 
