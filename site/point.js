@@ -6,7 +6,7 @@
 //
 var pointLookup = {}
 // should be arrays
-var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "filter":FilteredObject, 'Object':GenericObject};
+var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "mapReduce":FilteredObject, 'find':DBClass};
 
 function Point(options){ 
 
@@ -56,8 +56,11 @@ function Point(options){
 	var a1 = getObject([pp[0], pp[1], pp[2]], graphLookup);
 	this.programName = a1.value;
 	if (!programs[this.programName])
-		this.programName = 'Object';
-	var tpg = programs[this.programName];
+		this.programType = 'Object';
+	else
+		this.programType = this.programName;
+	
+	tpg = programs[this.programType];
 	//console.log(this.programName);
 	mixin(tpg.prototype, this)	
 	
@@ -69,10 +72,11 @@ function Point(options){
 	// in the future, program variables should automatically be detected by seperate linkage patch
 	var pp = copyArray(this.superGroup);
 //	this.programVar = {};
+	/*
 	while (pp.length > 0 ) {
 		var ppo = getObject(pp, graphLookup);
 		if (ppo.hasOwnProperty('types'))
-		if (ppo.types['program']) {
+		if (ppo.types['waits']) {
 				//console.log("=========================*****");
 				this.programVar = ppo.ptr;
 				break;
@@ -80,6 +84,8 @@ function Point(options){
 		pp.pop();
 		pp.pop();
 	}
+	*/
+	this.programVar = this.ptrId;
 
 }
 
@@ -106,12 +112,16 @@ Point.prototype = {
 		return true;
 
 	},
-	"getNode":function() {
+	"getGraphFunction":function() {
 		return graphObjLookup[this.ptr[0]];
 
 	},
-	"getRootNode": function(){
+	"getBaseNode": function(){
 		var rootPtr = [this.ptr[0], this.ptr[1], this.ptr[2]];
+		return getGraphObject(rootPtr);
+	},
+	"getBaseValue":function() {
+		return this.getBaseNode().value;
 	},
 
 	// used for detecting discontinuity...
@@ -323,6 +333,19 @@ System.prototype = {
 		//	if (!rootPoint.phraseVars)
 		//		rootPoint.phraseVars
 			//console.log(rootPoint.phraseVars);
+			//programVar needs to be changed to ptrId .. which all objects have..
+			//all objects should have this property
+			//remove the need to type sub programs
+
+			if (ponode.types)
+			if (ponode.types['root']) {
+			//	alert("test");
+				po.setBeginPhrase();
+				rpID = po.id;
+				//console.log(ponode);
+				//console.log("----------------");
+				var isRoot = true;
+			}
 			if (po.programVar) {
 				//console.log(po.id);
 				if (!rootPoint.phraseVars[po.programVar]) {
@@ -357,15 +380,6 @@ System.prototype = {
 				//rootPoint.phraseVars[po.programVar][pi].push(pID);
 			}			
 			
-			if (ponode.types)
-			if (ponode.types['root']) {
-			//	alert("test");
-				po.setBeginPhrase();
-				rpID = po.id;
-				//console.log(ponode);
-				//console.log("----------------");
-				var isRoot = true;
-			}
 
 		
 
@@ -755,7 +769,7 @@ DateClass.prototype = {
 	"timeStamp":function() {
 		//this.direction = this.inheritDirection(); //"push";
 		//;// point.nextPoint;// = "set"; // setting data dispatches data to be set by another function
-		this.value = new Date().toString();
+		this.value = new Date().getTime();
 
 		//this.onCondition();
 	
@@ -966,54 +980,104 @@ DBClass.prototype = {
 	"onComplete":function(text) {
 		console.log(text)
 	},
+	"getDataCallback":function(data) {
+		var pt = pointLookup[this.pointId];
+		pt.value = data;
+		console.log(data);
+		//pt.next();
+	},
 
 	"evaluate":function(vals) {
 		//console.log(vals);
 		//alert("test..");
 		// get operation ... 
 		// should have support for regex look behinds too
+		// need a way to describe the actions available in determining the selection method
 		console.log(this.superGroup.length+" "+this.label);
+		console.log(this.getBaseValue());
+		if (this.getBaseValue() == 'find') {
+			var value =  this.getGraphFunction().toObj()['find'];
+			console.log(this.value);
+			var db = this.getPriorNode().value;
+			db["query"] = value
+			var cb = this.getDataCallback.bind({"pointId":this.id});
+			postJSON({"findData":db}, cb);
+			
+			//this.next();
+			return;
+		}	
+
+		if (this.getBaseValue() == 'mapReduce') {
+			// generate map function ?
+			
+
+		}
+
 		if (this.superGroup.length == 7) {
-			var firstChild = pointLookup[this.children[0].id];
+			this.value = {"db":this.getDB(), "collection":this.label}
+			return;
+			/*
+			//	alert("test..");
+		//
+			var firstChild = pointLookup[pointLookup[this.children[0]].id];
 			// iterate through entire collection...
-			if ((pointLookup[this.children[0]].ptrId == this.ptrId) && pointLookup[this.children[0]].superGroup.length > 7)
+			if ((pointLookup[this.children[0]].ptrId == this.ptrId) && pointLookup[this.children[0]].superGroup.length > 7) {
 				// do a forEach
 				//postJSON("getData":{"collection":this.getCollection(), "db":this.getDB(), "find":''});
-			if (firstChild.programName == 'find') {
-				var node = firstChild.getNode();
-				var o = node.toJSON();
-				var find = o['find'];
+			}
+			console.log(firstChild.programName);
+			//var firstChild.programName
+			if (firstChild.programName == 'find' || ) {
+				// set next parameter to be a find program
+//				firstChild.setProgramType
+				//this.next();
+
+				return;	
 			}
 			console.log(this.label);
 		//	alert("test...")
 			// same as db[this.label].find() 
 			return;	
+			*/
 		}
-		// construct all the odd ways to define a save or insert or get...
 
-		var iln = true;
-		var saves = true;
-		for (var i=0; i < vals.length; i++)
-		if (!pointLookup[vals[i]].isLastNode) {
-			iln = false;
-			break;
-		}else {
-		if (!pointLookup[vals[i]].getPriorNode().programName == 'store')
-			saves = false;
-			break;
-			// if updating by id, then use doSave
-		}
-		if (iln || saves)
-			this.doInsert(vals);
-		else {
-			// if last node
-			//look back to see what this is supposed to do
-			// if last caller was a generic object, do the find..
-			// if the last caller was db objet, do a foreach over the last object, making sure each call is 
-			// consistent
-			// if the last object was a non db program, do a find
+		if (this.superGroup.length > 7) {
+			// construct all the odd ways to define a save or insert or get...
 
-			this.getData(vals);
+			var iln = false;
+			var saves = false;
+			for (var i=0; i < vals.length; i++) {
+
+				if (pointLookup[vals[i]].isLastNode()) {
+					//alert(pointLookup[vals[i]].isLastNode());
+					//alert('test');
+					iln = true;
+					break;
+				}else {
+
+					if (pointLookup[vals[i]].getPriorNode().programName == 'store')
+						saves = true;
+					break;
+					// if updating by id, then use doSave
+				}
+			}
+			if (iln || saves) {
+
+				//	alert(this.label);
+				this.doInsert(vals);
+			}
+			else {
+				console.log("getting data.......")
+					console.log(vals);
+				// if last node
+				//look back to see what this is supposed to do
+				// if last caller was a generic object, do the find..
+				// if the last caller was db objet, do a foreach over the last object, making sure each call is 
+				// consistent
+				// if the last object was a non db program, do a find
+
+				//this.getData(vals);
+			}
 		}
 
 	},

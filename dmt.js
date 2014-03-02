@@ -77,7 +77,8 @@ function main() {
 		//	console.log(JSON.stringify(data));
 			dal.storeData(data['storeData'],  this.spit);
 		}
-		if (data['getData']) {
+		if (data['findData']) {
+			dal.getData(data['findData'], this.spit);
 
 		}
 		// create some type of renderId string, use that string then to wait for a get of that name

@@ -52,7 +52,8 @@ universe.prototype = {
 
 */
 
-
+// perhaps graphObjLookup should be graphFunctionLookup
+//
 function Graph(type) {
 	this.id = mkguid();
 	this.object = {};
@@ -221,6 +222,41 @@ Graph.prototype = {
 		
 		return Graph.prototype._toJSON(ptr, test);
 	},
+
+
+	"toObj": function(ptr, test) {
+		if (!ptr) ptr = [this.id];
+		var o = getGraphObject(ptr);
+
+		var _toObj = function(obj, test, nobj, n2, lv) {
+			
+			var item = obj['item'];
+			for (var i=0; i < item.length; i++) {
+			
+				var gwan = false;
+				if (item[i]) {
+					if (item[i]['item']) {
+						if (item[i]['item'].length)
+						gwan = true;
+					}
+				}
+				if (gwan) {
+					var p = {};
+					var nn = nobj;
+					nobj[item[i].value] = p;
+					_toObj(item[i], test, p, nn, item[i].value);
+				} else {
+					n2[lv] = item[i].value;
+				}
+				       	
+
+			}
+		}
+		var nobj = {};
+		_toObj(o, test, nobj);
+		return nobj;
+	},
+
 
 	// rebuilding to standardize the gfx ptr 
 	"setFromJSON": function(obj, mkIndex) {

@@ -12,11 +12,8 @@ var
  
 
 
-exports.getData = function(e, callback) {
-	//console.log("trakkkkk");
-   // if (!tof) { callback(false); return }
-  // var calls = 0;
-    if (!e.hasOwnProperty("db") || !e.hasOwnProperty("collection") || !e.query) {
+exports.mapReduceData = function(e, callback) {
+  if (!e.hasOwnProperty("db") || !e.hasOwnProperty("collection") || !e.query) {
     	    console.log("no");
     	    callback(false);
         //return {rc: false, msg: "No type provided"};
@@ -24,7 +21,7 @@ exports.getData = function(e, callback) {
     //var indices = e.indices;
     //delete e.;
     var client = new MongoClient(e.db, new Server(mongoip, 27017)),
-        test = function (err, collection) {
+        doGet = function (err, collection) {
         	//	console.log("hi ");
                     collection.find(e.query).toArray(function(err, results ) {
                     		//    console.log("tree");
@@ -40,8 +37,50 @@ exports.getData = function(e, callback) {
                     });
         };
   //      console.log(e);
-    client.open(function(err, p_client) {
-            client.collection(e.collection, test);
+      client.open(function(err, p_client) {
+	    console.log("client opening...");
+	    var db1 = client.db(e.db);
+            // this is the collection we go for
+           // console.log("_____"+e.collection);
+            db1.collection(e.collection, doGet);
+            });
+}
+ 
+
+exports.findData = function(e, callback) {
+	//console.log("trakkkkk");
+   // if (!tof) { callback(false); return }
+  // var calls = 0;
+    if (!e.hasOwnProperty("db") || !e.hasOwnProperty("collection") || !e.query) {
+    	    console.log("no");
+    	    callback(false);
+        //return {rc: false, msg: "No type provided"};
+    }
+    //var indices = e.indices;
+    //delete e.;
+    var client = new MongoClient(e.db, new Server(mongoip, 27017)),
+        doGet = function (err, collection) {
+        	//	console.log("hi ");
+                    collection.find(e.query).toArray(function(err, results ) {
+                    		//    console.log("tree");
+                   // console.log(e);
+                    	callback(results, e);
+                    	//calls++;
+                    //	console.log(calls + "<<");
+                       // res = results;
+                        //console.log(results);
+                        client.close();
+                        //return results;
+                        
+                    });
+        };
+  //      console.log(e);
+      client.open(function(err, p_client) {
+	    console.log("client opening...");
+	    var db1 = client.db(e.db);
+            // this is the collection we go for
+           // console.log("_____"+e.collection);
+            db1.collection(e.collection, doGet);
             });
 }
 

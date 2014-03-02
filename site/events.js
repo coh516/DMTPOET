@@ -720,8 +720,8 @@ contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 		case "set layout,list":
 			contextMenu.setLayout('list');
 			break;
-		case "set type,value":
-			contextMenu.setNodeType("value");
+		case "set type,module":
+			contextMenu.setNodeType("module");
 			break
 		case "evaluate":
 			contextMenu.traverseProgram();

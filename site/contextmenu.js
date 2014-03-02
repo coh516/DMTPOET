@@ -158,7 +158,7 @@ var contextMenu = Object.create(menuHandler);
 
 contextMenu.setup = function(e) {
 
-	var json = ['expand', 'hide', 'rename', 'remove', 'add child', 'add sibling', 'converge', 'split', 'copy', {'set type':["root", "program", "value"]}, {'set layout':["grid", "list"]}, 'evaluate'];
+	var json = ['expand', 'hide', 'rename', 'remove', 'add child', 'add sibling', 'converge', 'split', 'copy', {'set type':["root", "program", "module"]}, {'set layout':["grid", "list"]}, 'evaluate'];
 	var o = this.init(json, "contextmenu");
 
 	// event processor needs to check if there is a specific event on the item node selected

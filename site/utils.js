@@ -142,6 +142,7 @@ function clonePt(pt) {
 	return {"index":pt.index, "ptr":pt.ptr, "index":pt.index
 }
 */
+
 function copyObject(o) {
     function F() {}
     F.prototype = o;

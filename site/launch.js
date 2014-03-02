@@ -13,8 +13,8 @@ function mkLoadGraph() {
 		{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"load graph"}]}, {"dropdown":["text", '_id']}, {"button":[{"type":"handleMouseClick"}, {"text":"submit"}]}]}]}},
 		{"DB":{"internals":{"dialogs":["_id", "name", "graph", 'timestamp']}}},
 		["drawPtrGraph"],
-		{"filter":[{'value':"greatest"}, 'packet']},
-		{"find":{'name':'/./'}}
+		{"mapReduce":[{'map':"greatest"}, 'packet']},
+		//{"find":{'name':'/./'}}
 	];
 	for (var i =0; i < jobjects.length; i++ ) {
 		gids[i] = new Graph('ptr'); //uni.addGraph();
@@ -48,12 +48,12 @@ function mkLoadGraph() {
 	o.gfx.ptr.layout = "grid";
 	mids[0].rebuild();
 
-	mids[0].moveTo(250, 20, 100);
+	mids[0].moveTo(450, 20, 100);
 	mids[1].moveTo(0, 20);	
 	mids[2].moveTo(150, 400);
-	mids[3].moveTo(150, 150);
+	mids[3].moveTo(270, 220);
 	mids[3].rebuild();
-	mids[4].moveTo(150, 0);
+//	mids[4].moveTo(150, 0);
 
 	var dbdlg = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
 
@@ -67,26 +67,27 @@ function mkLoadGraph() {
 
 	var dbDialog = [gids[1].id, 'item', 0, 'item', 0, 'item', 0];
 
+	var ftbase = [gids[3].id, 'item', 0, 'index', 0];
 	var ftrval = [gids[3].id, 'item', 0, 'item',0, 'index', 0];
 	var ftrpkt = [gids[3].id, 'item', 0, 'item', 1, 'index', 0];
 	var ftrgr = [gids[3].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0]
-	var rxd = [gids[4].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
+//	var rxd = [gids[4].id, 'item', 0, 'index', 0];
 
-	Graph.prototype.switchType('program', dbDialog);		
+	//Graph.prototype.switchType('program', dbDialog);		
 
 	//**
 	// i shouldnt be calling this directly, I should be calling the Graph.prototype.connect
 	// there is an inheritant issue with the way the link curve is handled.
 	// linkCurve needs to be part of the htmlRenderer 
 	// because of that, it can't render the graph directly..... 
-	Graph.prototype.switchType('program', [gids[3].id, 'item', 0]);
+	//Graph.prototype.switchType('program', [gids[3].id, 'item', 0]);
 	
 	PtrGfx.prototype.connect(uiroot, uibtn);
 	PtrGfx.prototype.connect(uiroot2, dbdlg);
-	PtrGfx.prototype.connect(dbdlg, rxd);
-	PtrGfx.prototype.connect(rxd, dbid1);
-	PtrGfx.prototype.connect(rxd, dbts);
-	PtrGfx.prototype.connect(rxd, dbname);
+	PtrGfx.prototype.connect(dbdlg, ftbase);
+	PtrGfx.prototype.connect(ftbase, dbid1);
+	PtrGfx.prototype.connect(ftbase, dbts);
+	PtrGfx.prototype.connect(ftbase, dbname);
 	//PtrGfx.prototype.connect(dbid1, uidrpid);
 	//PtrGfx.prototype.connect(dbdlg, dbid1);
 	//PtrGfx.prototype.connect(dbdlg, dbname);
