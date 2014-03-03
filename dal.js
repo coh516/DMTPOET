@@ -21,20 +21,25 @@ exports.mapReduceData = function(e, callback) {
     //var indices = e.indices;
     //delete e.;
     var client = new MongoClient(e.db, new Server(mongoip, 27017)),
-        doGet = function (err, collection) {
+        mapReduce = function (err, collection) {
         	//	console.log("hi ");
-                    collection.find(e.query).toArray(function(err, results ) {
+                    collection.mapReduce(
+			mapFunction, 
+			reduceFunction, 
+			{out:{ inline : 1}}, 
+			function(err, results) {
                     		//    console.log("tree");
                    // console.log(e);
-                    	callback(results, e);
-                    	//calls++;
-                    //	console.log(calls + "<<");
-                       // res = results;
-                        //console.log(results);
-                        client.close();
-                        //return results;
+                    		callback(results, e);
+                    		//calls++;
+                    		//	console.log(calls + "<<");
+                       		// res = results;
+                        	//console.log(results);
+                       		client.close();
+                       	 //return results;
                         
-                    });
+                    	}
+		);
         };
   //      console.log(e);
       client.open(function(err, p_client) {
@@ -44,6 +49,28 @@ exports.mapReduceData = function(e, callback) {
            // console.log("_____"+e.collection);
             db1.collection(e.collection, doGet);
             });
+
+	// make packet object
+	function makePacket(vars) {
+
+
+
+	}
+	
+ 	var mapFunction = function() {
+		
+	       var packet = [];
+		for (var g in e.packet) {
+			packet.push(this[g]);
+		}
+		emit (this[e.mapBy], {"reduceBy":this[e.reduceBy], "packet":packet};
+	}
+	var reduceFunction = function() {
+		var type = e.map.reduceType;
+		if (type == 'grestest') {
+			return values.sort(function(a,b) {return a.reduceBy-b.reduceBy})
+		}
+	}
 }
  
 

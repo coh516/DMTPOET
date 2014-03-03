@@ -6,7 +6,7 @@
 //
 var pointLookup = {}
 // should be arrays
-var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "mapReduce":FilteredObject, 'find':DBClass};
+var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "mapReduce":FilteredObject, 'mapReduce':DBClass};
 
 function Point(options){ 
 
@@ -995,6 +995,11 @@ DBClass.prototype = {
 		// need a way to describe the actions available in determining the selection method
 		console.log(this.superGroup.length+" "+this.label);
 		console.log(this.getBaseValue());
+
+		/*
+		 * should use find:[{"value":{"match":'value'}], ['packet']};
+		 * which get wired from 
+		 *
 		if (this.getBaseValue() == 'find') {
 			var value =  this.getGraphFunction().toObj()['find'];
 			console.log(this.value);
@@ -1005,9 +1010,54 @@ DBClass.prototype = {
 			
 			//this.next();
 			return;
-		}	
+		}
+		// this requires a better find
+		*/
+		
+		// going to apply the same pattern to find and get as well...	
 
-		if (this.getBaseValue() == 'mapReduce') {
+
+		if (this.programName == 'find') {
+			// iterate through 'values'
+			// do find ...........
+			
+		}
+
+		if (this.programName == 'mapReduce') {
+			// iterate throgh 'values'
+			// use the db and collection from [0]
+		
+			var firstVal = pointLookup[vals[0].getPriorNode()];
+			var db = firstVal.db
+			var collection = firstVal.collection; 
+			var packet = [];
+			for (var i =0; i < vals.length; i++) {
+					
+				var value = pointLookup[vals[i]].getPriorNode().value.objName ;
+				pl = pointLookuip[vals[i]];
+				var label = Graph.prototype.getLabels(pl.ptr);
+				switch (pl) {
+				      	case 'mapReduce,map':
+						var mapBy = value;
+						break;
+					// should be 'map,greatest'
+					case 'mapReduce,map,greatest':
+						var reduceBy = value;
+						var reduceType = 'greatest'
+				       		break;
+					case 'mapReduce,packet':
+						packet.push(value);
+						break;
+				}
+
+				//if (poingtLookup[				
+				// get next node's for query
+			}
+
+			
+			postJSON({"mapReduce":{'mapBy':mapBy, 'packet':packet, 'reduceType':reduceType}, this.getDataCallback);
+			
+
 			// generate map function ?
 			
 
@@ -1040,7 +1090,7 @@ DBClass.prototype = {
 			return;	
 			*/
 		}
-
+		// these tests should be configurable through external linkage
 		if (this.superGroup.length > 7) {
 			// construct all the odd ways to define a save or insert or get...
 
@@ -1054,7 +1104,28 @@ DBClass.prototype = {
 					iln = true;
 					break;
 				}else {
+					var k = pointLookup[vals[i]].children;
+					console.log(k);
+					for (var j =0; j < k.length; j++) {
+						console.log(pointLookup[k[j]].programName);
+						if (pointLookup[k[j]].programName == 'mapReduce') {
+							console.log(" this is intended for MapReduce");
+							// map reduce should query the actual field? unless a polymorphic example appears..
+							// perhaps the mapReduce could also get a generic 'DB:.. Collection:.. 
+							// regardless, just set these variables here
+							// maybe the object name could be variable..
+							this.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":this.label}
+							this.next();
+							return;
+						}
+						if (pointLookup[k[j]].programName == 'find') {
+							console.log(".. this is intended to find");
+							this.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":this.label}
+							this.next();							
+							return;
+						}
 
+					}
 					if (pointLookup[vals[i]].getPriorNode().programName == 'store')
 						saves = true;
 					break;
@@ -1067,7 +1138,8 @@ DBClass.prototype = {
 				this.doInsert(vals);
 			}
 			else {
-				console.log("getting data.......")
+				
+				console.log("finding data based on prior object")
 					console.log(vals);
 				// if last node
 				//look back to see what this is supposed to do

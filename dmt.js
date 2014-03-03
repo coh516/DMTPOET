@@ -81,6 +81,9 @@ function main() {
 			dal.getData(data['findData'], this.spit);
 
 		}
+		if (data['mapReduce']) {
+			dal.mapReduce(data['mapReduce'], this.spit);
+		}	
 		// create some type of renderId string, use that string then to wait for a get of that name
 		console.log(data);
 	//	}

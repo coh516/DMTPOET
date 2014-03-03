@@ -83,11 +83,11 @@ function mkLoadGraph() {
 	//Graph.prototype.switchType('program', [gids[3].id, 'item', 0]);
 	
 	PtrGfx.prototype.connect(uiroot, uibtn);
-	PtrGfx.prototype.connect(uiroot2, dbdlg);
-	PtrGfx.prototype.connect(dbdlg, ftbase);
-	PtrGfx.prototype.connect(ftbase, dbid1);
-	PtrGfx.prototype.connect(ftbase, dbts);
-	PtrGfx.prototype.connect(ftbase, dbname);
+	PtrGfx.prototype.connect(uiroot2, dbid1);
+	PtrGfx.prototype.connect(uiroot2, dbname);
+	PtrGfx.prototype.connect(uiroot2, dbts);
+	//PtrGfx.prototype.connect(ftbase, dbts);
+	//PtrGfx.prototype.connect(ftbase, dbname);
 	//PtrGfx.prototype.connect(dbid1, uidrpid);
 	//PtrGfx.prototype.connect(dbdlg, dbid1);
 	//PtrGfx.prototype.connect(dbdlg, dbname);
