@@ -49,7 +49,7 @@ function storeData(data) {
 
 function main() {
 //	console.log("test...");
-	var self = this;
+	//var self = this;
 	if (this.get) {
 
 	//	console.log(this.request, this.response);
@@ -82,6 +82,7 @@ function main() {
 
 		}
 		if (data['mapReduce']) {
+			console.log(JSON.stringify(data));
 			dal.mapReduce(data['mapReduce'], this.spit);
 		}	
 		// create some type of renderId string, use that string then to wait for a get of that name

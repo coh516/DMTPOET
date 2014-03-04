@@ -981,8 +981,12 @@ DBClass.prototype = {
 		console.log(text)
 	},
 	"getDataCallback":function(data) {
-		var pt = pointLookup[this.pointId];
-		pt.value = data;
+		// need to 'unmap' the values back to the module
+		console.log(data);
+		var pt = pointLookup[this.id];
+		var values = JSON.parse(data);
+		console.log(values);
+		pt.value = JSON.parse(data);
 		console.log(data);
 		//pt.next();
 	},
@@ -1026,17 +1030,18 @@ DBClass.prototype = {
 		if (this.programName == 'mapReduce') {
 			// iterate throgh 'values'
 			// use the db and collection from [0]
-		
-			var firstVal = pointLookup[vals[0].getPriorNode()];
-			var db = firstVal.db
-			var collection = firstVal.collection; 
+			//console.log("yooooooooooooooooooooo");	
+			var firstVal = pointLookup[vals[0]].getPriorNode();
+			var db = firstVal.value.db
+			var collection = firstVal.value.collection; 
 			var packet = [];
 			for (var i =0; i < vals.length; i++) {
-					
+				console.log(pointLookup[vals[i]].getPriorNode().value);
 				var value = pointLookup[vals[i]].getPriorNode().value.objName ;
-				pl = pointLookuip[vals[i]];
-				var label = Graph.prototype.getLabels(pl.ptr);
-				switch (pl) {
+				pl = pointLookup[vals[i]];
+				var label = Graph.prototype.getLabels(pl.superGroup);
+				console.log(label.join());
+				switch (label.join()) {
 				      	case 'mapReduce,map':
 						var mapBy = value;
 						break;
@@ -1046,16 +1051,22 @@ DBClass.prototype = {
 						var reduceType = 'greatest'
 				       		break;
 					case 'mapReduce,packet':
-						packet.push(value);
+						var x = {};
+						x[vals[i]]=value;
+						packet.push(x);
 						break;
 				}
 
 				//if (poingtLookup[				
 				// get next node's for query
 			}
+			console.log("db  "+db+"   "+collection);
+			console.log(reduceBy);
+			console.log(reduceType);
+			console.log(packet);	
 
 			
-			postJSON({"mapReduce":{'mapBy':mapBy, 'packet':packet, 'reduceType':reduceType}, this.getDataCallback);
+			postJSON({"mapReduce":{'db':db, 'collection':collection, 'mapBy':mapBy, 'packet':packet, 'reduceType':reduceType, 'reduceBy':reduceBy}}, this.getDataCallback);
 			
 
 			// generate map function ?
@@ -1096,6 +1107,7 @@ DBClass.prototype = {
 
 			var iln = false;
 			var saves = false;
+			var looksUp = false;
 			for (var i=0; i < vals.length; i++) {
 
 				if (pointLookup[vals[i]].isLastNode()) {
@@ -1104,44 +1116,50 @@ DBClass.prototype = {
 					iln = true;
 					break;
 				}else {
+					
 					var k = pointLookup[vals[i]].children;
-					console.log(k);
+					console.log("<> <> <> ");
 					for (var j =0; j < k.length; j++) {
 						console.log(pointLookup[k[j]].programName);
 						if (pointLookup[k[j]].programName == 'mapReduce') {
-							console.log(" this is intended for MapReduce");
+							var data = pointLookup[vals[i]];
+							looksUp = true;
+							console.log(" this is intended for MapReduce: "+data.label);
 							// map reduce should query the actual field? unless a polymorphic example appears..
 							// perhaps the mapReduce could also get a generic 'DB:.. Collection:.. 
 							// regardless, just set these variables here
 							// maybe the object name could be variable..
-							this.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":this.label}
-							this.next();
-							return;
+
+							data.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":data.label}
+							data.next();
+							//return;
 						}
 						if (pointLookup[k[j]].programName == 'find') {
+							looksUp = true;
 							console.log(".. this is intended to find");
-							this.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":this.label}
-							this.next();							
-							return;
+							data.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":data.label}
+							data.next();							
+							//return;
 						}
 
 					}
-					if (pointLookup[vals[i]].getPriorNode().programName == 'store')
+					if (pointLookup[vals[i]].getPriorNode().programName == 'store') {
 						saves = true;
-					break;
+						break;
+					}
 					// if updating by id, then use doSave
 				}
 			}
-			if (iln || saves) {
-
+			if ((iln || saves) && !looksUp) {
 				//	alert(this.label);
 				this.doInsert(vals);
 			}
 			else {
-				
-				console.log("finding data based on prior object")
+				if (!looksUp) {
+					console.log("finding data based on prior object")
 					console.log(vals);
 				// if last node
+				
 				//look back to see what this is supposed to do
 				// if last caller was a generic object, do the find..
 				// if the last caller was db objet, do a foreach over the last object, making sure each call is 
@@ -1149,6 +1167,7 @@ DBClass.prototype = {
 				// if the last object was a non db program, do a find
 
 				//this.getData(vals);
+				}
 			}
 		}
 
