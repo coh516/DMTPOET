@@ -217,9 +217,10 @@ Point.prototype = {
 		if (this.programVar) {
 			//alert(this.programVar);
 			// get programIndex 
-			
+			console.log("**************");	
 		    	var pi = this.programVarIndex;//programIndex()	
 			if (!pi) pi = 0;
+			console.log(graphLookup[this.programVar])	
 			var popped = rootPoint.phraseVars[this.programVar][pi].pop();
 			rootPoint.poppedPhraseVars[this.programVar][pi].push(popped);
 
@@ -232,6 +233,8 @@ Point.prototype = {
 			//console.log("one lovr!!!");
 			//console.log(rootPoint.phraseVars[this.programVar]);
 			if (rootPoint.phraseVars[this.programVar][pi].length == 0) {
+				console.log(rootPoint.poppedPhraseVars[this.programVar][pi]);
+				console.log("000000000000000000");
 				//alert("ja");
 				//console.log("jah.... rastafari");
 				rootPoint.phraseVars[this.programVar][pi] = copyArray( rootPoint.poppedPhraseVars[this.programVar][pi])
@@ -332,6 +335,7 @@ System.prototype = {
 			//if (rootPoint.programVars)
 		//	if (!rootPoint.phraseVars)
 		//		rootPoint.phraseVars
+		//		gfxLookup[this.linkedGfxId].setInputBox(_rowItem.ptr);
 			//console.log(rootPoint.phraseVars);
 			//programVar needs to be changed to ptrId .. which all objects have..
 			//all objects should have this property
@@ -474,10 +478,15 @@ UIClass.prototype = {
 			//console.log("------");
 			//console.log(this);
 			var li = this.superGroup;// i hate that i can't do li.climbToValue .. need to work on that..
-			var memberOf = Graph.prototype.climbToValue(li,['button', 'inputbox', 'label']);
+			var memberOf = Graph.prototype.climbToValue(li,['button', 'inputbox', 'label', 'dropdown']);
 		       	//console.log(li);
 			//return;
+			//this should only be triggered when the object is on the client side...
+			// the way im looking to do that is check that it directly decsended from UI
+			// or that it came from an event
+			if (this.getPriorNode().hasOwnProperty('value')){
 			switch (memberOf.val) {
+
 				case "button":
 				//	nodeEvents[li.
 					//alert('test');
@@ -508,6 +517,12 @@ UIClass.prototype = {
 					this.next();
 					
 					break;
+				case "dropdown":
+				break;
+			}}else {
+				console.log('setting data from external source');
+				
+
 			}
 			//var c = this.getNextChild();
 			//	alert("evaluaiting..");
@@ -595,7 +610,7 @@ UIClass.prototype = {
 		var grid = Graph.prototype.getPtrValue(view[0], "grid");
 		//view[0].gfx.point.hideItem = true;	
 		//gfxLookup[this.linkedGfxId].
-		
+		//http://imagecache5d.allposters.com/watermarker/8-850-SDTY000Z.jpg
 		//this.getLinkedNode(view[0])['gfx']['point'].hideItem = true;
 		//gfxLookup[this.linkedGfxId].hideChildren(this.getLinkedPtr(view[0]));
 		var _dialog = Graph.prototype.appendChild([this.linkedGraphId], 'dialog');
@@ -688,6 +703,15 @@ UIClass.prototype = {
 				////domNode = li;
 
 			break;
+			case 'dropdown':
+				var n = Graph.prototype.getPtrValue(ri, 'text');
+				gfxLookup[this.linkedGfxId].setType(_rowItem.ptr, 'dropdown');
+					
+				//add values from child nodes
+				//Graph.prototype.addValueArray(ri, 'text')	
+
+
+			break;
 			case 'inputbox':
 				//this.getLinkedNode(dialogPtr)['gfx']['point']. = true;
 				var n = Graph.prototype.getPtrValue(ri, 'text');
@@ -704,6 +728,7 @@ UIClass.prototype = {
 
 				// need to fix this so it returns a pointer back to the graph prototype
 				// so i can do dialog.getVal('row').getVal('text');
+				gfxLookup[this.linkedGfxId].setInputBox(_rowItem.ptr);
 				
 
 				
@@ -980,14 +1005,40 @@ DBClass.prototype = {
 	"onComplete":function(text) {
 		console.log(text)
 	},
-	"getDataCallback":function(data) {
+	// this just allows a singular callback ... 
+	"getDataCallback":function(data) { 
 		// need to 'unmap' the values back to the module
 		console.log(data);
 		var pt = pointLookup[this.id];
-		var values = JSON.parse(data);
-		console.log(values);
-		pt.value = JSON.parse(data);
-		console.log(data);
+		var dj = JSON.parse(data);
+		console.log(dj);	
+		//var pa = dj.value.packet;
+		// need to finalize the object and merge the values...
+		console.log(dj.length);
+		var packetHash = {};
+		for (var i=0; i < dj.length; i++) {
+			//alert("yo");
+			console.log(dj[i].value);
+			var pa;
+			if (dj[i].value.value)
+				pa = dj[i].value.value.packet;
+			else pa = dj[i].value.packet; // if singular
+		        console.log(pa);	
+			for (var j=0; j < pa.length; j++) {
+				var pt = Object.keys(pa[j])[0];
+				var val = pa[j][pt];
+				var plp = pointLookup[pt];
+				if (!plp.value) plp.value = [];
+				plp.value.push(val);
+				console.log(plp);
+				packetHash[pt] = pointLookup[pt];
+			//	pointLookup[pt].next();
+			}
+		}
+		for (var o in packetHash) {
+			packetHash[o].next();
+		}
+
 		//pt.next();
 	},
 
@@ -1035,9 +1086,12 @@ DBClass.prototype = {
 			var db = firstVal.value.db
 			var collection = firstVal.value.collection; 
 			var packet = [];
+			console.log(vals);
 			for (var i =0; i < vals.length; i++) {
+				console.log(pointLookup[vals[i]].getPriorNode().id);
+				console.log("-----------oo");
 				console.log(pointLookup[vals[i]].getPriorNode().value);
-				var value = pointLookup[vals[i]].getPriorNode().value.objName ;
+				var value = pointLookup[vals[i]].getPriorNode().value.objName;
 				pl = pointLookup[vals[i]];
 				var label = Graph.prototype.getLabels(pl.superGroup);
 				console.log(label.join());
@@ -1119,17 +1173,24 @@ DBClass.prototype = {
 					
 					var k = pointLookup[vals[i]].children;
 					console.log("<> <> <> ");
+					var calledData = {};
 					for (var j =0; j < k.length; j++) {
 						console.log(pointLookup[k[j]].programName);
 						if (pointLookup[k[j]].programName == 'mapReduce') {
 							var data = pointLookup[vals[i]];
+							if (calledData[vals[i]])
+								continue
+
+							calledData[vals[i]] = true;
 							looksUp = true;
 							console.log(" this is intended for MapReduce: "+data.label);
 							// map reduce should query the actual field? unless a polymorphic example appears..
 							// perhaps the mapReduce could also get a generic 'DB:.. Collection:.. 
 							// regardless, just set these variables here
 							// maybe the object name could be variable..
-
+							console.log(vals[i]);
+							console.log("@@@@@@@@@@@@@@@@@@@@");
+							console.log(vals.length+" <<<");
 							data.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":data.label}
 							data.next();
 							//return;

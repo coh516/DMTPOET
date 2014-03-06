@@ -26,13 +26,13 @@ exports.mapReduce = function(e, callback) {
 	// potential security risk with e.mapBy and e.reduceBy .. could put a strange function in there..
 	
 	var mf = "function() {"
-	       mf+="var packet = "
+	       mf+="var packet = ["
 		for (var i=0; i < e.packet.length; i++) {
 			var comma = (i != e.packet.length-1) ? ", " : ""; 
 			var key = Object.keys(e.packet[i])[0];
 			mf+="{\""+key+'\":this.'+e.packet[i][key]+"}"+comma;
 		}
-		mf+=";";
+		mf+="];";
 	//	mf+="var mapBy ="+e.mapBy+"; var reduceBy="+e.reduceBy+";" 
 	mf+='emit (this.'+e.mapBy+", {reduceBy:this."+e.reduceBy+", 'packet':packet});}"
 	console.log(mf);	

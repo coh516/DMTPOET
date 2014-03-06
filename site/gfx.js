@@ -56,7 +56,11 @@ Gfx.prototype = {
 		if (!renderer)
 			this.renderer = htmlRenderer.prototype;
 
-		else this.renderer  = renderer.prototype;
+		//else
+		//case "dropdown":
+		
+	
+		this.renderer  = renderer.prototype;
 
 		var ng = 0;
 
@@ -175,7 +179,13 @@ Gfx.prototype = {
 	       this.rebuild();	
 	},
 	"setLabel":function(ptr) {
-	getGraphObject(ptr.concat['gfx', this.type]).objType = 'label';
+		getGraphObject(ptr.concat['gfx', this.type]).objType = 'label';
+	},
+	"setType":function(ptr, type) {
+		console.log(ptr);
+		console.log(ptr.concat['gfx', this.type]);
+		getGraphObject(ptr.concat(['gfx', this.type])).objType = type;
+		this.rebuild;
 	},
 	"deselectInputBox": function() {
 		//alert("TEST..");

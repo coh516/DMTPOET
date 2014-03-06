@@ -1036,7 +1036,7 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 				//alert("test..");
 		//		var s1c = copyArray(s1.rect.indexRoot);
 		//		var s2c = copyArray(s2.rect.indexRoot);
-		
+				// should call Graph.prototype.connect, then call the gfx's re-render 	
 				Gfx.prototype.connect(s1.rect, s2.rect);
 
 	

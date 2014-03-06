@@ -70,6 +70,7 @@ function mkLoadGraph() {
 	var ftbase = [gids[3].id, 'item', 0, 'index', 0];
 	var ftrval = [gids[3].id, 'item', 0, 'item',0, 'index', 0];
 	var ftrpkt = [gids[3].id, 'item', 0, 'item', 1, 'index', 0];
+	var ftrpkt2 = [gids[3].id, 'item', 0, 'item', 1, 'index', 1];
 	var ftrgr = [gids[3].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0]
 //	var rxd = [gids[4].id, 'item', 0, 'index', 0];
 
@@ -91,10 +92,13 @@ function mkLoadGraph() {
 	//PtrGfx.prototype.connect(dbid1, uidrpid);
 	//PtrGfx.prototype.connect(dbdlg, dbid1);
 	//PtrGfx.prototype.connect(dbdlg, dbname);
-	PtrGfx.prototype.connect(dbname, ftrval);
-	PtrGfx.prototype.connect(ftrval, uidrptxt);
+	//PtrGfx.prototype.connect(ftrval, uidrptxt);
 	PtrGfx.prototype.connect(dbid1, ftrpkt);
+	PtrGfx.prototype.connect(dbname, ftrpkt2);
+	PtrGfx.prototype.connect(dbname, ftrval);
+	PtrGfx.prototype.connect(ftrpkt2, uidrptxt);
 	PtrGfx.prototype.connect(ftrpkt, uidrpid);
+	
 	PtrGfx.prototype.connect(dbts, ftrgr);
 	PtrGfx.prototype.connect(uibtn, uidrpid2);
 	PtrGfx.prototype.connect(uidrpid2, dbid2);
@@ -102,9 +106,6 @@ function mkLoadGraph() {
 	PtrGfx.prototype.connect(dbgraph, su)
 
 	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
-
-
-
 
 }
 

@@ -201,7 +201,7 @@ htmlRenderer.prototype = {
 		var gfo = tlg['gfx'][gfxRoot.type];		
 		var el = lastNode;
 		var id = itemPtr[0];
-				
+			
 
 		var linkHeight = this.linkHeight;
 
@@ -342,13 +342,25 @@ htmlRenderer.prototype = {
 		ul.appendChild(li);
 		//console.log(gfo.objType);
 		var tgt = tlg["gfx"][gfxRoot.type];
-		if (tgt.objType == 'inputBox') {
-		//	alert("xxx");
-			label = baseDocument.createElement("input");	
-			label.value = text;	
-		}else {
-			label = baseDocument.createElement("span");
-			label.innerText = text;
+		switch (tgt.objType) {
+			case 'inputBox':
+			//	alert("xxx");
+				label = baseDocument.createElement("input");	
+				label.value = text;
+			break;	
+			case 'dropdown':
+				label = baseDocument.createElement("select");
+				if (tlg.values)
+				for (var i =0; i < tlg.values.length; i++) {
+					tlg.values[i]
+					option = baseDocument.createElement("option");
+					option.innerText = text;
+					baseDocument.appendChild(option);
+				}
+			break;
+			default:
+				label = baseDocument.createElement("span");
+				label.innerText = text;
 		}
 			
 

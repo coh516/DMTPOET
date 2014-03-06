@@ -45,6 +45,7 @@ linkCurve.prototype = {
 		// go through ptrs of both o1 and o2
 	},
 	"drawToCanvas": function() {},
+	
 	"_drawCurve": function(o) {
 		//console.log("O:"+o);
 		//console.log("S:"+s);
@@ -103,7 +104,7 @@ linkCurve.prototype = {
 		o.recurseItems(linkCurve.prototype._drawCurve);
 	},
 
-	"drawCurves": function(c1, c2) {
+	"drawCurves": function(c1) {
 		//console.log("test...");
 		//console.log("______________________");
 		//console.log(c1);
@@ -118,6 +119,17 @@ linkCurve.prototype = {
 
 		// get x,y of 
 	},
+	"redrawCurves":function(node) {
+	//	graphObjLookup[node1].recurseItems(l
+
+	},
+	// this is the one that should be used when adding and subtracting link curves...
+	// just redraw the stupid curve.
+	"renderGraphIndexes":function(o) {
+		
+
+
+	},
 	"testCurve": function() {
 
 		// if was a canvas ...
@@ -127,27 +139,27 @@ linkCurve.prototype = {
 
 }
 
-
-// assumes parent is p and child is c... gotten from the ptr index
 function getCurve(p,c) {
-		
+
 	var pj = p.join();
 	var cj = c.join();
 
-	
+
 
 	if (curveLookup.hasOwnProperty(pj)) if (curveLookup[pj].hasOwnProperty(cj))
 		return curveLookup[pj][cj];
 	/*
-	if (curveLookup[cj])
-		if (curveLookup[cj][pj])
-			return curveLookup[cj][pj];
-			*/
+	   if (curveLookup[cj])
+	   if (curveLookup[cj][pj])
+	   return curveLookup[cj][pj];
+	   */
 	if (!curveLookup[pj]) curveLookup[pj] = {};
 	//console.log(pj+" <<>> "+cj);
 	curveLookup[pj].uid = "linkCurves";	
 	return curveLookup[pj][cj] = new curveLine(p, c);
 }
+// assumes parent is p and child is c... gotten from the ptr index
+
 function reduceAfterIndex(ptr) {
 	var index = ptr[ptr.length-1]+1;
 	var pta = copyArray(ptr);
@@ -450,9 +462,12 @@ curveLine.prototype = {
 		var pj = this.pj;
 		var cj = this.cj;
 		//console.log(this);
-		snapSpace.prototype.updateSnapObject(pj, "curveLookup");				
+		snapSpace.prototype.updateSnapObject(pj, "curveLookup");			//	alert("yoo!");	
 		var path =  linkLookup[pj][cj];
+		console.log(path);
 		path.parentNode.removeChild(path);
+	//	path.parentNode.removeChild(path);
+		
 		delete linkLookup[pj][cj];
 	       	delete this;
 		delete curveLookup[pj][cj];

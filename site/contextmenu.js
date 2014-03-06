@@ -240,6 +240,10 @@ contextMenu.addChild = function() {
 
 	graphObjLookup[id].addChild(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
 	//console.log("loooochi");
+	
+	// need to delete all the curves..
+
+
 	gfxLookup[this.lastRect.gfxId].rebuild();
 	/*
 	var id = this.lastPtr[0];
@@ -258,6 +262,9 @@ contextMenu.addChild = function() {
 //
 
 contextMenu.cleanUpLines = function(o) {
+	console.log(o);
+	console.log("--==");
+	/*
 	if (o.oldChild && o.oldParent) {
 
 		var pj = o.oldParent.join();
@@ -275,7 +282,7 @@ contextMenu.cleanUpLines = function(o) {
 		//return;	
 		//var curve = getCurve(o.oldParent, o.newChild);
 		//curve.register();
-		/*	
+	//	/*	
 		if (!curveLookup[pj]) curveLookup[pj] = {};
 		if (!curveLookup[pj][cj]) curveLookup[pj][cj] = {}
 		
@@ -283,10 +290,29 @@ contextMenu.cleanUpLines = function(o) {
 		*/
 		//getCurve
 		
-	} else if (o.oldParent) {
+	//} 
+		
+	if (o.oldChild) {
+		var oc = curveLookup[o.oldChild.join()];
+		for (var g in oc) {
+			if (oc[g] instanceof curveLine) {
+				//alert('test...');
+				oc[g].delete();
+				//var curve = getCurve(o.newParent, [g])
+				/*
+				var pj = o.oldParent.join();
+				if (!curveLookup[pj][g]) curveLookup[pj][g] = {};			
+				snapSpace.prototype.regObject([o.oldParent.join(), g, "rect"], "curveLookup");
+				*/
+			}
+		}
+	}
+		
+	if (o.oldParent) {
 		var oc = curveLookup[o.oldParent.join()];
 		for (var g in oc) {
 			if (oc[g] instanceof curveLine) {
+				//alert('test...');
 				oc[g].delete();
 				//var curve = getCurve(o.newParent, [g])
 				/*

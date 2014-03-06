@@ -855,7 +855,7 @@ Graph.prototype = {
 								
 								console.log("testing old parents.......");
 								if(f)
-								f({"oldParent":p[pi], "newParent":po.children[c]});
+								f({"oldParent":p[pi], "oldChild":poc, "newParent":po.children[c]});
 							}
 						}
 					}
@@ -926,6 +926,10 @@ Graph.prototype = {
 		this.removeType(pa, ca, "children", f);
 		this.removeType(ca, pa, "parents", f);
 		
+	},
+	"addValueArray":function(ptr, array) {
+		var a = graphObjLookup[ptr];
+		a.values = array;
 	},
 	"appendChild":function(ptr, value, linkedHandler) {
 		if (ptr.length == 1) {
