@@ -260,7 +260,11 @@ contextMenu.addChild = function() {
 // this should bemoved to be part of the curvelines.... not here... anything but here! omg! no!
 // ugh.
 //
-
+// this is kinda weird, because the graph renderer should just re-render all adjascent nodes anyway 
+// i think it's a poor design to do this
+// the link curve should delete all the lines, then do a redraw on them
+// this is a pain in the ass to re-render for other renderers...
+// but i guess it's ok for now.. just a poor design
 contextMenu.cleanUpLines = function(o) {
 	console.log(o);
 	console.log("--==");

@@ -119,8 +119,14 @@ linkCurve.prototype = {
 
 		// get x,y of 
 	},
+	// todo
 	"redrawCurves":function(node) {
-	//	graphObjLookup[node1].recurseItems(l
+		var _deleteCurves = function(ptr) {
+			// go through parents and children
+			// delete all lines from parent node and child node
+			// call redrawCurves on node
+		}
+		graphObjLookup[node1].recurseItems(_deleteCurves);
 
 	},
 	// this is the one that should be used when adding and subtracting link curves...

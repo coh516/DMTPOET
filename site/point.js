@@ -441,7 +441,9 @@ System.prototype = {
 
 }
 
-// Template much include onFunction and onParameter
+// Template much include onFunction and onParamete
+// this is just for shits and giggles i guess...
+// the real version needs to create children and link them
 function UIClass() {
 };
 
@@ -465,7 +467,7 @@ UIClass.prototype = {
 	},
 
 	// this needs to be moved to the UIRenderer class....
-	"evaluate":function() {
+	"evaluate":function(vals) {
 
 		// only at the phrase begin stage should this ever draw a ui
 		if (!this.phraseBegin) {
@@ -484,45 +486,71 @@ UIClass.prototype = {
 			//this should only be triggered when the object is on the client side...
 			// the way im looking to do that is check that it directly decsended from UI
 			// or that it came from an event
-			if (this.getPriorNode().hasOwnProperty('value')){
-			switch (memberOf.val) {
+			console.log("------oo------");
+			//console.log(">> whoo"+this.getPriorNode());
+			console.log(this.getPriorNode());
+			// vals should be standard...
+			// should use vals rather than this.getPriorNode.... 
+			for (var i=0; i < vals.length; i++) {
+				var vp = pointLookup[vals[i]];
+				emitData = (!vp.getPriorNode().hasOwnProperty('value'))
+				switch (memberOf.val) {
 
-				case "button":
-				//	nodeEvents[li.
-					//alert('test');
-					//console.log(this.ptr[0]);
-					//console.log(memberOf.ptr);
-					//console.log(getGraphObject[memberOf.ptr]);
-					var glp = this.getLinkedPtr(memberOf.ptr);
-					//console.log(glp.concat(['gfx', 'point']).join());
-					// fix this to actually correspond to the proper area
-					ptrEvents[glp.concat(['gfx', 'point']).join()]= {'handleMouseClick': this._next.bind({"id":this.id})};
-					//this.addUIEvent(glp.concat(['gfx', 'point']), 'handleMouseClick', this._next.bind({"id":this.id}));
-					break;
-				case "inputbox":
-					console.log(memberOf.ptr);
-					console.log("--------------=");
-					var glp = this.getLinkedPtr(memberOf.ptr);
-					//console.log(glp);
-					glp = glp.concat(['gfx', 'point']);
-					console.log(glp);
-					var z = getGraphObject(glp);
-					//console.log(glp);
-					glp.pop();glp.pop();
-					console.log(z.gfxId);
-					// sort of dumb, I need the gfxId from the hardcoded point... 
-					//
-					console.log(graphLookup[z.gfxId]);
-					this.value =  gfxLookup[z.gfxId].getValue(glp);////pa.renderUI.domNode.value;
-					this.next();
-					
-					break;
-				case "dropdown":
-				break;
-			}}else {
-				console.log('setting data from external source');
-				
+					case "button":
+						//	nodeEvents[li.
+						//alert('test');
+						//console.log(this.ptr[0]);
+						//console.log(memberOf.ptr);
+						//console.log(getGraphObject[memberOf.ptr]);
+						var glp = this.getLinkedPtr(memberOf.ptr);
+						//console.log(glp.concat(['gfx', 'point']).join());
+						// fix this to actually correspond to the proper area
+						ptrEvents[glp.concat(['gfx', 'point']).join()]= {'handleMouseClick': this._next.bind({"id":this.id})};
+						//this.addUIEvent(glp.concat(['gfx', 'point']), 'handleMouseClick', this._next.bind({"id":this.id}));
+						break;
+					case "inputbox":	
+						console.log(memberOf.ptr);
+							console.log("--------------=");
+						var glp = this.getLinkedPtr(memberOf.ptr);
+						//console.log(glp);
+						glp = glp.concat(['gfx', 'point']);
+						console.log(glp);
+						var z = getGraphObject(glp);
+						//console.log(glp);	
+						//						glp.pop();glp.pop();
+						console.log(z.gfxId);
+							// sort of dumb, I need the gfxId from the hardcoded point... 
+						//
+						console.log(graphLookup[z.gfxId]);
+						vp.value =  gfxLookup[z.gfxId].getValue(glp);////pa.renderUI.domNode.value;
+						vp.next();
+						break;
+					case "dropdown":
+						console.log("fuck you");
+						if (!emitData) {
+							// should populate the sub node...
+							//vp.values.push(vp.getPriorNode().value
 
+							var glp = this.getLinkedPtr(memberOf.ptr);
+							//console.log(glp);
+							//glp = glp.concat(['gfx', 'point']);
+							console.log(glp);
+							var obj = getGraphObject(glp);
+							if (vp.label == 'text') {
+							obj.values = vp.getPriorNode().value;
+							var z = glp.concat(['gfx', 'point']);
+						        var gfxObj = getGraphObject(z);
+						        console.log(gfxObj);	
+							gfxLookup[gfxObj.gfxId].rebuild();
+							}
+						} else {
+
+
+						}	
+
+						//	alert("test..");
+						break;
+				}
 			}
 			//var c = this.getNextChild();
 			//	alert("evaluaiting..");
@@ -530,9 +558,9 @@ UIClass.prototype = {
 			//c.evaluate()
 
 
-//			}
-		}else { // imply  {"GFX":{"renderer":"WindowManager"}}
-			// for the most part, this should work...
+			//			}
+	}else { // imply  {"GFX":{"renderer":"WindowManager"}}
+		// for the most part, this should work...
 			// it should duplicate the graph and use a modified renderer
 		
 		//	this.createDom();

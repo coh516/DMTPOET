@@ -352,10 +352,10 @@ htmlRenderer.prototype = {
 				label = baseDocument.createElement("select");
 				if (tlg.values)
 				for (var i =0; i < tlg.values.length; i++) {
-					tlg.values[i]
+					var t = tlg.values[i]
 					option = baseDocument.createElement("option");
-					option.innerText = text;
-					baseDocument.appendChild(option);
+					option.innerText = t;
+					label.appendChild(option);
 				}
 			break;
 			default:
