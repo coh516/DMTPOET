@@ -352,9 +352,13 @@ htmlRenderer.prototype = {
 				label = baseDocument.createElement("select");
 				if (tlg.values)
 				for (var i =0; i < tlg.values.length; i++) {
-					var t = tlg.values[i]
+
 					option = baseDocument.createElement("option");
-					option.innerText = t;
+					option.innerText = tlg.values[i].text;
+					// should be generic
+					for (var key in tlg.values[i])
+						if (key !='text')
+							option.setAttribute(key, JSON.stringify(tlg.values[i]));
 					label.appendChild(option);
 				}
 			break;

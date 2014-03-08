@@ -200,19 +200,21 @@ Point.prototype = {
 	
 	"_next":function() {
 		//alert("test from _");
+		console.log("yo this is the shit");
 		var o = pointLookup[this.id]
 		o.next();
 
 	},
 	
 	"next":function() {
+		console.log("----------9876");
 		for (var i =0; i < this.children.length; i++) {
 			pointLookup[this.children[i]].step();
 		}
 	},
 	"step":function() {
 		var rootPoint = pointLookup[this.rootPointID];
-	////	console.log("test.....");
+		console.log("test.....");
 	//	console.log(this);	
 		if (this.programVar) {
 			//alert(this.programVar);
@@ -491,6 +493,7 @@ UIClass.prototype = {
 			console.log(this.getPriorNode());
 			// vals should be standard...
 			// should use vals rather than this.getPriorNode.... 
+			// somehow there are multiple objects being registered...	
 			for (var i=0; i < vals.length; i++) {
 				var vp = pointLookup[vals[i]];
 				emitData = (!vp.getPriorNode().hasOwnProperty('value'))
@@ -505,6 +508,13 @@ UIClass.prototype = {
 						var glp = this.getLinkedPtr(memberOf.ptr);
 						//console.log(glp.concat(['gfx', 'point']).join());
 						// fix this to actually correspond to the proper area
+					//	alert("test.............");
+						console.log(glp+" <<<<<<<<<<<<<<<<<<<<<<<<<@#$@@#$@#!$@!#$@!#$@!#$@!#$@!#$!@#$@!#$!@#$!@#$!@$!@#$!@#$!@#$!@#$@!#$@!#$@!#$@!#$#!@$E!@#$!@$#!$$#@$!@#");
+						console.log(glp);
+					//	var z = getGraphObject(glp.concat(['gfx', 'point']));
+						//console.log(glp);	
+						//						glp.pop();glp.pop();
+					//	console.log(z.gfxId)
 						ptrEvents[glp.concat(['gfx', 'point']).join()]= {'handleMouseClick': this._next.bind({"id":this.id})};
 						//this.addUIEvent(glp.concat(['gfx', 'point']), 'handleMouseClick', this._next.bind({"id":this.id}));
 						break;
@@ -526,7 +536,7 @@ UIClass.prototype = {
 						vp.next();
 						break;
 					case "dropdown":
-						console.log("fuck you");
+					//	alert("test");
 						if (!emitData) {
 							// should populate the sub node...
 							//vp.values.push(vp.getPriorNode().value
@@ -536,16 +546,71 @@ UIClass.prototype = {
 							//glp = glp.concat(['gfx', 'point']);
 							console.log(glp);
 							var obj = getGraphObject(glp);
-							if (vp.label == 'text') {
-							obj.values = vp.getPriorNode().value;
-							var z = glp.concat(['gfx', 'point']);
-						        var gfxObj = getGraphObject(z);
-						        console.log(gfxObj);	
-							gfxLookup[gfxObj.gfxId].rebuild();
+							// shoud get number of dropdowns to test whether or not to rebuild
+							// if all fulfilled......rebuild
+							
+							
+							if (!obj.values) obj.values = []; // should be initted somewhere else			
+							// needs some more work when dealing with other paradigms
+							//if (vp.label == 'text') {
+							// need to iterate through the values, and coordinate it with the id's....
+							var values = vp.getPriorNode().value;
+							getGraphObject(vp.superGroup).values = values;
+							// values need to pushed to their corrosponding parent node
+							for (var j=0; j < values.length; j++) {
+								var o;
+								if (!obj.values[j]) obj.values[j] = {};
+								if (vp.label == 'text') {
+									console.log("---------------xxx=--");
+									obj.values[j]['text'] = values[j];
+								}
+								/*
+								else
+								if (!obj.values[j].ptr) {
+									//var o = {}
+									//if (values[j] != 'text') {
+										//o["ptr"] = vp.ptr;//values[j];	
+										obj.values[j]["ptr"] = [JSON.stringify(vp.ptr)]
+									//}
+								}
+								else
+									obj.values[j]['ptr'].push(JSON.stringify(vp.ptr));
+								*/					
+	
 							}
+							console.log(obj.values);
+							var z = glp.concat(['gfx', 'point']);
+							var gfxObj = getGraphObject(z);
+							console.log(gfxObj);
+							// should store and rebuild all	
+							gfxLookup[gfxObj.gfxId].rebuild();
+							//}
 						} else {
+						//	console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!--------------=");
+							var glp = this.getLinkedPtr(memberOf.ptr);
+							//console.log(glp);
+							glp = glp.concat(['gfx', 'point']);
+						//	console.log(glp);
+							var z = getGraphObject(glp);
+							//console.log(glp);	
+							//glp.pop();glp.pop();
+						//	console.log(z.gfxId);
+							// sort of dumb, I need the gfxId from the hardcoded point... 
+							//
+							//console.log(graphLookup[z.gfxId]);
+							var ogp = this.getLinkedPtr(memberOf.ptr);
+							va =  gfxLookup[z.gfxId].getDropdownIndex(ogp);
+						//	console.log("va: "+va);
+						//	console.log(vp.label+": "+getGraphObject(vp.superGroup).values[va]);
+							vp.value = getGraphObject(vp.superGroup).values[va];
 
-
+							//console.log(va);
+							//var ptrs = JSON.parse(JSON.parse(va.getAttribute('ptr')));
+							//for (var k = 0 k < ptrs.length; k++) {
+							//	var pt = pointLookup[ptrs];
+							//	pt.next();
+							//}
+							vp.next();
 						}	
 
 						//	alert("test..");
@@ -562,12 +627,18 @@ UIClass.prototype = {
 	}else { // imply  {"GFX":{"renderer":"WindowManager"}}
 		// for the most part, this should work...
 			// it should duplicate the graph and use a modified renderer
-		
+			var sg = getGraphObject(this.superGroup);
+			if (sg.point)
+			if (sg.point.built) {
+				this.next();
+				return;
+			}
 		//	this.createDom();
 			//var json =  graphObjLookup[this.ptrId].toJSON();
 			//console.log(JSON.stringify(json));
 			var graph = new Graph();
 			//graph.setFromJSON(["Dialog"]);
+		//	alert("psycho!");
 			var g = new Gfx({"type":"point", "ptr":[graph.id], "renderer":htmlRenderer, "baseElement":frame2.contentDocument.body});
 		//	gfxLookup[g.id].initNodes(); // sets up graph with gfx.point
 		//	console.log(graphLookup[g.id]);
@@ -592,6 +663,8 @@ UIClass.prototype = {
 			
 			this.createDom();
 			g.build();
+			if (!sg.point) sg.point = {"built":true}
+			else sg.point.built = true;
 		this.next();
 
 			// the parent objects should have a pointIndex layer that connects to the point item child items.
@@ -1033,8 +1106,9 @@ DBClass.prototype = {
 	"onComplete":function(text) {
 		console.log(text)
 	},
-	// this just allows a singular callback ... 
-	"getDataCallback":function(data) { 
+	// this just allows a singular callback ...
+	// should do the finalize stage on the back end ...  
+	"getMapReduceDataCallback":function(data) { 
 		// need to 'unmap' the values back to the module
 		console.log(data);
 		var pt = pointLookup[this.id];
@@ -1068,6 +1142,9 @@ DBClass.prototype = {
 		}
 
 		//pt.next();
+	},
+	"getFindDataCallback":function(data) {
+
 	},
 
 	"evaluate":function(vals) {
@@ -1103,6 +1180,7 @@ DBClass.prototype = {
 		if (this.programName == 'find') {
 			// iterate through 'values'
 			// do find ...........
+			// need to use this for dealing with and, or and other logical operators
 			
 		}
 
@@ -1148,7 +1226,7 @@ DBClass.prototype = {
 			console.log(packet);	
 
 			
-			postJSON({"mapReduce":{'db':db, 'collection':collection, 'mapBy':mapBy, 'packet':packet, 'reduceType':reduceType, 'reduceBy':reduceBy}}, this.getDataCallback);
+			postJSON({"mapReduce":{'db':db, 'collection':collection, 'mapBy':mapBy, 'packet':packet, 'reduceType':reduceType, 'reduceBy':reduceBy}}, this.getMapReduceDataCallback);
 			
 
 			// generate map function ?
@@ -1190,8 +1268,10 @@ DBClass.prototype = {
 			var iln = false;
 			var saves = false;
 			var looksUp = false;
+			var ands = [];
+		//	var ors = [];
 			for (var i=0; i < vals.length; i++) {
-
+				var vp = pointLookup[vals[i]];
 				if (pointLookup[vals[i]].isLastNode()) {
 					//alert(pointLookup[vals[i]].isLastNode());
 					//alert('test');
@@ -1200,10 +1280,10 @@ DBClass.prototype = {
 				}else {
 					
 					var k = pointLookup[vals[i]].children;
-					console.log("<> <> <> ");
+				//	console.log("<> <> <> ");
 					var calledData = {};
 					for (var j =0; j < k.length; j++) {
-						console.log(pointLookup[k[j]].programName);
+					//	console.log(pointLookup[k[j]].programName);
 						if (pointLookup[k[j]].programName == 'mapReduce') {
 							var data = pointLookup[vals[i]];
 							if (calledData[vals[i]])
@@ -1211,21 +1291,22 @@ DBClass.prototype = {
 
 							calledData[vals[i]] = true;
 							looksUp = true;
-							console.log(" this is intended for MapReduce: "+data.label);
+						//	console.log(" this is intended for MapReduce: "+data.label);
 							// map reduce should query the actual field? unless a polymorphic example appears..
 							// perhaps the mapReduce could also get a generic 'DB:.. Collection:.. 
 							// regardless, just set these variables here
 							// maybe the object name could be variable..
-							console.log(vals[i]);
-							console.log("@@@@@@@@@@@@@@@@@@@@");
-							console.log(vals.length+" <<<");
+						//	console.log(vals[i]);
+						//	console.log("@@@@@@@@@@@@@@@@@@@@");
+						//	console.log(vals.length+" <<<");
 							data.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":data.label}
 							data.next();
 							//return;
 						}
 						if (pointLookup[k[j]].programName == 'find') {
 							looksUp = true;
-							console.log(".. this is intended to find");
+						//	console.log(".. this is intended to find");
+							
 							data.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":data.label}
 							data.next();							
 							//return;
@@ -1244,11 +1325,18 @@ DBClass.prototype = {
 				this.doInsert(vals);
 			}
 			else {
+				//looksup is a poor choice for a variable name, because it's not that it doesnt look up, it just means that it infers the lookup
 				if (!looksUp) {
-					console.log("finding data based on prior object")
-					console.log(vals);
+					for (var i=0; i < vals.length; i++) {
+						ands.push
+						console.log("finding data based on prior object")
+					// if more than one object, use 'and' keyword
+						var o = {};
+						o[vals[i].label] = vp.getPriorNode().value;
+						ands.push(o);
+					}
 				// if last node
-				
+					postJSON({"find":{'db':this.getDB(), 'collection':this.getCollection(), 'and':ands}, this.getFindDataCallback);
 				//look back to see what this is supposed to do
 				// if last caller was a generic object, do the find..
 				// if the last caller was db objet, do a foreach over the last object, making sure each call is 
@@ -1259,6 +1347,7 @@ DBClass.prototype = {
 				}
 			}
 		}
+
 
 	},
 	"onIterationComplete":function() {

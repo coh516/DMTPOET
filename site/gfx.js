@@ -167,7 +167,14 @@ Gfx.prototype = {
 			//window.removeEventListener('keypress', stageMenu.checkForEnter, true);
 		}
 	},
-	//maybe extend this for UI gfx	
+	//maybe extend this for UI gfx
+	"getDropdownIndex":function(ptr, attr) {
+		// i forgot how to do this.
+		var v = getGraphObject(ptr.concat(['gfx', this.type])).div;
+		//var o = v.options[v.selectedIndex]
+		return v.selectedIndex; //v ? v : getGraphObject(ptr).value
+
+	},	
 	"getValue":function(ptr) {
 		var v = getGraphObject(ptr.concat(['gfx', this.type])).div.value;
 		return v ? v : getGraphObject(ptr).value;
