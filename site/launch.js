@@ -11,7 +11,7 @@ function mkLoadGraph() {
 	var mids = [];
 	var jobjects = [
 		{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"load graph"}]}, {"dropdown":["text", '_id']}, {"button":[{"type":"handleMouseClick"}, {"text":"submit"}]}]}]}},
-		{"DB":{"internals":{"dialogs":["_id", "name", "graph", 'timestamp']}}},
+		{"MONGO":{"database":[{"name":"internals"},{"collection":[{"name":"dialogs"},{"object":["_id", "name", "graph", 'timestamp']}]}]}},
 		["drawPtrGraph"],
 		{"mapReduce":[{'map':"greatest"}, 'packet']},
 		//{"find":{'name':'/./'}}
@@ -57,12 +57,12 @@ function mkLoadGraph() {
 
 	var dbdlg = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
 
-	var dbname = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 1, 'index', 0];
-	var dbid1=  [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
-	var dbid2 =  [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 0, 'index', 1];
+	var dbname = [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 1, 'index', 0];
+	var dbid1=  [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 0, 'index', 0];
+	var dbid2 =  [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 0, 'index', 1];
 	
-	var dbgraph = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 2, 'index', 0];
-	var dbts = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 3, 'index', 0]
+	var dbgraph = [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 2, 'index', 0];
+	var dbts = [gids[1].id,'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 3, 'index', 0]
 	var su = [gids[2].id, 'item', 0, 'index', 0];
 
 	var dbDialog = [gids[1].id, 'item', 0, 'item', 0, 'item', 0];

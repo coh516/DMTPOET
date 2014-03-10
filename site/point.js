@@ -6,7 +6,15 @@
 //
 var pointLookup = {}
 // should be arrays
-var programs  = {"UI":UIClass, "DB":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "mapReduce":FilteredObject, 'mapReduce':DBClass};
+var programs  = {"UI":UIClass, "MONGO":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "mapReduce":FilteredObject, 'mapReduce':DBClass};
+
+// *** todo ***
+// generic objects getClassPrototype.  for example, mapReduce  following a DBClass should be tied to the DB, but if its after an Array class, it should be part of the Array object.
+// this would be for things like, after a FIND, and there's a map reduction from the collection, from the returned Array.
+// im sure there are other instances where this would be necessary. This would allow a level of polymorphism that might be really cool. 
+// 
+// The DB should be indexed differently, DB->[dbName]->collection->[collectionName] 
+
 
 function Point(options){ 
 
@@ -192,7 +200,21 @@ Point.prototype = {
 		
 	},
 
-
+	"getFirstNamedItem":function(val) {
+		var pz = [];
+		for (var i=0; i < this.ptr.length; i++) {
+			pz.push(this.ptr[i]);
+			var o = getGraphObject(pz);
+			if (o.value == val)
+				return o;
+		}
+	},
+	"isWithin":function(val) {
+		var go = this.getFirstNamedItem(val); //this.containedWithin('object')
+		if (go)
+			return (go.ptr.length < this.ptr.length)
+		return false;
+	},
 	"obj2JSON":function() {
 		return graph.prototype.toJSON(this.ptr[0]);
 
@@ -496,7 +518,9 @@ UIClass.prototype = {
 			// somehow there are multiple objects being registered...	
 			for (var i=0; i < vals.length; i++) {
 				var vp = pointLookup[vals[i]];
-				emitData = (!vp.getPriorNode().hasOwnProperty('value'))
+				var pn = vp.getPriorNode();
+				emitData = !vp.isLastNode();//   ((!pn.hasOwnProperty('value') || pn.hasOwnProperty('selectsData')) && !pn.hasOwnProperty('setsData'))
+				//if (pn.hasOwnProperty('setsData')) emitData = false;
 				switch (memberOf.val) {
 
 					case "button":
@@ -967,8 +991,9 @@ function GenericObject() {
 GenericObject.prototype = {
 	"evaluate":function(){
 		// need to return the object, 
-		this.value = graphObjLookup[this.ptrId].toJSON(0, this.superGroup);
-		
+		//this.value = graphObjLookup[this.ptrId].toJSON(0, this.superGroup);
+		console.log(this.getPriorNode.value)
+		console.log("EOF")
 	}
 }
 
@@ -1036,23 +1061,52 @@ DBClass.prototype = {
 	},
 	*/
 	"getDB":function() {
+		// should memberOf
+		// there are also issues with variable db's... need to use 'if (values)' else, use first child.. actually, most getters should be this way
+		/*
 		var x = copyArray(this.superGroup);
 		var m = x.length;
 		for (var i = m; i >5; i--) {
 			x.pop();
 		}
 		console.log(x);
-		return getGraphObject(x).value;
+		*/
+		var o = this.getFirstNamedItem("database")
+		//var db = [this.ptr[0], this.ptr[1], this.ptr[2], this.ptr[3], this.ptr[4]];
+		//var dbo = getGraphObject(db);
+		// need to make a simplified selector interface (getFirstChild.findChildren.climbToValue.forEach)
+		console.log(o.ptr);
+		if (!o) { console.log("errror!!!!!!!"); return; };		
+		var val = Graph.prototype.getPtrValue(o.ptr, "name")[0];
+		val = getGraphObject(val.concat(['item', 0])).value;
+	//	alert(val);
+		//console.log(val);
+		//console.log(getGraphObject(val).value);
+	       	return val;///getGraphObject(val).value;
+		//return getGraphObject(x).value;
 	},
 
 	"getCollection":function() {
-		var x = copyArray(this.superGroup);
+		/*
+		// should memberOf .. 
+		// var x = copyArray(this.superGroup);
 		var m = x.length;
 		var values = [];
 		for (var i = m; i >7; i--) {
 			x.pop();
 		}
 		return getGraphObject(x).value;	
+		*/
+	
+		//var c = [this.ptr[0], this.ptr[1], this.ptr[2], this.ptr[3], this.ptr[4], this.ptr[5], this.ptr[6]];
+		//var dbo = getGraphObject(db);
+		// need to make a simplified selector interface (getFirstChild.findChildren.climbToValue.forEach)
+		var o= this.getFirstNamedItem("collection");
+		if (!o) { console.log("errror!!!!!!!"); return; };
+		var val  = Graph.prototype.getPtrValue(o.ptr, "name")[0];
+		val = getGraphObject(val.concat(['item', 0])).value;
+		
+	       	return val;//getGraphObject(val).value;
 	},
 	"getObject":function() {
 		var x = copyArray(this.superGroup);
@@ -1110,13 +1164,10 @@ DBClass.prototype = {
 	// should do the finalize stage on the back end ...  
 	"getMapReduceDataCallback":function(data) { 
 		// need to 'unmap' the values back to the module
-		console.log(data);
 		var pt = pointLookup[this.id];
 		var dj = JSON.parse(data);
-		console.log(dj);	
 		//var pa = dj.value.packet;
 		// need to finalize the object and merge the values...
-		console.log(dj.length);
 		var packetHash = {};
 		for (var i=0; i < dj.length; i++) {
 			//alert("yo");
@@ -1144,7 +1195,16 @@ DBClass.prototype = {
 		//pt.next();
 	},
 	"getFindDataCallback":function(data) {
-
+		//console.log(data);
+		
+		for (var i=0; i <  this.vals.length; i++) {
+			var p = pointLookup[this.vals[i]];
+			p.value = JSON.parse(data);
+			//console.log(this.data);
+			console.log(p.value);
+			console.log("******************************************************");
+			p.next();
+		}
 	},
 
 	"evaluate":function(vals) {
@@ -1153,8 +1213,6 @@ DBClass.prototype = {
 		// get operation ... 
 		// should have support for regex look behinds too
 		// need a way to describe the actions available in determining the selection method
-		console.log(this.superGroup.length+" "+this.label);
-		console.log(this.getBaseValue());
 
 		/*
 		 * should use find:[{"value":{"match":'value'}], ['packet']};
@@ -1192,15 +1250,11 @@ DBClass.prototype = {
 			var db = firstVal.value.db
 			var collection = firstVal.value.collection; 
 			var packet = [];
-			console.log(vals);
 			for (var i =0; i < vals.length; i++) {
-				console.log(pointLookup[vals[i]].getPriorNode().id);
-				console.log("-----------oo");
-				console.log(pointLookup[vals[i]].getPriorNode().value);
+
 				var value = pointLookup[vals[i]].getPriorNode().value.objName;
 				pl = pointLookup[vals[i]];
 				var label = Graph.prototype.getLabels(pl.superGroup);
-				console.log(label.join());
 				switch (label.join()) {
 				      	case 'mapReduce,map':
 						var mapBy = value;
@@ -1233,8 +1287,10 @@ DBClass.prototype = {
 			
 
 		}
-
+		// should use:: check if this label's position is the first instance of 'object'
+		// this.getFirstNamedItem("object").ptr.length == this.ptr.length 
 		if (this.superGroup.length == 7) {
+			// if building an object from other variables...
 			this.value = {"db":this.getDB(), "collection":this.label}
 			return;
 			/*
@@ -1243,6 +1299,7 @@ DBClass.prototype = {
 			var firstChild = pointLookup[pointLookup[this.children[0]].id];
 			// iterate through entire collection...
 			if ((pointLookup[this.children[0]].ptrId == this.ptrId) && pointLookup[this.children[0]].superGroup.length > 7) {
+		var val = getGraphObject(name[0].concat(['item', 0])).value;
 				// do a forEach
 				//postJSON("getData":{"collection":this.getCollection(), "db":this.getDB(), "find":''});
 			}
@@ -1262,13 +1319,17 @@ DBClass.prototype = {
 			*/
 		}
 		// these tests should be configurable through external linkage
-		if (this.superGroup.length > 7) {
+		// should check if this chain contains 'object'
+		//var go = this.getFirstNamedItem("object"); //isWithin('object')
+		//if (go)
+		if (this.isWithin("object")) {
+		//if (this.getFirstNamedItem("object")) {
 			// construct all the odd ways to define a save or insert or get...
 
 			var iln = false;
 			var saves = false;
 			var looksUp = false;
-			var ands = [];
+			var findObj = {};
 		//	var ors = [];
 			for (var i=0; i < vals.length; i++) {
 				var vp = pointLookup[vals[i]];
@@ -1279,13 +1340,15 @@ DBClass.prototype = {
 					break;
 				}else {
 					
-					var k = pointLookup[vals[i]].children;
+					var k = vp.children;
 				//	console.log("<> <> <> ");
 					var calledData = {};
+				
 					for (var j =0; j < k.length; j++) {
 					//	console.log(pointLookup[k[j]].programName);
-						if (pointLookup[k[j]].programName == 'mapReduce') {
-							var data = pointLookup[vals[i]];
+						var kid = pointLookup[k[j]];
+						if (kid.programName == 'mapReduce') {
+							var data = vp;//pointLookup[vals[i]];
 							if (calledData[vals[i]])
 								continue
 
@@ -1302,15 +1365,17 @@ DBClass.prototype = {
 							data.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":data.label}
 							data.next();
 							//return;
-						}
-						if (pointLookup[k[j]].programName == 'find') {
+						}else
+						if (kid.programName == 'find') {
 							looksUp = true;
 						//	console.log(".. this is intended to find");
 							
 							data.value = {"db":this.getDB(), "collection":this.getCollection(), "objName":data.label}
 							data.next();							
 							//return;
-						}
+						}//else
+						//if (kid.isWithin("object") && kid.ptrId == vp.ptrId)
+								
 
 					}
 					if (pointLookup[vals[i]].getPriorNode().programName == 'store') {
@@ -1321,22 +1386,59 @@ DBClass.prototype = {
 				}
 			}
 			if ((iln || saves) && !looksUp) {
+				// this should actually take the remainder of the links.. not disqualify all of them...
 				//	alert(this.label);
 				this.doInsert(vals);
 			}
 			else {
 				//looksup is a poor choice for a variable name, because it's not that it doesnt look up, it just means that it infers the lookup
 				if (!looksUp) {
+					var doFind = false;
 					for (var i=0; i < vals.length; i++) {
-						ands.push
-						console.log("finding data based on prior object")
-					// if more than one object, use 'and' keyword
-						var o = {};
-						o[vals[i].label] = vp.getPriorNode().value;
-						ands.push(o);
+						var vp = pointLookup[vals[i]];
+						// if prior node already has the document ... select this variable name from the document already gotten.. 
+						if (vp.getPriorNode().ptrId == vp.ptrId) {
+							var vpv = vp.getPriorNode().value;
+							console.log(vpv);
+							for (var j =0; j < vpv.length; j++) { 
+								vp.value = (vpv[j][vp.label])
+								vp.next();
+							}
+								
+								console.log("-----------------------------------------");
+						}else {
+
+							if (vals.length == 1) {
+								doFind = true;
+								var o = {};
+								var vp = pointLookup[vals[0]];
+								o[vp.label] = vp.getPriorNode().value;
+								findObj = o;
+								console.log(vp.label);
+								console.log("============================");
+							}
+							else {
+								doFind = true;
+								findObj['$and'] = [];
+								//ands.push
+								//	for (var i=0; i < vals.length; i++) {
+								var vp = pointLookup[vals[i]];
+								console.log("finding data based on prior object")
+									// if more than one object, use 'and' keyword
+									var o = {};
+								o[vp.label] = vp.getPriorNode().value;
+
+								findObj['$and'].push(o);
+
+							}
+						}
 					}
+				//}
 				// if last node
-					postJSON({"find":{'db':this.getDB(), 'collection':this.getCollection(), 'and':ands}, this.getFindDataCallback);
+				if(doFind) {				
+					var gf = this.getFindDataCallback.bind({"vals":vals});
+					postJSON({"find":{'db':this.getDB(), 'collection':this.getCollection(), 'query':findObj}}, gf);//this.getFindDataCallback);
+				}
 				//look back to see what this is supposed to do
 				// if last caller was a generic object, do the find..
 				// if the last caller was db objet, do a foreach over the last object, making sure each call is 
@@ -1415,3 +1517,4 @@ Point.prototype.traverseProgram = function(ptr) {
 }
 
 
+	//	var val = getGraphObject(name[0].concat(['item', 0])).value;
