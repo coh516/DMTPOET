@@ -54,8 +54,11 @@ universe.prototype = {
 
 // perhaps graphObjLookup should be graphFunctionLookup
 //
-function Graph(type) {
-	this.id = mkguid();
+function Graph(type, id) {
+	if (!id)
+		this.id = mkguid();
+	else this.id = id;
+
 	this.object = {};
 	graphLookup[this.id] = {};//this;
 	if (!typedGraphs[type]) typedGraphs[type] = []
@@ -295,7 +298,7 @@ Graph.prototype = {
 		},[this.id, "item"])
 	
 	},
-	"cloneTo":function(nid) {
+	"cloneTo":function(nid,out) {
 		
 		var _clone = function(item, item2) {
 			//console.log(item);
@@ -317,7 +320,9 @@ Graph.prototype = {
 				}
 			}
 		}
-		_clone(graphLookup[this.id], graphLookup[nid]);
+		var out = {};
+		_clone(graphLookup[nid], out);
+		return out;
 	
 
 	},
@@ -345,6 +350,15 @@ Graph.prototype = {
 		var o = getObject(ptr, graphLookup);
 		if (o.index === undefined) o.index = [];
 		o.index.push ({"parents":[], "children":[]});
+	},
+	// really need to cache the ptr's....
+	"ensureIndex":function(ptr) {
+		var a = copyArray(ptr);
+		var idx = a.pop();a.pop();
+		var o = getObject(a, graphLookup);
+		if (o.index === undefined) o.index = [];
+		if (!o.index[idx])
+			o.index[idx] = {"parents":[], "children":[]};
 	},
 	"setPtrIndex":function(b) {
 		this._setPtrIndex(graphLookup["item"], b);
@@ -623,6 +637,10 @@ Graph.prototype = {
 	},
 
 	"connect":function(n1, n2) {
+	
+		Graph.prototype.ensureIndex(n1);
+		Graph.prototype.ensureIndex(n2);
+		
 		var p = getObject(n1, graphLookup);
 		var c = getObject(n2, graphLookup);
 

@@ -29,8 +29,9 @@ htmlRenderer.prototype = {
 		var lz = Gfx.prototype.lastz+1;
 		if (!lz) lz = 0;
 
-		
+	//	alert(JSON.stringify(gfxRoot.loc));	
 		if (!gfxRoot.loc) {
+			alert('test...');
 			gfxRoot.loc = {"x":0, "y":0, "z":lz};
 		} else if (!gfxRoot.loc.z)  
 			gfxRoot.loc.z = lz;
@@ -433,11 +434,13 @@ htmlRenderer.prototype = {
 		if (tlg.types) {
 			for (var type in  tlg.types) {
 				//tlg['tye]
-				//alert("yoo");
+			//	alert("yoo");
+				//console.log(gfo);	
 				var t = tlg.types[type];
-				gfo.div.setAttribute(csstype+type, t ? "label": false);
+				console.log(gfo);
+				o.div.setAttribute(csstype+type, t ? "label": false);
 
-				gfo.el.setAttribute(csstype+type, t ? "section":false); // not really sure about this one...
+				o.el.setAttribute(csstype+type, t ? "section":false); // not really sure about this one...
 			}
 		}
 		if (!_lastNodeType) _lastNodeType = "list";
@@ -462,8 +465,11 @@ htmlRenderer.prototype = {
 	"moveGfx":function(gfxRoot) {
 		//console.log(id);
 		var t = gfxRoot.loc;
+		console.log(gfxRoot);
+		console.log("---------------------");
 		var canvas = gfxRoot.el;
 		//console.log("moving...."+this.id);
+		console.log(gfxRoot.loc.x);
 		canvas.style.top = t.y+"px";
 		canvas.style.left = t.x+"px";
 		canvas.style.zIndex = t.z;

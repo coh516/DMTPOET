@@ -545,9 +545,10 @@ UIClass.prototype = {
 					case "inputbox":	
 						console.log(memberOf.ptr);
 							console.log("--------------=");
-						var glp = this.getLinkedPtr(memberOf.ptr);
+						//var glp = this.getLinkedPtr(memberOf.ptr);
 						//console.log(glp);
-						glp = glp.concat(['gfx', 'point']);
+						var oglp =  this.getLinkedPtr(memberOf.ptr);
+						var glp = oglp.concat(['gfx', 'point']);
 						console.log(glp);
 						var z = getGraphObject(glp);
 						//console.log(glp);	
@@ -556,7 +557,7 @@ UIClass.prototype = {
 							// sort of dumb, I need the gfxId from the hardcoded point... 
 						//
 						console.log(graphLookup[z.gfxId]);
-						vp.value =  gfxLookup[z.gfxId].getValue(glp);////pa.renderUI.domNode.value;
+						vp.value =  gfxLookup[z.gfxId].getValue(oglp);////pa.renderUI.domNode.value;
 						vp.next();
 						break;
 					case "dropdown":
@@ -940,12 +941,14 @@ UniverseClass.prototype =  {
 		
 		var ga = typedGraphs[type];
 		for (var i = 0; i < ga.length; i++) {
-			var g = new Graph(type+'copy');
-			graphObjLookup[ga[i]].cloneTo(g.id); // this shouldn't be part of the graph object
-			var o = {};
-			o[g.id] = graphLookup[g.id];
-
-			arr.push(o);
+			var out = {};
+			var gai = ga[i];
+			//out[gai] = {};
+			//console.log(gai);
+			out[gai] = Graph.prototype.cloneTo(gai); // this shouldn't be part of the graph object
+			console.log(out);	
+			//o[g.id] = graphLookup[g.id];	
+			arr.push(out);
 		}
 
 		//console.log(arr);
@@ -966,6 +969,7 @@ UniverseClass.prototype =  {
 				//console.log(getGraphObject(this.superGroup));
 				//console.log(val);
 				this.value = this.cloneNodes(val);
+				console.log(this.value);
 				break;
 				//this.value =  
 			//}
@@ -1113,8 +1117,10 @@ DBClass.prototype = {
 		var m = x.length;
 		var values = [];
 		values.push(getGraphObject(x).value);
-	
-		while (x.length >9) {
+		
+		var o = this.getFirstNamedItem("object")	
+		
+		while (x.length > o.ptr.length+2) {
 			x.pop();
 			x.pop();
 			values.push(getGraphObject(x).value);
@@ -1169,6 +1175,7 @@ DBClass.prototype = {
 		//var pa = dj.value.packet;
 		// need to finalize the object and merge the values...
 		var packetHash = {};
+		console.log(dj);
 		for (var i=0; i < dj.length; i++) {
 			//alert("yo");
 			console.log(dj[i].value);
@@ -1469,9 +1476,36 @@ DBClass.prototype = {
 function GraphRenderer() {}
 
 GraphRenderer.prototype =  {
+	// draw and connect....
 	"evaluate":function() {
 		var graph = this.getPriorNode().value;
+		var ids = [];
 		console.log(graph);
+		//return;
+		for (var i=0; i < graph.length; i++) {
+			//console.log(JSON.parse(o));
+			var o = graph[i];
+			var id = Object.keys(o)[0];
+			//console.log();
+		//	console.log(o[id].gfx.ptr.loc);
+		//	console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+			var g = new Graph("ptr", id);
+		       	graphObjLookup[id] = g;
+			graphLookup[id] = o[id];
+			var gf = mkPtrGfx({"id":id});
+		//	console.log(o[id].gfx.ptr.loc);
+
+			gf.build();
+			
+		//	console.log(gf.rootGfxObj.loc);
+			
+		//	gf.moveCanvas();
+			ids.push(id);
+		}
+		for (var i=0; i < ids.length; i++) {
+			console.log(graphObjLookup[ids[i]]);
+			graphObjLookup[ids[i]].recurseItems(linkCurve.prototype._drawCurve);
+		}			
 
 	}
 

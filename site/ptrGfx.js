@@ -19,7 +19,7 @@ PtrGfx.prototype.connect = function(c1, c2) {
 		// add another index to the graph 
 
 		linkCurve.prototype.drawCurves(c1);
-		linkCurve.prototype.drawCurves(c2);
+	//	linkCurve.prototype.drawCurves(c2);
 }
 
 PtrGfx.prototype.drawCurves = function() {

@@ -30,10 +30,10 @@ function mkLoadGraph() {
 		//	universes['ptr', uni.id, 
 		gids[i].setFromJSON(json, true);
 
-		var gf = mkPtrGfx({"id":gids[i].id});
-	        mids.push(gf);	
-		gf.build();
-		gojs.push(gf);
+	//	var gf = mkGraph({"id":gids[i].id});
+	  //      mids.push(gf);	
+	//	gf.build();
+	//	gojs.push(gf);
 	}
 	var uiroot2 = [gids[0].id, 'item', 0, 'index', 1];
 	
@@ -45,16 +45,16 @@ function mkLoadGraph() {
 
 	var o = getObject([gids[0].id, 'item', 0, 'item', 0], graphLookup);
 	// probably better way of doing this...
-	o.gfx.ptr.layout = "grid";
-	mids[0].rebuild();
+//	o.gfx.ptr.layout = "grid";
+/*	mids[0].rebuild();
 
 	mids[0].moveTo(450, 20, 100);
 	mids[1].moveTo(0, 20);	
 	mids[2].moveTo(150, 400);
 	mids[3].moveTo(270, 220);
-	mids[3].rebuild();
+//	mids[3].rebuild();
 //	mids[4].moveTo(150, 0);
-
+*/
 	var dbdlg = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
 
 	var dbname = [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 1, 'index', 0];
@@ -82,28 +82,28 @@ function mkLoadGraph() {
 	// linkCurve needs to be part of the htmlRenderer 
 	// because of that, it can't render the graph directly..... 
 	//Graph.prototype.switchType('program', [gids[3].id, 'item', 0]);
+	// apparently there is a problem adding graph items to the next slot......	
+	Graph.prototype.connect(uiroot, uibtn);
+	Graph.prototype.connect(uiroot2, dbid1);
+	Graph.prototype.connect(uiroot2, dbname);
+	Graph.prototype.connect(uiroot2, dbts);
+	//Graph.prototype.connect(ftbase, dbts);
+	//Graph.prototype.connect(ftbase, dbname);
+	//Graph.prototype.connect(dbid1, uidrpid);
+	//Graph.prototype.connect(dbdlg, dbid1);
+	//Graph.prototype.connect(dbdlg, dbname);
+	//Graph.prototype.connect(ftrval, uidrptxt);
+	Graph.prototype.connect(dbid1, ftrpkt);
+	Graph.prototype.connect(dbname, ftrpkt2);
+	Graph.prototype.connect(dbname, ftrval);
+	Graph.prototype.connect(ftrpkt2, uidrptxt);
+	Graph.prototype.connect(ftrpkt, uidrpid);
 	
-	PtrGfx.prototype.connect(uiroot, uibtn);
-	PtrGfx.prototype.connect(uiroot2, dbid1);
-	PtrGfx.prototype.connect(uiroot2, dbname);
-	PtrGfx.prototype.connect(uiroot2, dbts);
-	//PtrGfx.prototype.connect(ftbase, dbts);
-	//PtrGfx.prototype.connect(ftbase, dbname);
-	//PtrGfx.prototype.connect(dbid1, uidrpid);
-	//PtrGfx.prototype.connect(dbdlg, dbid1);
-	//PtrGfx.prototype.connect(dbdlg, dbname);
-	//PtrGfx.prototype.connect(ftrval, uidrptxt);
-	PtrGfx.prototype.connect(dbid1, ftrpkt);
-	PtrGfx.prototype.connect(dbname, ftrpkt2);
-	PtrGfx.prototype.connect(dbname, ftrval);
-	PtrGfx.prototype.connect(ftrpkt2, uidrptxt);
-	PtrGfx.prototype.connect(ftrpkt, uidrpid);
-	
-	PtrGfx.prototype.connect(dbts, ftrgr);
-	PtrGfx.prototype.connect(uibtn, uidrpid2);
-	PtrGfx.prototype.connect(uidrpid2, dbid2);
-	PtrGfx.prototype.connect(dbid2, dbgraph);
-	PtrGfx.prototype.connect(dbgraph, su)
+	Graph.prototype.connect(dbts, ftrgr);
+	Graph.prototype.connect(uibtn, uidrpid2);
+	Graph.prototype.connect(uidrpid2, dbid2);
+	Graph.prototype.connect(dbid2, dbgraph);
+	Graph.prototype.connect(dbgraph, su)
 
 	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
 
@@ -120,9 +120,9 @@ function mkSaveButton() {
 	//
 			
 		
-	    		{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"save as"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"handleMouseClick"}]}]}]}},
-	    	//	{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"load"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"type":"onSubmit"}]}]}]}},
-	    		{"DB":{"internals":{"dialogs":["name", "timestamp", "graph"]}}},
+	    	
+	    		{"UI":{"dialog":[{"view":"grid"},{"row":[{"label":[{"text":"save"}]}, {"inputbox":[{"text":"enterSomeText"}]}, {"button":[{"text":"enter text"},{"type":"onSubmit"}]}]}]}},
+	    		{"MONGO":{"database":[{"name":"internals"},{"collection":[{"name":"dialogs"},{"object":["_id", "name", "graph", 'timestamp']}]}]}},
 			["timeStamp"],
 			{"serializeUniverse":"ptr"}//,
 
@@ -144,18 +144,18 @@ function mkSaveButton() {
 	//	universes['ptr', uni.id, 
 		gids[i].setFromJSON(json, true);
 
-		/* display saveAs
-		var gf = mkPtrGfx({"id":gids[i].id});
-	        mids.push(gf);	
-		gf.build();
-		gojs.push(gf);
-		*/
+	//	/* display saveAs
+	//	var gf = mkGraph({"id":gids[i].id});
+	 //       mids.push(gf);	
+	//	gf.build();
+	//	gojs.push(gf);
+	//	*/
 	}
-	/* display saveAs
-	mids[0].moveTo(450, 20, 100);
-	mids[2].moveTo(200, 20);	
-	mids[3].moveTo(200, 300);
-	*/
+	///* display saveAs
+//	mids[0].moveTo(450, 20, 100);
+//	mids[2].moveTo(200, 20);	
+//	mids[3].moveTo(200, 300);
+	//*/
 /*
 	mids[4].moveTo(650, 500);
 	mids[5].moveTo(580, 450);
@@ -170,9 +170,14 @@ function mkSaveButton() {
 	var uitext = [gids[0].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 0, 'item', 0, 'index', 0];
 
 
-	var dbname = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
-	var dbtimestamp =  [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 1, 'index', 0];
-	var dbgraph = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'item', 2, 'index', 0];
+	var dbdlg = [gids[1].id, 'item', 0, 'item', 0, 'item', 0, 'index', 0];
+
+	var dbname = [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 1, 'index', 0];
+	var dbid1=  [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 0, 'index', 0];
+	var dbid2 =  [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 0, 'index', 1];
+	
+	var dbgraph = [gids[1].id, 'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 2, 'index', 0];
+	var dbts = [gids[1].id,'item', 0, 'item', 0, 'item', 1, 'item', 1, 'item', 3, 'index', 0]
 
 	var timestamp = [gids[2].id, 'item', 0, 'index', 0];
 	var su = [gids[3].id, 'item', 0, 'item', 0, 'index', 0];
@@ -186,11 +191,11 @@ function mkSaveButton() {
 	var a6 = [gids[9].id, 'item', 0, 'index', 0];
 //	var a7 = [gids[10], 'item', 0, 'index', 0];
 */	
-
-/* display saveAs
 	var o = getObject([gids[0].id, 'item', 0, 'item', 0], graphLookup);
 
-	o.gfx.ptr.layout = "grid";
+//	o.gfx.ptr.layout = "grid"
+/* display saveAs
+;
 	console.log(o);
 	mids[0].rebuild();  //rebuild might need to be fixed to just 'build'
 //	o.gfx.ptr.layout = "list";
@@ -209,18 +214,18 @@ function mkSaveButton() {
 	Graph.prototype.connect(uisub, uitext);
 	Graph.prototype.connect(uitext, dbname);
 	Graph.prototype.connect(uisub, timestamp);
-	Graph.prototype.connect(timestamp, dbtimestamp);
+	Graph.prototype.connect(timestamp, dbts);
 	Graph.prototype.connect(uisub, su);
 	Graph.prototype.connect(su, dbgraph);
 	
 /*
-	PtrGfx.prototype.connect(a1, a2);
+	Graph.prototype.connect(a1, a2);
 
-	PtrGfx.prototype.connect(a2, a3);
-	PtrGfx.prototype.connect(a2, a4);
-	PtrGfx.prototype.connect(a4, a5);
-	PtrGfx.prototype.connect(a3, a6);
-	PtrGfx.prototype.connect(a3, a4);
+	Graph.prototype.connect(a2, a3);
+	Graph.prototype.connect(a2, a4);
+	Graph.prototype.connect(a4, a5);
+	Graph.prototype.connect(a3, a6);
+	Graph.prototype.connect(a3, a4);
 */
 	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
 
@@ -286,8 +291,9 @@ function launch() {
 	loadGlobals();
 
 	setupCanvas(function() { 
-	//	mkSaveButton(), 
-		mkLoadGraph()});
+	        //mkSaveButton() 
+		mkLoadGraph()
+	});
 }
 
 //launch();

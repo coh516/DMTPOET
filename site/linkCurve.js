@@ -120,13 +120,19 @@ linkCurve.prototype = {
 		// get x,y of 
 	},
 	// todo
-	"redrawCurves":function(node) {
-		var _deleteCurves = function(ptr) {
+	"redrawCurves":function(id) {
+		var _deleteCurves = function(ptr, obj) {
 			// go through parents and children
 			// delete all lines from parent node and child node
 			// call redrawCurves on node
+			var oi = obj.index; 
+			var oil = oi.length;
+			for (var i =0; i < oil; i++) {
+			//	oi[i].children.
+
+			}
 		}
-		graphObjLookup[node1].recurseItems(_deleteCurves);
+		graphObjLookup[id].recurseItems(_deleteCurves);
 
 	},
 	// this is the one that should be used when adding and subtracting link curves...
@@ -136,13 +142,67 @@ linkCurve.prototype = {
 
 
 	},
-	"testCurve": function() {
+	/*
+	"deleteCurvesFromNode": function(id) {
+		for (var key in curveLine) 
+			if (key.indexOf(id) == 0)
+				for (var g in curveLine[key])
+					curveLine[key][g].delete();
 
-		// if was a canvas ...
-		//copy image to pixelbuffer..
-		//since svg, just add an event listener..
+	},
+	"deleteFromParents":function(parents, children) {
+		for (var i =0 ; i < parents.length; i++) {
+			for (var g in curveLine[parents[i]]) {
+				for (var j =0; j < children.length; j++)
+					if (g == children[j])
+						curveLine[parents[i]][j].delete();
+			}
+			
+		}
+		for (var i =0 ; i < children.length; i++) {
+			for (var g in curveLine[children[i]]) {
+				for (var j =0; j < parents.length; j++)
+					if (g == parents[j])
+						curveLine[children[i]][j].delete();
+			}
+			
+		}
+
 	}
+	*/
+	// should call this before adding or subtracting...
+	//
+	"deleteCurves":function(id) {
+		var _delCurves = function(ptr, obj) {
+			// go through parents and children
+			// delete all lines from parent node and child node
+			// call redrawCurves on node
+			var oi = obj.index; 
+			var oil = oi.length;
+			for (var i =0; i < oil; i++) {
+				var c = oi[i]['parents'];
+				for (var j=0; j < c.length; j++) {
+					var cl = curveLine[c[j]];
+					for ( var key in cl) {
+						if (key == ptr.concat(['index', i]))
+							cl[key].delete();
+					}
+					//c[j]
+				}
+			}
+		}
 
+		var _deleteCurvesFromNode = function(id) {
+			for (var key in curveLine) 
+				if (key.indexOf(id) == 0)
+					for (var g in curveLine[key])
+						curveLine[key][g].delete();
+
+		}
+		_deleteCurvesFromNode(_id);
+		graphObjLookup[this.graphId].recurseItems(_deleteCurves);
+
+	}
 }
 
 function getCurve(p,c) {
@@ -439,7 +499,10 @@ curveLine.prototype = {
 		//console.log("&**&*********** a1 items")
 		//console.log(getObject(a1, graphLookup));
 		//var gl = getObject(a1, graphLookup).gfx.length;
-			
+		if (!graphLookup[a1[0]]) {
+			console.log("errrrrrrrrrrrrrrrrrrr");
+			return;
+	}	
 		var i1 = a1.pop(); a1.pop(); a1Items = getObject(a1, graphLookup).gfx.length;
 		//var i2 = a2.pop(); var a2Items = getObjects(a2, graphObject); a2.pop();
 		// if the index is 0, and there are 5 items, then the gfx is 5-1-0

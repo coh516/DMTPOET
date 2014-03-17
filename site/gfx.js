@@ -74,12 +74,17 @@ Gfx.prototype = {
 		gfxLookup[this.id] = this;
 
 		var o = getObject(ptr, graphLookup);
-		if (!o.gfx)
+		try { 
+		console.log(o.gfx.ptr.loc)
+		console.log(JSON.parse(JSON.stringify(o)));
+		} catch (e) { }
+		console.log("smiley don");
+		if (!o.gfx) {
 			o.gfx = {};
-
-		if (!o.gfx[type])
+		}
+		if (!o.gfx[type]) {
 			o.gfx[this.type] = {};
-
+		}
 
 
 		// baseElement is when there is an object within another object
@@ -90,7 +95,12 @@ Gfx.prototype = {
 		this.baseElement = baseElement;
 		//console.log(this.baseElement);
 		//if (!baseElement) {
-		o.gfx[this.type] = {'baseElement':baseElement, 'type':type, 'rootPtr':ptr, 'gfxId':this.id, 'hasBaseElement':be}
+		
+		o.gfx[this.type]['baseElement'] = baseElement;
+		o.gfx[this.type]['type'] = type;
+	        o.gfx[this.type]['rootPtr'] = ptr;
+		o.gfx[this.type]['gfxId'] = this.id;
+		o.gfx[this.type]['hasBaseElement'] = be;
 
 		// not sure if setting the type is necessary
 
@@ -507,6 +517,7 @@ Gfx.prototype = {
 
 	},
 
+		
 	"connect":function(c1, c2) {
 		console.log(c1+ " "+c2);	 
 		pt = Graph.prototype.connect(c1.indexRoot, c2.indexRoot);
@@ -524,6 +535,7 @@ Gfx.prototype = {
 
 	"moveCanvas":function() {
 		this.renderer.moveGfx(this.rootGfxObj);
+		// no clue what this is 
 		if (typeof this._moveCanvas === 'function') this._moveCanvas();//this.drawCurves();
 		
 		return;
@@ -545,7 +557,7 @@ Gfx.prototype = {
 
 		this.moveCanvas();
 			
-		//this.putToScreen();
+		//this.putToScreen();/draw
 		// move canvas element
 	},
 	"setY":function(y) {
