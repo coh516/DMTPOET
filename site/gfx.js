@@ -74,10 +74,7 @@ Gfx.prototype = {
 		gfxLookup[this.id] = this;
 
 		var o = getObject(ptr, graphLookup);
-		try { 
-		console.log(o.gfx.ptr.loc)
-		console.log(JSON.parse(JSON.stringify(o)));
-		} catch (e) { }
+	
 		console.log("smiley don");
 		if (!o.gfx) {
 			o.gfx = {};

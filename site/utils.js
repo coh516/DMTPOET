@@ -62,6 +62,9 @@ function ptrSplit(ptrs) {
 	return rcarray;
 }
 
+
+
+
 function getObject(ptrList, o, debug) {
 	var j = ptrList.length;
 //	console.log(ptrList);
@@ -120,6 +123,46 @@ function mixin(from, to) {
 	}
 }
 
+function setObject(ptrList, o, val) { //debug) {
+	var j = ptrList.length;
+//	console.log(ptrList);
+//	console.log("___ptrlist___");
+//	console.log(o);
+	for (var i = 0; i < j; i++) {
+		if (typeof ptrList[i] === 'string') {
+			var type = {};
+			var pi = ptrList[i].replace(/\"/g, "");
+		}
+		else  {
+			var type = [];
+			var pi = ptrList[i];
+		}
+	//	console.log(pi);
+		var z = o; 
+	//console.log(o);
+		/*
+		if (debug) {
+		console.log(pi+"____"+i);
+		console.log(o[pi]);
+		}
+		
+		if (o[pi] === undefined) {
+		//	console.log("pi: "+pi);
+		//	console.log(ptrList);
+			throw('match object error with '+ptrList.join());
+			//console.log("OH SHIT! NO!!!!");	
+			return z;
+		}
+		*/
+		if (o[pi] === undefined) {
+			o[pi] = type;
+		}		
+		o = o[pi]
+//		console.log(o);
+	}
+	return o;
+}
+/*
 function setObject(ptrList, o, val) {
 	var j = ptrList.length;
 	for (var i =0; i < j-1; i++) {
@@ -130,7 +173,9 @@ function setObject(ptrList, o, val) {
 		
 	}
 	o[ptrList[j-1]] = val;
+	return val;
 }
+*/
 function cloneObj(obj) {
 	return JSON.parse(JSON.stringify(obj));
 

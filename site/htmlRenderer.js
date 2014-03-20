@@ -31,7 +31,7 @@ htmlRenderer.prototype = {
 
 	//	alert(JSON.stringify(gfxRoot.loc));	
 		if (!gfxRoot.loc) {
-			alert('test...');
+		//	alert('test...');
 			gfxRoot.loc = {"x":0, "y":0, "z":lz};
 		} else if (!gfxRoot.loc.z)  
 			gfxRoot.loc.z = lz;
@@ -58,7 +58,7 @@ htmlRenderer.prototype = {
 		objPtr = getObject(ptrRoot, graphLookup);
 
 
-		Graph.prototype.recurseItems(htmlRenderer.prototype.delDomRefs, ptrRoot)
+		//Graph.prototype.recurseItems(htmlRenderer.prototype.delDomRefs, ptrRoot)
 
 		gfxRoot.el.innerHTML = "";
 	//	uu//console.log(gfxRoot.layout);

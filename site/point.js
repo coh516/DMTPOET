@@ -8,6 +8,13 @@ var pointLookup = {}
 // should be arrays
 var programs  = {"UI":UIClass, "MONGO":DBClass, "serializeUniverse":UniverseClass, "timeStamp":DateClass, "drawPtrGraph":GraphRenderer, "mapReduce":FilteredObject, 'mapReduce':DBClass};
 
+
+// evaluate should have event listeners for 'onPromiseFullfilled' and 'onTraversed' functions 
+// right now it just waits for the fulfilment stage and calls the method ...... 
+//
+// the other solution is to make an evaluator class...
+// the benefit of an evaluator class is it pushes the deferment to its own scope
+
 // *** todo ***
 // generic objects getClassPrototype.  for example, mapReduce  following a DBClass should be tied to the DB, but if its after an Array class, it should be part of the Array object.
 // this would be for things like, after a FIND, and there's a map reduction from the collection, from the returned Array.
@@ -24,6 +31,9 @@ function Point(options){
 	this.ptrId = this.ptr[0];
 	this.childNumber = options.childNumber;
 	this.id =  mkguid();
+	console.log(options);
+	//console.log("(*&(*&(*&(*&(*&(*&(*&(*&(*&(*&(*&(*&(*(*");
+	this.systemId = options.systemId;
 	this.parentId = options.parentId;
 	//this.pathList = options.pathList;
 
@@ -280,6 +290,29 @@ Point.prototype = {
 	"memberOf":function(a) {
 		return Graph.prototype.climbToValue(this.superGroup, a);
 	},
+	"getSystemObject":function(ptr) {
+		//var so = this.systemObject;
+		
+		var spc = systemLookup[this.systemId].systemPtrCache;
+		console.log(spc);
+		if (!spc[ptr]) {
+			//var p = setObject(ptr, so, {});
+			//spc[ptr] = p;
+			spc[ptr] = {};
+		}
+		return spc[ptr];
+		//return p;
+			
+
+	},
+
+	//cached ptr getters/setters
+	"getPtr":function(ptr, vari) {
+	},
+	"setPtr":function(ptr, vari) {
+
+	},
+
 	"programIndex":function() {
 		//var pt = this;
 		var index = -1;
@@ -328,6 +361,7 @@ function System(ptr, pathList) {
 	this.id = mkguid();
 
 	systemLookup[this.id] = this;
+	this.visitedNodes = {};
 //	this.phrases = [];
 // 	need to build a phrase hash...
 }
@@ -345,6 +379,8 @@ System.prototype = {
 		var pathList = this.pathList;
 		var parents = {};
 		// use progz cuz z is cooler than s
+		var visitedNodes = this.visitedNodes;
+		var systemId = this.id;
 		var recurse = function(pID, rpID, progz) {
 
 
@@ -406,8 +442,14 @@ System.prototype = {
 				//console.log(pi+"  <tractor trailor"+pID+"  >>"+po.label);
 
 				//rootPoint.phraseVars[po.programVar][pi].push(pID);
-			}			
-			
+			}
+			/*
+			if (!visitedNodes[po.ptrId]) {
+				visitedNodes[po.ptrId] = true;
+				var gol = graphObjLookup[po.ptrId]
+				gol.recurseItems(function(ptr, obj) { if (obj.point) delete obj.point; })
+			}else alert("roodika");
+			*/
 
 		
 
@@ -420,8 +462,9 @@ System.prototype = {
 			
 
 			for (var i =0 ; i < pathList[po.ptr].length; i++) {
-				
-				var np = new Point({"ptr":pathList[po.ptr][i], "parentId":pID, "childNumber":i});
+				//console.log(systemId);
+				//console.log("--------------------------------");	
+				var np = new Point({"ptr":pathList[po.ptr][i], "parentId":pID, "childNumber":i, "systemId":systemId});
 				//console.log(.children);
 				//console.log("^%%^^^%%%^^%%%%%^");
 				var zp = {};
@@ -452,7 +495,7 @@ System.prototype = {
 
 		}
 
-		this.rootPoint = new Point({"ptr":this.rootPtr, "childNumber":0, "pathList":pathList});
+		this.rootPoint = new Point({"ptr":this.rootPtr, "childNumber":0, "pathList":pathList, "systemId":systemId});
 	
 		recurse(this.rootPoint.id, this.rootPoint.id, {});
 		//console.log("-----------------------evaluting");
@@ -474,6 +517,10 @@ function UIClass() {
 //  UIClass.prototype = Object.create(baseProgram.prototype);
 // use the UI class fro UIRenderer ..
 UIClass.prototype = {
+	"systemInit":function() {
+		// used to clean up the shit....
+
+	},
 
 	"getNameSpace":function() {
 		//need to look back to find 'grid' location
@@ -503,6 +550,7 @@ UIClass.prototype = {
 			var rootPoint = pointLookup[this.rootNodeId];
 			//console.log("------");
 			//console.log(this);
+			
 			var li = this.superGroup;// i hate that i can't do li.climbToValue .. need to work on that..
 			var memberOf = Graph.prototype.climbToValue(li,['button', 'inputbox', 'label', 'dropdown']);
 		       	//console.log(li);
@@ -529,11 +577,12 @@ UIClass.prototype = {
 						//console.log(this.ptr[0]);
 						//console.log(memberOf.ptr);
 						//console.log(getGraphObject[memberOf.ptr]);
+						console.log(this.getSystemObject(memberOf.ptr));
 						var glp = this.getLinkedPtr(memberOf.ptr);
 						//console.log(glp.concat(['gfx', 'point']).join());
 						// fix this to actually correspond to the proper area
 					//	alert("test.............");
-						console.log(glp+" <<<<<<<<<<<<<<<<<<<<<<<<<@#$@@#$@#!$@!#$@!#$@!#$@!#$@!#$!@#$@!#$!@#$!@#$!@$!@#$!@#$!@#$!@#$@!#$@!#$@!#$@!#$#!@$E!@#$!@$#!$$#@$!@#");
+					//	console.log(glp+" <<<<<<<<<<<<<<<<<<<<<<<<<@#$@@#$@#!$@!#$@!#$@!#$@!#$@!#$!@#$@!#$!@#$!@#$!@$!@#$!@#$!@#$!@#$@!#$@!#$@!#$@!#$#!@$E!@#$!@$#!$$#@$!@#");
 						console.log(glp);
 					//	var z = getGraphObject(glp.concat(['gfx', 'point']));
 						//console.log(glp);	
@@ -552,7 +601,7 @@ UIClass.prototype = {
 						console.log(glp);
 						var z = getGraphObject(glp);
 						//console.log(glp);	
-						//						glp.pop();glp.pop();
+						//glp.pop();glp.pop();
 						console.log(z.gfxId);
 							// sort of dumb, I need the gfxId from the hardcoded point... 
 						//
@@ -652,12 +701,18 @@ UIClass.prototype = {
 	}else { // imply  {"GFX":{"renderer":"WindowManager"}}
 		// for the most part, this should work...
 			// it should duplicate the graph and use a modified renderer
-			var sg = getGraphObject(this.superGroup);
-			if (sg.point)
-			if (sg.point.built) {
+		//alert('test...');
+			var sg = this.getSystemObject(this.superGroup);
+		//	alert(JSON.stringify(sg.point));
+			var sgo
+			if (sgo = this.getSystemObject(this.superGroup))
+			if (sgo.pointVars)
+			if (sgo.pointVars.built) {
+			//alert(JSON.stringify(sg.point));
 				this.next();
 				return;
 			}
+		//	alert(this.superGroup+" notYetBuilt");
 		//	this.createDom();
 			//var json =  graphObjLookup[this.ptrId].toJSON();
 			//console.log(JSON.stringify(json));
@@ -688,8 +743,17 @@ UIClass.prototype = {
 			
 			this.createDom();
 			g.build();
-			if (!sg.point) sg.point = {"built":true}
-			else sg.point.built = true;
+			// should use a 'setSystemVar' function
+			
+			if (!sgo.pointVars)
+				sg.pointVars = {};
+			sgo.pointVars.built = true;
+
+			//if (!sg.pointVars) sg.pointVars = {"built":true, "id":sg.ptr}
+			//if (!sg.pointVars.built)  { 
+			//	sg.pointVars.built = true;
+			//	sg.pointVars.id = sg.ptr;
+			//}
 		this.next();
 
 			// the parent objects should have a pointIndex layer that connects to the point item child items.
@@ -703,7 +767,8 @@ UIClass.prototype = {
 		
 		//_ptr[0] = pointLookup[this.rootPointID].linkedGraphId;
 		console.log(getGraphObject(this.ptr));
-		return getGraphObject(ptr).point.linkedPtr;
+		
+		return this.getSystemObject(ptr).point.linkedPtr;
 	},
 	"getLinkedNode":function(ptr) {
 		return getGraphObject(this.getLinkedPtr(ptr));
@@ -743,11 +808,13 @@ UIClass.prototype = {
 		//.console.log(_dialog);
 		this.initGfx(_dialog.ptr);
 		_dialog.gfx.point.hideItem = true;
-		var o = getGraphObject(dialogPtr);
-		if (!o.point) o.point = {};
+		//var o = getGraphObject(dialogPtr);
+		var so = this.getSystemObject(dialogPtr);
+		//if (!soo.system) o.system = {};
+		if (!so.point) so.point = {};
 		//var go = getGraphObject[this.graphId,'item'];
-		o.point.linkedPtr = _dialog.ptr;//[this.graphId,'item', go.length-1];
-	
+		so.point.linkedPtr = _dialog.ptr;//[this.graphId,'item', go.length-1];
+	//	alert(JSON.stringify(so));	
 		
 
 		if (grid) {
@@ -780,8 +847,11 @@ UIClass.prototype = {
 			//console.log(this.getLinkedNode(rows[i]));
 			var ro = getObject(rows[i], graphLookup);
 			//var ro = getObject(rows[i]);
-			if (!ro.point) ro.point= {};
-			ro.point.linkedPtr = _row.ptr; 
+			//if (!ro.system) ro.system = {};//point) ro.point= {};
+			var so = this.getSystemObject(rows[i]);
+			if (!so.point) so.point = {};
+			// should have a setSystemVariable function
+			so.point.linkedPtr = _row.ptr; 
 			// it should use the standard index model and make unhide
 
 
@@ -806,7 +876,7 @@ UIClass.prototype = {
 		var ri = rowItem.ptr;
 		var _rowItem = Graph.prototype.appendChild(_row.ptr, 'rowItem');
 		this.initGfx(_rowItem.ptr);
-		var rig = getGraphObject(ri);
+		var rig = this.getSystemObject(ri);
 		if (!rig.point) rig.point = {};
 		rig.point.linkedPtr = _rowItem.ptr;
 			// once again, this should be part of the standard index model
@@ -1530,19 +1600,32 @@ Point.prototype.traverseProgram = function(ptr) {
 	}
 
 	//console.log(o);
-//	return;
+	//return;
+	//need to clean out the pathList from System variables
+	//console.log(pathList);
+	//console.log("=----------==----------------------------------------=")
+	//return;
+
+
+	// rather than actually store the system variables directly in the object,
+	// could use a seperate object to store variables in .... and create a systemObject
+	
+	//var systemObject = {};
+	var systemPtrCache = {};
 	for (var i = 0 ; i < o.index.length; i++) {
 	//	alert(o.ptr.join());
 		//console.log("system "+ i);
 		var oc = copyArray(o.ptr);
 		oc = oc.concat(['index', i]);
-		//console.log(oc);	
+		//console.log(oc);
 		var lo = (getGraphObject(oc))
 		//console.log(o);
 		//console.log(oc);
 		if (lo.children.length || lo.parents.length) {
 
 			var sys = new System(oc, pathList);
+		//	sys.systemObject = systemObject;
+			sys.systemPtrCache = systemPtrCache;
 			sys.begin();
 		}
 		//pt.evaluatePhrase();
