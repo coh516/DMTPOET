@@ -28,6 +28,7 @@ As of Feb 16, 2014, The Gui renderer and data modeler is completed.
 - need to allow editing of multiple graph types
 - need to fix the rendering of the link node lines... it should be updated and rerendered from the graph
 - need to fix the add child and add sibling child / parent relinking
+- need to enhance the deferment / promise fulfilment eventing methodology
 - ~~traverser is still not done~~
 - ~~requires a window management layer to view the rendered document~~
   - ~~necessary refactor for the gfx layer to further abstract the coupling of the node pointer from the node itself~~
