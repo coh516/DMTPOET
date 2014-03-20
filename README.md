@@ -27,6 +27,7 @@ As of Feb 16, 2014, The Gui renderer and data modeler is completed.
   - ~~point interface contains most of the helpers required to deal with the object array pointers~~
 - need to allow editing of multiple graph types
 - need to fix the rendering of the link node lines... it should be updated and rerendered from the graph
+- need to fix the add child and add sibling child / parent relinking
 - ~~traverser is still not done~~
 - ~~requires a window management layer to view the rendered document~~
   - ~~necessary refactor for the gfx layer to further abstract the coupling of the node pointer from the node itself~~
