@@ -819,7 +819,8 @@ UIClass.prototype = {
 
 		if (grid) {
 			var rows = Graph.prototype.getPtrValue(dialogPtr, 'row');
-		
+			console.log(rows);
+			console.log("---------------------------------------------");
 //			var n = Graph.prototype.getPtrValue(ri, 'rows');
 			
 			gfxLookup[this.linkedGfxId].setGridLayout(_dialog.ptr);
@@ -853,11 +854,11 @@ UIClass.prototype = {
 			// should have a setSystemVariable function
 			so.point.linkedPtr = _row.ptr; 
 			// it should use the standard index model and make unhide
-
-
+			console.log(rows[i]);
+			console.log(ro)
 			for (var j=0; j < ro['item'].length; j++) {
 				var rowItem = ro['item'][j];
-
+				console.log(rowItem);
 				this.drawElement(rowItem, _row)
 					//li.innerText = row[items];
 			}
@@ -887,8 +888,10 @@ UIClass.prototype = {
 				//gfxLookup[this.linkedGfxId];
 				//the id shouldnt be there...
 				//var go = Graph.prototype.appendChild([this.graphId,'item',0], 'row');
-				
+				console.log(ri);
 				var n = Graph.prototype.getPtrValue(ri, 'text');
+				console.log(n);	
+				
 				var txt = getGraphObject(n[0]).item[0].value;
 					
 				_rowItem.value = txt;

@@ -781,13 +781,22 @@ Graph.prototype = {
 
 	// use keywords addSibling, removeItem, addChild 
 	// iff op == "delLink" you need to pass an object which specifies the child item to delete specifically {"parent":ptr, "match":child} (or vice versa) }
+	//
+	//
+	
+
+	
+
 	"changePtr":function(ptr, op, f) {
 		//alert(op);
-
+		var efs = [];
 		var pl = ptr;
 		var idv = ptr[ptr.length-1];
+		if (op == "addSibling")
+			idv++;
 		var ptrc = copyArray(ptr);
-		
+		var ptrc2 = copyArray(ptr);
+		ptrc2.pop();	
 	//	if (op == "addSibling" || op == "removeItem")  {
 			pl = ptrc;
 			pl.pop();
@@ -808,7 +817,14 @@ Graph.prototype = {
 		//	alert(gp[gp.length-1]+" "+idv);
 			var deleteThis = (gp[gp.length-1] == idv && (op == "removeItem" ))
 			//if (deleteThis) alert("deleteThis");
-			if ( gp[gp.length-1] > idv  || deleteThis) {
+			//
+			ptrc2.join()
+			console.log(ptr.join()+" "+gp.join());
+			if ((ptr.length <= gp.length ) || deleteThis) {
+				if (gp[ptr.length-1] < idv && !deleteThis) {
+					console.log(gp[ptr.length-1] +" "+idv);
+					continue;
+				}
 				
 				if (op == "addChild") {
 					var gog = copyArray(gil[i])
@@ -825,94 +841,133 @@ Graph.prototype = {
 					var gog = copyArray(gil[i]);
 					var go = getObject(gog, graphLookup);
 				}
-
-				//console.log(go);
+				console.log("white cat!");
+				console.log(go);
 				for (var idx = 0; idx < go.index.length; idx++) {
 					var gpc = gp.concat("index", idx).join();
 					var p = go.index[idx].parents;
 					// >> in the same level 
 					var goi = go.index[idx];
-				//	alert("test...");
+					//alert("test...");
+					console.log("LEVEL 1");
 					for (var pi =0; pi < p.length; pi++) {
 						var po = getObject(p[pi], graphLookup);
-
+					//	console.log("*******************************************************************");
 						for (var c = 0; c < po.children.length; c++) {
-
 							//alert("kronkik");
 							var poc = copyArray(po.children[c]);
 						//	var gt = copyArray(gil[i]);
 						//	console.log(po.children[c].join() +" tac<0>cat "+gt);
-						//	alert(po.children[c].join()+" "+gpc);
+							console.log(po.children[c].join()+" "+gpc);
+							// need to add chile first, then patch gpc
 							if (po.children[c].join() == gpc) {
 								var oc = copyArray(po.children[c]);
+								console.log("___________________________")
+								console.log(JSON.stringify(oc));
+								var obj = {};
 								if (op == "addChild") {
 									//alert(po.children[c][1]);
 									var poc2 = po.children[c];
-									poc2[poc2.length-3]++;
+									console.log(ptr);
+									// need to fix this to the actual array pointer .. this is wrong!
+								//	console.log("**********************************************#################################");
+									//oc[ptr.length-1]++;
+									//efs.push(poc2)
+									obj.obj =  po.children[c];
+									
 								}
 								if (op == "addSibling") {
-									var pc = po.children[c].length-3;
-										po.children[c][pc]++;
+									//var pc = po.children[c].length-3;
+									//efs.push(po.children[c]);
+									obj.obj =  po.children[c];
+
+									//	po.children[c][pc]++;
 								}
 								if (op == "removeItem") {
 								//	alert("test ri1");
+									obj.obj = cp;
+										
 									if (deleteThis) {
 									//	alert("test1");
-										var cp = po.children[c];
+									//	var cp = po.children[c];
 									//	console.log(cp);
 									//	console.log("<<<<<<<---lkj");
-										po.children.splice(c, 1);
-
+									//	po.children.splice(c, 1);
+										obj.deleteThis = true;
+										obj.parentObject = po.parents;
+										obj.itemNumber = c;
+										
 									} else {
-										var pc = po.children[c].length-3;
-										po.children[c][pc]--;
+									//	var pc = po.children[c].length-3;
+									//	po.children[c][pc]--;
+										
 									}
 									//} else po.children.splice(c, 1);
 								}
 
 								
 								console.log("testing old parents.......");
-								if(f)
-								f({"oldParent":p[pi], "oldChild":poc, "newParent":po.children[c]});
+								//if(f)
+								//f({"oldParent":p[pi], "oldChild":poc, "newParent":oc});
+								obj.f = ({"oldParent":p[pi], "oldChild":poc, "newParent":po.children[c]})
+								efs.push(obj);
 							}
 						}
 					}
 					var c = go.index[idx].children;
 					
 					//console.log(po.children[c].join() +" tac<0>cat "+gt);
-					
+					console.log("level 2!");
 					for (var ci = 0; ci < c.length; ci++) {
-						var co = getObject(c[ci], graphLookup) 
+						var co = getObject(c[ci], graphLookup);
+					//	console.log("*******************************************************************");
+						
 						for (var p = 0; p < co.parents.length; p++) {
 							var cop = copyArray(co.parents[p]);
 						//	alert('tewst');
 							
 							var gt = copyArray(gil[i]);
-						
+							console.log(co.parents[p].join() +" "+gp.join());	
 							if ( (co.parents[p].join() == gp.concat("index", idx).join())) {
-							
+								var oc = copyArray(co.parents[p]);
+								console.log("___________________");
+								console.log(JSON.stringify(oc));								
+								var obj = {};
 								if (op == "addChild") {
+									//console.log("**********************************************#################################");
 							
-									var cop2 = co.parents[p];
-									cop2[cop2.length-3]++;
+									//var cop2 = co.parents[p];
+									//oc[ptr.length-1]++;
+									obj.obj = co.parents[p]; //cop2; 
+									//efs.push(co.parents[p])
 								}
 								if (op == "addSibling") {
-										var cp3 = co.parents[p].length-3;
-										co.parents[p][cp3]++;
+									obj.obj = co.parents[p];
+									//	var cp3 = co.parents[p].length-3;
+									//	co.parents[p][cp3]++;
+									//oc[ptr.length-1]++;
+								//	efs.push(co.parents[p]);
 								}
 								if (op == "removeItem") {
 								//	alert("test.2..");
+									obj.obj = co.parents[p];
 									if (deleteThis) {
+										obj.deleteThis = true;
+										obj.parentObject = co.parents;
+										obj.itemNumber = c;
+										
 									//	alert("test2");
-										co.parents.splice(c, 1);
+									//	co.parents.splice(c, 1);
 									} else {
-										var pc = co.parents[p].length-3;
-										co.parents[p][pc]--;
+									//	var pc = co.parents[p].length-3;
+									//	co.parents[p][pc]--;
 									}
 								}
 								//maybe returning this thing is smarter to do..	
-								if (f)
-							       	f({"oldParent":c[ci], "oldChild": cop, "newChild":co.parents[p]});
+								//if (f)
+								//f({"oldParent":c[ci], "oldChild": cop, "newChild":oc});
+								obj.f = {"oldParent":c[ci], "oldChild": cop, "newChild":co.parents[p]}
+								efs.push(obj);
 							}
 						}
 					}
@@ -921,6 +976,63 @@ Graph.prototype = {
 			}
 			var index = getObject(gp, graphLookup).index;
 		
+		}
+		//alert('test');
+		console.log(efs);
+		console.log("=========================================");
+		if (op == "addChild" || op == "addSibling") {
+
+			console.log("--------------------------------------------------zuuuuuuubrooo");
+			var dupes = [];
+		
+			console.lo
+			for (var i=0; i < efs.length; i++) {
+				var isDupe = false;
+				for (var j =0; j < dupes.length; j++)
+				       if (efs[i].obj == dupes[j])
+				       		isDupe = true;
+		 		if (isDupe) continue;		
+					//if (dupes[efs[i].obj.join()]) continue;						
+				//console.log("----------------zip");
+				//if (efs[i].edited) continue;
+				var o = efs[i].obj;
+		       		o[ptr.length-1]++;
+				console.log("strong and mean-----------------------------");	
+				console.log(JSON.stringify(o));
+				//efs[i].f.newChild = o;
+				f(efs[i].f)
+				dupes.push(efs[i].obj);
+				
+			}
+		}
+		if (op == "removeItem") {
+			var dupes = [];
+		
+			for (var i=efs.length; i >= 0; i--) {
+				var isDupe = false;
+				for (var j =0; j < dupes.length; j++)
+				       if (efs[i].obj == dupes[j])
+				       		isDupe = true;
+		 		if (isDupe) continue;		
+					//if (dupes[efs[i].obj.join()]) continue;						
+				//console.log("----------------zip");
+				//if (efs[i].edited) continue;
+				if (efs[i].deleteThis) {
+					efs[i].deleteThis = true;
+					var p = efs[i].parentObject;
+					var c = efs[i].itemNumber
+					p.splice(c,1);			
+				}else {
+					//if (co.parents.splice(c, 1);
+					var o = efs[i].obj;				
+			       		o[ptr.length-1]--;
+				}
+				console.log(JSON.stringify(o));
+				//efs[i].f.newChild = o;
+				f(efs[i].f)
+				dupes.push(efs[i].obj);
+				
+			}
 		}
 	},
 
@@ -974,20 +1086,21 @@ Graph.prototype = {
 		var go = getObject(ptr, graphLookup);
 		if (go.item)
 		if (go.item[0]) 
-			this.changePtr(ptr.concat(['item', 0]),  "addChild", linkHandler); 
+			efs = this.changePtr(ptr.concat(['item', 0]),  "addChild", linkHandler); 
 		else go.item = [];
 		//return;
 		var index = ptr[ptr.length-1];
 
 		var lbl = getObject(ptr, graphLookup);
 
-		lbl.item.splice(0, 0,  {'item':[], 'value':value, 'ptr':ptr})
+		lbl.item.splice(0, 0,  {'item':[], 'value':value, 'ptr':ptr.concat(['item', 0])})
 		
 		var ptrc = copyArray (ptr);
 
-		var idx = ptr[ptr.length];
+	//	var idx = ptr[ptr.length];
 
-		console.log(getGraphObject(ptr));
+	//	console.log(getGraphObject(ptr));
+	//	for (var i=0; i < efs.length; i++) linkHandler(efs[i]);
 
 		// now all the pointer elements need to be refactored
 		//
@@ -997,15 +1110,17 @@ Graph.prototype = {
 		//console.log("add sibling ptr----------------->");
 		//console.log(ptr);
 		
-		this.changePtr(ptr, "addSibling", linkHandler);
 
 		var a = copyArray(ptr);
 		//a.pop();a.pop();
-		var index = a[a.length-1];
-		a.pop();
+		this.changePtr(ptr, "addSibling", linkHandler);		
+		var index = a.pop();//[a.length-1];
 		var lbl = getObject(a, graphLookup);
+		a.push(index+1);		
+		//a.push(index+1);	
 		lbl.splice(index+1, 0, {'item':[], 'value':value, 'ptr':a})
 		//console.log("----------------meow");
+		
 	},
 
 

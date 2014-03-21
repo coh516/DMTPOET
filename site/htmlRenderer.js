@@ -437,7 +437,7 @@ htmlRenderer.prototype = {
 			//	alert("yoo");
 				//console.log(gfo);	
 				var t = tlg.types[type];
-				console.log(gfo);
+				//console.log(gfo);
 				o.div.setAttribute(csstype+type, t ? "label": false);
 
 				o.el.setAttribute(csstype+type, t ? "section":false); // not really sure about this one...
@@ -465,11 +465,11 @@ htmlRenderer.prototype = {
 	"moveGfx":function(gfxRoot) {
 		//console.log(id);
 		var t = gfxRoot.loc;
-		console.log(gfxRoot);
-		console.log("---------------------");
+		//console.log(gfxRoot);
+		//console.log("---------------------");
 		var canvas = gfxRoot.el;
 		//console.log("moving...."+this.id);
-		console.log(gfxRoot.loc.x);
+		//console.log(gfxRoot.loc.x);
 		canvas.style.top = t.y+"px";
 		canvas.style.left = t.x+"px";
 		canvas.style.zIndex = t.z;
