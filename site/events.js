@@ -680,7 +680,8 @@ contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 	//console.log(ptr);
 
 	var r = Graph.prototype.getLabels(obj.rect.nodeRoot);
-
+//	alert("test...");
+//	return;
 	switch (r.join()) {
 		case "expand":
 		//		alert("test..");
@@ -694,6 +695,7 @@ contextEventHandler.prototype.handleMouseClick = function(obj, e) {
 			contextMenu.renamePtr();
 			break;
 		case "remove":
+		//	alert("xxx");
 			contextMenu.remove();
 			break;
 		case "add child":

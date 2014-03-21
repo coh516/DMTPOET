@@ -815,13 +815,13 @@ Graph.prototype = {
 			var gpj = gp.join();
 			//console.log("gil test: "+gp[gp.length-1]+"   idv:"+idv );
 		//	alert(gp[gp.length-1]+" "+idv);
-			var deleteThis = (gp[gp.length-1] == idv && (op == "removeItem" ))
+			//var deleteThis = (gp[gp.length-1] == idv && (op == "removeItem" ))
 			//if (deleteThis) alert("deleteThis");
 			//
 			ptrc2.join()
 			console.log(ptr.join()+" "+gp.join());
-			if ((ptr.length <= gp.length ) || deleteThis) {
-				if (gp[ptr.length-1] < idv && !deleteThis) {
+			if ((ptr.length <= gp.length )) {
+				if (gp[ptr.length-1] < idv) {
 					console.log(gp[ptr.length-1] +" "+idv);
 					continue;
 				}
@@ -865,6 +865,9 @@ Graph.prototype = {
 								console.log("___________________________")
 								console.log(JSON.stringify(oc));
 								var obj = {};
+								obj.obj = po.children[c];
+								/*
+								
 								if (op == "addChild") {
 									//alert(po.children[c][1]);
 									var poc2 = po.children[c];
@@ -885,8 +888,8 @@ Graph.prototype = {
 								}
 								if (op == "removeItem") {
 								//	alert("test ri1");
-									obj.obj = cp;
-										
+									obj.obj = po.children[c];
+									
 									if (deleteThis) {
 									//	alert("test1");
 									//	var cp = po.children[c];
@@ -894,16 +897,18 @@ Graph.prototype = {
 									//	console.log("<<<<<<<---lkj");
 									//	po.children.splice(c, 1);
 										obj.deleteThis = true;
-										obj.parentObject = po.parents;
+										obj.parentObject = po.children;
 										obj.itemNumber = c;
+										obj.type = 'child';
 										
 									} else {
 									//	var pc = po.children[c].length-3;
 									//	po.children[c][pc]--;
 										
 									}
+									*/
 									//} else po.children.splice(c, 1);
-								}
+								//}
 
 								
 								console.log("testing old parents.......");
@@ -933,6 +938,9 @@ Graph.prototype = {
 								console.log("___________________");
 								console.log(JSON.stringify(oc));								
 								var obj = {};
+								obj.obj = co.parents[p]
+								/*
+
 								if (op == "addChild") {
 									//console.log("**********************************************#################################");
 							
@@ -955,6 +963,7 @@ Graph.prototype = {
 										obj.deleteThis = true;
 										obj.parentObject = co.parents;
 										obj.itemNumber = c;
+										obj.type = 'parent';
 										
 									//	alert("test2");
 									//	co.parents.splice(c, 1);
@@ -963,6 +972,7 @@ Graph.prototype = {
 									//	co.parents[p][pc]--;
 									}
 								}
+								*/
 								//maybe returning this thing is smarter to do..	
 								//if (f)
 								//f({"oldParent":c[ci], "oldChild": cop, "newChild":oc});
@@ -982,10 +992,8 @@ Graph.prototype = {
 		console.log("=========================================");
 		if (op == "addChild" || op == "addSibling") {
 
-			console.log("--------------------------------------------------zuuuuuuubrooo");
 			var dupes = [];
 		
-			console.lo
 			for (var i=0; i < efs.length; i++) {
 				var isDupe = false;
 				for (var j =0; j < dupes.length; j++)
@@ -997,18 +1005,18 @@ Graph.prototype = {
 				//if (efs[i].edited) continue;
 				var o = efs[i].obj;
 		       		o[ptr.length-1]++;
-				console.log("strong and mean-----------------------------");	
-				console.log(JSON.stringify(o));
-				//efs[i].f.newChild = o;
+
 				f(efs[i].f)
 				dupes.push(efs[i].obj);
 				
 			}
 		}
+		//return;
 		if (op == "removeItem") {
 			var dupes = [];
 		
-			for (var i=efs.length; i >= 0; i--) {
+		
+			for (var i=0; i < efs.length; i++) {
 				var isDupe = false;
 				for (var j =0; j < dupes.length; j++)
 				       if (efs[i].obj == dupes[j])
@@ -1017,18 +1025,9 @@ Graph.prototype = {
 					//if (dupes[efs[i].obj.join()]) continue;						
 				//console.log("----------------zip");
 				//if (efs[i].edited) continue;
-				if (efs[i].deleteThis) {
-					efs[i].deleteThis = true;
-					var p = efs[i].parentObject;
-					var c = efs[i].itemNumber
-					p.splice(c,1);			
-				}else {
-					//if (co.parents.splice(c, 1);
-					var o = efs[i].obj;				
-			       		o[ptr.length-1]--;
-				}
-				console.log(JSON.stringify(o));
-				//efs[i].f.newChild = o;
+				var o = efs[i].obj;
+		       		o[ptr.length-1]--;
+
 				f(efs[i].f)
 				dupes.push(efs[i].obj);
 				

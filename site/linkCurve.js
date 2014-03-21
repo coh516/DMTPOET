@@ -231,7 +231,7 @@ function reduceAfterIndex(ptr) {
 	var pta = copyArray(ptr);
 	pta.pop();
 	var o = getObject(pta,	graphLookup);
-
+	//alert("test...");
 //	console.log(ptr);
 //	console.log("from reduce aftert index");
 	for (var i=index; i < o.length; i ++) {
@@ -304,7 +304,7 @@ function reduceAfterIndex(ptr) {
 			}
 			if (c[j].join() == cj) {
 				c[c.length-1]--;
-				alert("reducing...");
+				//alert("reducing...");
 			}
 
 		}

@@ -44,8 +44,8 @@ var menuHandler = {
 		this.cssType = g.type
 		//console.log(g);
 
-		if (zIndex[uniName] === undefined)
-			alert("xxxx");
+		//if (zIndex[uniName] === undefined)
+		//	alert("xxxx");
 
 		g.setZ(10000);
 		//zIndex[uniName]+1; 
@@ -295,12 +295,12 @@ contextMenu.cleanUpLines = function(o) {
 		//getCurve
 		
 	//} 
-		
+	//alert(JSON.stringify(o));
 	if (o.oldChild) {
-		var oc = curveLookup[o.oldChild.join()];
+		var oc = curveLookup[o.oldChild.join()]
 		for (var g in oc) {
 			if (oc[g] instanceof curveLine) {
-				//alert('test...');
+			//	alert('test...1');
 				oc[g].delete();
 				//var curve = getCurve(o.newParent, [g])
 				/*
@@ -316,7 +316,7 @@ contextMenu.cleanUpLines = function(o) {
 		var oc = curveLookup[o.oldParent.join()];
 		for (var g in oc) {
 			if (oc[g] instanceof curveLine) {
-				//alert('test...');
+			//	alert('test...2');
 				oc[g].delete();
 				//var curve = getCurve(o.newParent, [g])
 				/*
@@ -331,7 +331,7 @@ contextMenu.cleanUpLines = function(o) {
 // i think this should be in a general user interface class...... 
 contextMenu.remove = function() {
 	var id = this.lastRect.ptr[0];
-
+	//alert("test...");
 	graphObjLookup[id].deleteNode(this.lastRect.nodeRoot, contextMenu.cleanUpLines);
 	//console.log("loooochi");
 	gfxLookup[this.lastRect.gfxId].rebuild();
