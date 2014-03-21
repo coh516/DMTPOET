@@ -866,6 +866,11 @@ Graph.prototype = {
 								console.log(JSON.stringify(oc));
 								var obj = {};
 								obj.obj = po.children[c];
+
+								if (op=="removeItem" && gp == ptr.join()) {
+									obj.deleteThis = po.children;
+									obj.idx = c;
+								}
 								/*
 								
 								if (op == "addChild") {
@@ -938,7 +943,11 @@ Graph.prototype = {
 								console.log("___________________");
 								console.log(JSON.stringify(oc));								
 								var obj = {};
-								obj.obj = co.parents[p]
+								obj.obj = co.parents[p];
+								if (op == "removeItem" && gp == ptr.join()) {
+									obj.deleteThis = co.parents
+									obj.idx = p;
+								}
 								/*
 
 								if (op == "addChild") {
@@ -1018,6 +1027,13 @@ Graph.prototype = {
 		
 			for (var i=0; i < efs.length; i++) {
 				var isDupe = false;
+				if (p = efs[i].deleteThis) {
+				//	alert('test...');
+					p.splice( efs[i].idx, 1);
+				}
+
+
+
 				for (var j =0; j < dupes.length; j++)
 				       if (efs[i].obj == dupes[j])
 				       		isDupe = true;
@@ -1025,6 +1041,7 @@ Graph.prototype = {
 					//if (dupes[efs[i].obj.join()]) continue;						
 				//console.log("----------------zip");
 				//if (efs[i].edited) continue;
+				
 				var o = efs[i].obj;
 		       		o[ptr.length-1]--;
 
