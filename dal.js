@@ -35,7 +35,9 @@ exports.mapReduce = function(e, callback) {
 	//	mf+="var mapBy ="+e.mapBy+"; var reduceBy="+e.reduceBy+";" 
 	mf+='emit (this.'+e.mapBy+", {reduceBy:this."+e.reduceBy+", 'packet':packet});}"
 	eval("var mapFunction = mf");
-
+	console.log("<*************");
+	console.log(mf);
+	console.log("*************>");
 //	var mapFunction = function() { emit (this.name, {"reduceBy":'greatest', "packet":[this._id]})}
 	//var reduceFunction =
 	/* 
@@ -48,7 +50,7 @@ exports.mapReduce = function(e, callback) {
 	//eval("var reduceFunction = rf"); // reduceFunction.prototype.test = "12342354";
 	*/
 	if (e.reduceType == 'greatest')
-	var reduceFunction = function(map, values) { return {"value":values.sort(function(a,b) {return a.reduceBy-b.reduceBy})[0]}};
+	var reduceFunction = function(map, values) { return {"value":values.sort(function(a,b) {return b.reduceBy-a.reduceBy})[0]}};
 
     var client = new MongoClient(new Server(mongoip, 27017)),
 
