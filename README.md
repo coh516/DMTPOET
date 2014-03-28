@@ -9,7 +9,7 @@ Essentially this is a tool to build an application layer with modular route patc
 
 Testing
 ===
-download the zip
+download the zip, or use the standard git installation or use npm's github functionality...
 ```
 node dmt 
 ```
