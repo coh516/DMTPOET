@@ -9,7 +9,7 @@ Essentially this is a tool to build an application layer with modular route patc
 
 Testing
 ===
-download the zip
+download the zip, or use the standard git installation or use npm's github functionality...
 ```
 node dmt 
 ```
@@ -26,8 +26,8 @@ As of Feb 16, 2014, The Gui renderer and data modeler is completed.
 - needs a simplified selector object interface
   - ~~point interface contains most of the helpers required to deal with the object array pointers~~
 - need to allow editing of multiple graph types
-- need to fix the rendering of the link node lines... it should be updated and rerendered from the graph
-- need to fix the add child and add sibling child / parent relinking
+- need to fix the rendering of the link node lines... it should be part of the htmlRenderer
+- need to fix the remove child/subchild relinking
 - need to enhance the deferment / promise fulfilment eventing methodology
 - ~~traverser is still not done~~
 - ~~requires a window management layer to view the rendered document~~
