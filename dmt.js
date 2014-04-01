@@ -3,18 +3,13 @@ var http = require('http'),
     url = require("url"),
     dal = require("./dal"),
     static = require('node-static'),
-    
-    //mongo = require('mongodb'),
-    
+ 
     utils = require('./site/utils')
 
 	
 session.magicSession(main, 6789); //.listen(9876);
 var file =  new(static.Server)('./site');
 
-//var BSON = mongo.BSONPure;
-
-// move this somewhere else.. 
 function setupFileServer(request, response) {
 	request.addListener('end', function () {
 		file.serve(request, response, function(err, result) {
@@ -34,22 +29,8 @@ function renderGraph(obj) {
 }
 */
 
-function storeData(data) {
-	for (var db in data['storeData']) {
-		var dbo = {};
-		dbo['db'] = db;
-		for (var collection in db) {
-			dbo['collection'] = collection;
-			dbo['document'] = db['collection'];
-		}
-		dal.storeData(data);	
-	}
-}
-
-
 function main() {
-//	console.log("test...");
-	//var self = this;
+
 	if (this.get) {
 
 	//	console.log(this.request, this.response);
@@ -67,14 +48,13 @@ function main() {
 		*/
 		setupFileServer(this.request, this.response);
 	}
-	else //{
+	else 
 	if (this.post) {
-	//	try {
+
 		var data= JSON.parse(this.post['/post']);
-		// most likely will change
 		// controller
 		if (data['storeData']) {
-		//	console.log(JSON.stringify(data));
+	
 			dal.storeData(data['storeData'],  this.spit);
 		}
 		if (data['find']) {
@@ -85,9 +65,8 @@ function main() {
 			console.log(JSON.stringify(data));
 			dal.mapReduce(data['mapReduce'], this.spit);
 		}	
-		// create some type of renderId string, use that string then to wait for a get of that name
-		console.log(data);
-	//	}
+		// need to map out a renderId string to sync to a generated graph
+
 	}
 
 }
