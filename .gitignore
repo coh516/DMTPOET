@@ -2,3 +2,5 @@
 *~
 *.swp
 .*.sw?
+package.json
+.gitignore

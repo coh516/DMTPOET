@@ -4,14 +4,6 @@ function isArray(obj) {
 
 }
 
-function s2o(o) {
-    var x = JSON.parse(o)
-    return {
-        id : x[0],
-        ptr : x[1],
-        index : x[2]
-    } 	
-}
 
 
 function postJSON(data, callback, packet) {
@@ -37,97 +29,58 @@ function postUp(data, callback, packet) {
 	this.request.send(data);
 }
 
-function o2s() {
-	return JSON.stringify ( [e.id , e.ptr , e.index] ); 
-}
 function copyArray(a) {
 	//return;
 	var g= [];
 	for (var i=0; i < a.length; i++) {
-	//	console.log("-----");
 		g.push(a[i]);
 	}
 	return g;
 }
 
-function ptrJoin(a) {
-	return '['+a.join('][')+']'
-}
-
-function ptrSplit(ptrs) {
-	var rcarray = [];
-	ptrs = ptrs.substr(1,ptrs.length);
-	ptrs = ptrs.substr(0,ptrs.length-1);
-	rcarray = ptrs.split('][');
-	return rcarray;
-}
-
-
 
 
 function getObject(ptrList, o, debug) {
 	var j = ptrList.length;
-//	console.log(ptrList);
-//	console.log("___ptrlist___");
-//	console.log(o);
+
 	for (var i = 0; i < j; i++) {
 		if (typeof ptrList[i] === 'string')
 			var pi = ptrList[i].replace(/\"/g, "");
 		else 
 			var pi = ptrList[i];
-	//	console.log(pi);
 		var z = o; 
-	//console.log(o);
 		if (debug) {
 		console.log(pi+"____"+i);
 		console.log(o[pi]);
 		}
 		if (o[pi] === undefined) {
-		//	console.log("pi: "+pi);
-		//	console.log(ptrList);
+	
 			throw('match object error with '+ptrList.join());
-			//console.log("OH SHIT! NO!!!!");	
 			return z;
 		}		
 		o = o[pi]
-//		console.log(o);
 	}
 	return o;
 }
 
 function getPos(e) {
-       //console.log(e);	
 	if (!document.body) return;
-	//console.log(e);
 
-//	console.log(document.documentElement.innerHTML);
-//	console.log(document.documentElement.scrollTop);
-//	if (window.document.parent != window.document)
 		return {x:e.clientX+e.view.scrollX, y:e.clientY+e.view.scrollY}
 	
-//	return {x:e.clientX+document.documentElement.scrollLeft, y:e.clientY+document.documentElement.scrollTop}
-	/*
-	var pos = {};
-	pos.x = e.hasOwnProperty('offsetX') ? e.offsetX : e.layerX;
-	pos.y = e.hasOwnProperty('offsetY') ? e.offsetY : e.layerY;
-	return pos;
-	*/
+
 
 }
 
 function mixin(from, to) {
-	//var oc = Object.create(from)
 	for (var g in from) {
-	//	if (to[g] == undefined)
 			to[g] = from[g];
 	}
 }
 
-function setObject(ptrList, o, val) { //debug) {
+function setObject(ptrList, o, val) {
 	var j = ptrList.length;
-//	console.log(ptrList);
-//	console.log("___ptrlist___");
-//	console.log(o);
+
 	for (var i = 0; i < j; i++) {
 		if (typeof ptrList[i] === 'string') {
 			var type = {};
@@ -137,87 +90,22 @@ function setObject(ptrList, o, val) { //debug) {
 			var type = [];
 			var pi = ptrList[i];
 		}
-	//	console.log(pi);
 		var z = o; 
-	//console.log(o);
-		/*
-		if (debug) {
-		console.log(pi+"____"+i);
-		console.log(o[pi]);
-		}
-		
-		if (o[pi] === undefined) {
-		//	console.log("pi: "+pi);
-		//	console.log(ptrList);
-			throw('match object error with '+ptrList.join());
-			//console.log("OH SHIT! NO!!!!");	
-			return z;
-		}
-		*/
+
 		if (o[pi] === undefined) {
 			o[pi] = type;
 		}		
 		o = o[pi]
-//		console.log(o);
 	}
 	return o;
 }
-/*
-function setObject(ptrList, o, val) {
-	var j = ptrList.length;
-	for (var i =0; i < j-1; i++) {
-		if (!o[ptrList[i]])
-			o[ptrList[i]] = {};
 
-		o = o[ptrList[i]];
-		
-	}
-	o[ptrList[j-1]] = val;
-	return val;
-}
-*/
 function cloneObj(obj) {
 	return JSON.parse(JSON.stringify(obj));
 
 }
 var cloneObject = cloneObj;
 
-/*
-function clonePt(pt) {
-	return {"index":pt.index, "ptr":pt.ptr, "index":pt.index
-}
-*/
-
-function copyObject(o) {
-    function F() {}
-    F.prototype = o;
-    return new F();
-}
-
-function obj2ptr(item, gid, id, il) {
-	pos = 0;
-	for (var i in item) {
-		if (typeof item[i] !== 'function') {
-			if (typeof item === 'object') {
-		//		if (typeof item[i] === 'string') {
-		 		il.push(i)
-				var ptrstring = '['+il.join('][')+']';
-
-				models[gid]["id"][id]["ptr"][ptrString] = {};
-				var r = models[this.gid]["id"][this.id];
-				r["ptr"][ptr] = {};
-				var rr = r["ptr"][ptr];
-				rr["index"]["0"] = {"children":[], "parents":[]};
-				r["props"] = {};
-				r["props"]["index"] = pos;
-				pos++;
-				obj2ptr(item, gid, id, ptrSplit(ptrstring))
-				//ar.push(ptrstring);
-				//
-			}
-		}
-	}
-}
 
 function getObjs(obj, fv) {
 	var ar = [];
@@ -313,7 +201,6 @@ function loadCSS(filename, doc) {
 	script.setAttribute('rel', 'stylesheet')
 	script.setAttribute('type', 'text/css');
 	return script;
-//	script.onload = callback
 }
 
 
@@ -352,7 +239,6 @@ function mergeJson(objAr) {
 			//	if (Array.isArray(obj[key]) && typeof no[key] == 'object')
 			//		no[key] = [ no[key] ]
 					
-			//console.log(no[key]);
 			if (Array.isArray(obj[key])) {
 
 				for (var i =0; i < obj[key].length; i++) {
@@ -369,19 +255,15 @@ function mergeJson(objAr) {
 						_recurse(obj[key][i], no[key][i])
 					}
 					
-					//if (no[key]
 					if (typeof obj[key][i] !== 'object') 
-					//	if (no[key].indexOf(obj[key][i]) < 0 ) 
 						       	no[key].push(obj[key][i]);
 					
 					
 				}
 			}
-		//	if (obj[key])
 			else  _recurse(obj[key], no[key]);
 		}
-		//no[key] = out;
-		//return out;
+	
 	}
 
 	for (var i=0; i < objAr.length; i++) 

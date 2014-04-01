@@ -46,19 +46,15 @@ Gfx.prototype = {
 	},
 
 	"init": function(type, ptr, renderer, baseElement ) {
-		//console.log(baseElement);
 		this.type = type;
 		this.rootPtr = ptr;
 		this.graphId = ptr[0];
-	//	this.uid = uid;
-	//	this.baseNode = baseNode;
+
 
 		if (!renderer)
 			this.renderer = htmlRenderer.prototype;
 
-		//else
-		//case "dropdown":
-		
+	
 	
 		this.renderer  = renderer.prototype;
 
@@ -68,14 +64,11 @@ Gfx.prototype = {
 		//the link curve still needs to be refactored to be 
 		//managed by seperate id's...
 
-		//if (!gfxLookup['type'][type])
-		//	gfxLookup['type'][type] = {};
 
 		gfxLookup[this.id] = this;
 
 		var o = getObject(ptr, graphLookup);
 	
-		console.log("smiley don");
 		if (!o.gfx) {
 			o.gfx = {};
 		}
@@ -90,8 +83,6 @@ Gfx.prototype = {
 		if (!baseElement)
 			baseElement = document.body;
 		this.baseElement = baseElement;
-		//console.log(this.baseElement);
-		//if (!baseElement) {
 		
 		o.gfx[this.type]['baseElement'] = baseElement;
 		o.gfx[this.type]['type'] = type;

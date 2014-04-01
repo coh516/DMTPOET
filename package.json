@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node dmt.js"
   },
-  "version": "0.0.0-3",
+  "version": "0.0.0-23",
   "engines": {
     "node": "0.10.x"
   },
