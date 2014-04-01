@@ -130,14 +130,14 @@ contextMenu.renamePtr = function() {
 contextMenu.addSibling = function() {
 	var id = this.lastRect.ptr[0];
 
-	graphObjLookup[id].addSibling(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
+	graphObjLookup[id].addSibling(this.lastRect.nodeRoot, "tab", contextMenu.cleanUpLines);
 	gfxLookup[this.lastRect.gfxId].rebuild();	
 }
 
 contextMenu.addChild = function() {
 	var id = this.lastRect.ptr[0];
 
-	graphObjLookup[id].addChild(this.lastRect.nodeRoot, "acid", contextMenu.cleanUpLines);
+	graphObjLookup[id].addChild(this.lastRect.nodeRoot, "tab", contextMenu.cleanUpLines);
 
 	gfxLookup[this.lastRect.gfxId].rebuild();
 
@@ -263,7 +263,7 @@ stageMenu.manageScreenClick = function(e) {
 
 stageMenu.mkNewNode = function(e) {
 	var graph = new Graph('ptr');
-	var json = ['acid'];
+	var json = ['tab'];
 	graph.setFromJSON(json, true);
 	var pg = mkPtrGfx({"id":graph.id}); 
 	var p = getPos(e);
