@@ -7,7 +7,7 @@ This is used for creating user interfaces and binding them to merge rules to gen
 
 Essentially this is a tool to build an application layer with modular route patches.
 
-With the focus on performance and scalability rather than OO paradigms, this tool is not for the faint of heart.
+**WARNING**  With the focus on performance and scalability rather than OO paradigms, this tool is not for the faint of heart.
 
 Testing
 ===
