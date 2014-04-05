@@ -5,7 +5,7 @@ The DMTPOET system is a linked document graph framework for managing complex bus
 
 This is used for creating user interfaces and binding them to merge rules to generate documents whilst modeling and analysing data.
 
-Essentially this is a tool to build an application layer with modular route patches.
+Essentially this is a tool to build an application layer with modular route patches focusing on memory management and performance using an indexed database design. 
 
 Testing
 ===
