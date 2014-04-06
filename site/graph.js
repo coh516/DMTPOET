@@ -4,6 +4,12 @@ Seth Tenenbaum
 development
 */
 
+
+// needs to be pulled apart into a few different classes.
+// the individual ptr arrays should also be their own class, updated by an event system.
+// the universe class is needed, as this should be an overview of all graph objects
+// great care has been taken to make sure everything is statically scoped to the 0'th level
+
 function Graph(type, id) {
 	if (!id)
 		this.id = mkguid();
@@ -654,15 +660,20 @@ Graph.prototype = {
 		var gil = graphObjLookup[id].getItemList(pl);
 
 		var deleteList = [];
-		var reduceList = []
+		var reduceList = [];
+		var list = [];
 		for (var i =0; i < gil.length; i++) {
 			var gp = gil[i];	 
 			var gpj = gp.join();
 
-			var t1, t2;
+			var t1=false, t2=false;
 			if ((ptr.length <= gp.length )) {
+		
 				if ( (t1=(gp[ptr.length-1] == idv)) || (t2=(gp[ptr.length-1] > idv)) ) {
+
+					
 					if (t1) list = deleteList;
+					else
 					if (t2) list = reduceList;
 
 					var go = getGraphObject(gp);
@@ -675,11 +686,27 @@ Graph.prototype = {
 
 						var c = go.index[idx].children;
 						for (var x=0; x < p.length; x++) {
-							list.push ({"parent":p[x], "child":gpc, "type":"child"});
+							var pnt = p[x];
+							console.log("-------------------");
+							console.log(ptr.join());
+							console.log(pnt.join());
+							console.log("-------------------");
+							
+						//	if (p[x].join().indexOf(ptr.join()) == 0) alert("yoo");//pnt = null;
+							
+							list.push ({"parent":copyArray(pnt), "child":copyArray(gpc), "type":"child"});
 						}
 
 						for (var x=0; x < c.length; x++) {
-							list.push({"parent":gpc, "child":c[x], "type":"parent"})
+							var cld = c[x];
+							console.log("-----------------");
+							console.log(ptr.join());
+							
+							console.log(cld.join())							
+							  //	"+ptr.join());
+							console.log("-------------------");
+						//	if (c[x].join().indexOf(ptr.join()) == 0) alert("yooo");//cld = null;							
+							list.push({"parent":copyArray(gpc), "child":copyArray(cld), "type":"parent"})
 						}
 					}
 				}
@@ -736,8 +763,12 @@ Graph.prototype = {
 
 
 		for (var i=0; i < reduceList.length; i++) {
-	
+				//alert("wtf?");
+				
 			if (reduceList[i].type == "parent") {
+			//	consoole.log(reduceList[i])
+				console.log(reduceList[i].child);
+			//	
 				var o = getGraphObject(reduceList[i].child)
 				if (reduceList[i].child[0] != reduceList[i].parent[0])
 				ids[reduceList[i].child] = reduceList[i].child;

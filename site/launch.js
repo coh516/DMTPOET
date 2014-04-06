@@ -1,7 +1,7 @@
 
 // copyright 4thTemple
 
-
+// Graph object requires an eventing system to allow for insantiantion. 
 
 function mkLoadGraph() {
 	var gids = []; 
@@ -39,6 +39,7 @@ function mkLoadGraph() {
 
 	var o = getObject([gids[0].id, 'item', 0, 'item', 0], graphLookup);
 	// probably better way of doing this...
+	
 	o.gfx.ptr.layout = "grid";
 	mids[0].rebuild();
 
@@ -87,37 +88,46 @@ function mkLoadGraph() {
 	console.log(typedGraphs);
 
 		
-	PtrGfx.prototype.connect(uiroot, uibtn);
-	PtrGfx.prototype.connect(uiroot2, dbid1);
-	PtrGfx.prototype.connect(uiroot2, dbname);
-	PtrGfx.prototype.connect(uiroot2, dbts);
+	Graph.prototype.connect(uiroot, uibtn);
+	Graph.prototype.connect(uiroot2, dbid1);
+	Graph.prototype.connect(uiroot2, dbname);
+	Graph.prototype.connect(uiroot2, dbts);
 	//Graph.prototype.connect(ftbase, dbts);
 	//Graph.prototype.connect(ftbase, dbname);
 	//Graph.prototype.connect(dbid1, uidrpid);
 	//Graph.prototype.connect(dbdlg, dbid1);
 	//Graph.prototype.connect(dbdlg, dbname);
 	//Graph.prototype.connect(ftrval, uidrptxt);
-	PtrGfx.prototype.connect(dbid1, ftrpkt);
-	PtrGfx.prototype.connect(dbname, ftrpkt2);
-	PtrGfx.prototype.connect(dbname, ftrval);
-	PtrGfx.prototype.connect(ftrpkt2, uidrptxt);
-	PtrGfx.prototype.connect(ftrpkt, uidrpid);
+	Graph.prototype.connect(dbid1, ftrpkt);
+	Graph.prototype.connect(dbname, ftrpkt2);
+	Graph.prototype.connect(dbname, ftrval);
+	Graph.prototype.connect(ftrpkt2, uidrptxt);
+	Graph.prototype.connect(ftrpkt, uidrpid);
 	
-	PtrGfx.prototype.connect(dbts, ftrgr);
-	PtrGfx.prototype.connect(uibtn, uidrpid2);
-	PtrGfx.prototype.connect(uidrpid2, dbid2);
-	PtrGfx.prototype.connect(dbid2, dbgraph);
-	PtrGfx.prototype.connect(dbgraph, su);
-	PtrGfx.prototype.connect(uiroot3, saveClick);
-	PtrGfx.prototype.connect(saveClick, saveText);
+	Graph.prototype.connect(dbts, ftrgr);
+	Graph.prototype.connect(uibtn, uidrpid2);
+	Graph.prototype.connect(uidrpid2, dbid2);
+	Graph.prototype.connect(dbid2, dbgraph);
+	Graph.prototype.connect(dbgraph, su);
+	Graph.prototype.connect(uiroot3, saveClick);
+	Graph.prototype.connect(saveClick, saveText);
 
-	PtrGfx.prototype.connect(saveText, dbname2);
-	PtrGfx.prototype.connect(saveClick, timestamp);
-	PtrGfx.prototype.connect(timestamp, dbts2);
-	PtrGfx.prototype.connect(saveClick, su2);
-	PtrGfx.prototype.connect(su2, dbgraph2)
+	Graph.prototype.connect(saveText, dbname2);
+	Graph.prototype.connect(saveClick, timestamp);
+	Graph.prototype.connect(timestamp, dbts2);
+	Graph.prototype.connect(saveClick, su2);
+	Graph.prototype.connect(su2, dbgraph2);
+	console.log(gids);
 
-//	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
+	// need to extend the ptrGraph function to detect when the opposing graph object
+	// has been finished getting rebuilt... this would then automatically defer the
+	// linking until completion...
+	for (var i=0; i < mids.length; i++) {
+		mids[i].rebuild(false);
+	}
+	for (var i=0; i < gids.length; i++)
+		graphObjLookup[gids[i].id].recurseItems(linkCurve.prototype._drawCurve);
+		
 
 }
 
@@ -144,7 +154,6 @@ function mkSaveButton() {
  
 		gids[i].setFromJSON(json, true);
 
-	//	 display saveAs
 	
 		var gf = mkPtrGfx({"id":gids[i].id});
 	        mids.push(gf);	
@@ -196,10 +205,7 @@ function mkSaveButton() {
 	PtrGfx.prototype.connect(uisub, su);
 	PtrGfx.prototype.connect(su, dbgraph);
 	
-//	Point.prototype.traverseProgram([gids[0].id, 'item', 0]);
 
-
-//	mids[0].rebuild();
 
 }
 
@@ -240,7 +246,6 @@ function launch() {
 	loadGlobals();
 
 	setupCanvas(function() { 
-	//      mkSaveButton(); 
 		mkLoadGraph()
 	});
 }

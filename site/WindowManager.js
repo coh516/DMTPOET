@@ -1,8 +1,4 @@
 
-function launch() {
-
-}
-
 
 	function getSBSize(w) {
 		var d = w.document, b = d.body, r = [ 0, 0 ], t;
@@ -109,8 +105,7 @@ WindowManager.prototype = {
 	
 		window.onscroll = window.onresize;
 
-	},
-
+	}
 }
 
 

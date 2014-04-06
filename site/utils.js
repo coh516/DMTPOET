@@ -1,6 +1,5 @@
 function isArray(obj) {
 	return Array.isArray(obj);
-	//return Object.prototype.toString.call(obj) === "[object Array]";
 
 }
 

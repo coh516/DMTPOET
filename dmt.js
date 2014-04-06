@@ -33,9 +33,9 @@ function main() {
 
 	if (this.get) {
 
-	//	console.log(this.request, this.response);
-	//	console.log(this.get);
+
 		/*
+		 * need to parse out the get to find out what we're serving
 		var srequest = this.request.substring(1);
 		for (var i = 0; i < evaluatedGraphs.length; i++) {
 			if (evaluatedGraphs[i]] == this.srequest

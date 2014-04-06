@@ -3,12 +3,8 @@ Copywrite 2013, 4thTemple.com, FourthTemple.com
 2013 Seth Tenenbaum
 */
 
-// launch this on start
 // let's start by polluting the global scope more
 
-//var bigAssCanvas = 
-//
-//
 
 // this needs to be done a bit better...
 // moveTo is sketchy ..... 
@@ -131,7 +127,6 @@ Gfx.prototype = {
 		var type = this.type;
 		graphLookup[this.graphId].recurseItems(
 				function(ptr) {
-			//	       console.log(ptr);	
 					var o = getGraphObject(ptr); 
 					if (!o.gfx)o.gfx = {};
 				       	o.gfx[type] = {} 
@@ -149,28 +144,23 @@ Gfx.prototype = {
 		
 
 	"setupNodeEvents": function () {
-		var cfe = Gfx.prototype.checkForEnter; //.bind({gid:this.id, uni:this.uid});
+		var cfe = Gfx.prototype.checkForEnter;
 		Gfx.prototype.c4n = cfe;
 		window.addEventListener('keypress', cfe, true);
-		//if (!events["screenClick"]) events["screenClick"] = [];
-		//events["screenClick"].push(Gfx.prototype.deselectInputBox);
+	
 	},
 	"checkForEnter": function(e) {
-	       	//alert("test...");
-		// need 'current focuses' 	
+	      	
 		if (e.keyCode == 13 && Gfx.prototype.isRenaming) {
 				
 			var n = Gfx.prototype.deselectInputBox.bind({id:this.id})();
 			
-			//window.removeEventListener('keypress', stageMenu.checkForEnter, true);
 		}
 	},
 	//maybe extend this for UI gfx
 	"getDropdownIndex":function(ptr, attr) {
-		// i forgot how to do this.
 		var v = getGraphObject(ptr.concat(['gfx', this.type])).div;
-		//var o = v.options[v.selectedIndex]
-		return v.selectedIndex; //v ? v : getGraphObject(ptr).value
+		return v.selectedIndex;e
 
 	},	
 	"getValue":function(ptr) {
@@ -193,18 +183,15 @@ Gfx.prototype = {
 		this.rebuild;
 	},
 	"deselectInputBox": function() {
-		//alert("TEST..");
-		//var t = gfxLookup.isRenaming;
+;
 		var rect = Gfx.prototype.isRenaming.rect;
 		var ptr = rect.ptr;
-		//alert(ptr);
 		if (ptr) {
 			
 			var o = getObject(ptr, graphLookup);
 			//once again.. need to store id's...
 			if (!o.inputBox) console.log(o);
 			var it = o.inputBox.value;
-			//	return;
 			
 			o.inputBox.parentNode.removeChild(o.inputBox);
 			o.hiddenInputBox.parentNode.removeChild(o.hiddenInputBox);	
@@ -223,14 +210,10 @@ Gfx.prototype = {
 	// this should be in html renderer
 	// will refactor in a minute....
 	"mkInputBox":function(rect) {
-		// push textmenu div :)
-		//alert("test..");
-	//	console.log(ptr + "<<<<>>>>>");	
-	//	var id = rect.ptr[0];
+;
 		console.log(rect);
-		var o = getGraphObject(rect.ptr)//, graphLookup);
+		var o = getGraphObject(rect.ptr)
 		var item = getGraphObject(rect.nodeRoot);
-		//var item = this.rootGfxObj;//ect() //getObject(ca, graphics);
 		var d = o.div;
 		d.innerText = "";
 
@@ -239,40 +222,27 @@ Gfx.prototype = {
 
 		ib.type = "text";
 		ibc.type = "text";
-		//ib.style.zIndex = "2000000";
 		ib.value = item.value; 
 		d.appendChild(ib);
 	
-		//the idea is to create a hidden area and an absolute
-		// position one .. this way you can keep the svg layer
-		// between the two
+	
 		var xy = getElPos(d);
 		ib.style.visibility = "hidden";
 		ibc.value = item.value;
 		ibc.style.position = "absolute";
-		// next quantized level after svg
 		ibc.style.zIndex =  zIndex["svg"]+10
 			ibc.style.top = xy.y+"px";
 		ibc.style.left = xy.x+"px";
 		d.ownerDocument.body.appendChild(ibc)
-			//console.log(graphics[id]);
 			o.inputBox = ibc;
 		o.hiddenInputBox = ib;
-		//console.log("__________________________________");
 		this.reindex();
-		//console.log(this.lastPtr);
-		//console.log("&*8&&&**************************&$&$");
-		//console.log(id + "<thumb");
 	
-		// this is such a hack becuase it requires focus.. whatever.
 		Gfx.prototype.isRenaming = {"rect":rect, "gfxId":this.id};
 
 	},
 
-	// 2 b refactored
-	//
-	// the way this works is that it should link to a 
-	// sublings = columns, children = rows
+
 	"switchType":function(ptr, type) {
 		var o = getObject(ptr, graphLookup);
 		graphObjLookup[ptr[0]].switchType(ptr, type);
@@ -293,86 +263,48 @@ Gfx.prototype = {
 	},
 	
 	"build":function(cb) {
-		//graphics = graphLookup;
 		this.renderer.setElement(this.rootGfxObj);
-                                        //obj ref, beginPtr
 		this.renderer.mkPtrImgs(this.rootGfxObj);
 		this.hasBeenBuilt = true;
 	},
-	"rebuild":function(cb) {
-	//	alert("x");
-		//console.log("rebuilding....");
+	"rebuild":function(dnd) {
+;
 		this.build();
 		this.reindex();
 		handlerData.offset = false;
-		if (typeof this._rebuild === 'function') this._rebuild();
-		//this.drawCurves();
+
 		return;
 	},
 	"reindex":function() {
 
 		snapSpace.prototype.updateSnapObject(this.graphId, "graphLookup");
-	//	alert("test");
 		this.renderer.reindex(this.rootGfxObj);
-		
-		// reindex all the index points (after deletion)
-		// reindex the curveLookup table also
-		//handlerData.offset = false;
+	
 	},
 
-	// this converts the regular model into an indexed ptr model
-	// ie, ["item"][0-9]["item"][0-9]....["item][0-9]
-	// the ptr model looks like models[uid]["graph"][guid]["id"][ptr]["index"][index][("prop"|"children"|"parents")]
-	// this should really be just a 'clone'
+
 
 	"doSort":function(a,b) {
-		//console.log(b.props.index+" _____________________________________________________________________________>");
+	
 		return a.props.index-b.props.index;
-		//return false;
 	},
 	"sortIM":function(g) {
-		// sort array, then traverse further into each element
-		//console.log(Array.isArray(g));
+	
 		if (Array.isArray(g))
 			g.sort(Gfx.prototype.doSort); // gfx contains dom references, can't use closures.
 		else return;
 		for (var i = 0; i <  g.length; i++) {
 			if (g[i]["item"]) {
-				//this.idxSort.push(g[i]["item"]);
 				var o = g[i]["item"];
 				Gfx.prototype.sortIM(o);
-				//o.sort(Gfx.prototype.doSort);	
 			}
 		}
 	},
-	// dont thnk this ever gets called
-	/*
-	"ptrSize":function(ptr) {
-		var gph = models[this.uni]["graph"][this.gid];
-		//var gf2 = gfxLookup[gpo.gid];
-		var d = gph.el.style;
-		//console.log(d);
-		//console.log("_-----------------------_");
-		d.display = ""; //"none" ? "" : "none";
-		//alert("test...");
-		gph["hidden"] =  false; //(d.display.length > 0)
-			var pe = getPos(e);
-		// update event table
-		//alert(Gfx.prototype.lastz);
-		//console.log(gfx);
-		gfxLookup[this.id].moveTo(pe.x, pe.y, zIndex["ptr"]+10);
-		gfxLookup[this.id].reindex();
-	},
-	*/
+
 	"hide":function() {
-		//this.model.hidden = true;
-		//this.renderer.hide(this.id);
-		//console.log("hail cleo!!!!");
-		//	alert("test");
+	
 		var o = getObject(this.gfxPtr, graphLookup);
-		//var d = o.el.style;
-		//d.display = "none";
-		//o["hidden"] = true;	
+	
 		this.renderer.hide(o);
 	},
 	"isHidden":function() {
@@ -386,52 +318,24 @@ Gfx.prototype = {
 	"showChildren":function(ptr) { 
 		var o = getObject(ptr, graphLookup);
 		o.hideChildren = false;
-		//console.log(o);
-		//console.log("extasy");
+	
 		this.rebuild();
 	},
 	"hideChildren":function(ptr) {
-		// should be in gfx object
 		var o = getObject(ptr, graphLookup);
 		o.hideChildren = true;
-	//	console.log(o);
-		//console.log("extasy");
+
 
 		this.rebuild();
 	},
 	"hideItem":function(ptr) {
-		// should be in gfx object
+	
 		var o = getObject(ptr, graphLookup);
 		o.hideItem = true;
-	//	console.log(o);
-		//console.log("extasy");
 
 		this.rebuild();
 	},
-	/*
-	"moveTo":function(x,y,z) {
-		//console.log(this);
-		// only manage the lastz for indexPtr
-		this.rootGfxObj.loc = {"x":x, "y":y};
-		if (z) {
-			this.rootGfxObj.loc.z = z
 
-//this should be typed to the graphicsType 
-
-			if (z > Gfx.prototype.lastz && this.rootGfxObj.indexPtr)
-				Gfx.prototype.lastz = z;
-		} 
-		if (this.hasBeenBuilt) {
-			this.renderer.moveGfx(this.rootGfxObj);
-		}
-
-		//linkCurve.prototype.drawCurves(c1);
-		//console.log("test test...");
-		// use proper canvas movation
-		//this.putToScreen();
-	},
-	*/
-	// wtv
 	"moveTo":function(x,y,z) {
 		this.setXY(x,y,z);
 
@@ -480,9 +384,7 @@ Gfx.prototype = {
 						curveLookup[parents[j]][gil[i].concat(["index", idx])].delete();
 						index[idx].parents.splice(j, 1);
 
-						//if (notchDown) {
-						//}	
-						// need to delete the child element references
+					
 					}
 
 					for (var j = 0; j < children.length; j++) {
@@ -523,7 +425,6 @@ Gfx.prototype = {
 
 	"moveCanvas":function() {
 		this.renderer.moveGfx(this.rootGfxObj);
-		// no clue what this is 
 		if (typeof this._moveCanvas === 'function') this._moveCanvas();//this.drawCurves();
 		
 		return;
@@ -534,29 +435,20 @@ Gfx.prototype = {
 
 		canvas.style.left = t.x+"px";
 
-		//alert(JSON.stringify(t)+" "+t.x+" "+t.y+" "+canvas.style.top+" "+canvas.style.left);
-		//console.log("----------()*)(*)(*)(#*)$(*@#)(*$)#(*$#@<S-F9>+)$#)$+#_)+$#_)$+#@_)+#_");
-		//console.log(canvas.style);
 	},
 	"setX":function(x) {
 		var tml = this.rootGfxObj
-		//console.log(this.rootGfxObj.loc + ")()()(*)(*)(*)()(*)(*)(*");
 		tml.loc.x = x;
 
 		this.moveCanvas();
 			
-		//this.putToScreen();/draw
-		// move canvas element
+	
 	},
 	"setY":function(y) {
-		//console.log("draggging....");
 		var tml = this.rootGfxObj
-		//
 		tml.loc.y = y;
 		this.moveCanvas();
-		//this.putToScreen();
 
-		// move canvas element
 	},
 	"setXY":function(x, y) {
 		if (!this.rootGfxObj.loc)
@@ -565,22 +457,15 @@ Gfx.prototype = {
 			var tml = this.rootGfxObj.loc
 			tml.x = x;
 			tml.y = y;// = { "x":x, "y":y};
-		//}
 			this.moveCanvas();
 		}
-		//console.log(this.model.loc)
-		//console.log(canvas.style.top+" "+canvas.style.left);
-		//this.putToScreen();
-
-		// move canvas element
+	
 	},
        	"setZ":function(z) {
 		this.rootGfxObj.loc.z = z;
 	},
 
-	//"mkInputBox":function(ptr) {
 
-	//},
 	"mkButton":function(ptr) {
 	},	
 	"setXYZ":function(x,y,z) {
@@ -589,7 +474,6 @@ Gfx.prototype = {
 		tml.y = y;// = { "x":x, "y":y};
 		if (z) {
 			tml.z = z;
-		//	Gfx.prototype.lastz = z;
 		}
 		this.moveCanvas();
 
@@ -597,16 +481,10 @@ Gfx.prototype = {
 	// most likely this will be refactored out into something more generic ... 
 
 	"ptr2InputBox":function(ptr) {
-		//ptr[ptr] = 
 	}
 
 
 	
 }
 
-
-
-// probably easiest way of doing this is create an alert system to update the drawing of the grph
-//
-//
 

@@ -130,16 +130,20 @@ contextMenu.renamePtr = function() {
 contextMenu.addSibling = function() {
 	var id = this.lastRect.ptr[0];
 
-	graphObjLookup[id].addSibling(this.lastRect.nodeRoot, "tab", contextMenu.cleanUpLines);
-	gfxLookup[this.lastRect.gfxId].rebuild();	
+	graphObjLookup[id].addSibling(this.lastRect.nodeRoot, "label", contextMenu.cleanUpLines);
+	gfxLookup[this.lastRect.gfxId].rebuild();
+	gfxLookup[this.lastRect.gfxId].drawCurves();
+	
 }
 
 contextMenu.addChild = function() {
 	var id = this.lastRect.ptr[0];
 
-	graphObjLookup[id].addChild(this.lastRect.nodeRoot, "tab", contextMenu.cleanUpLines);
+	graphObjLookup[id].addChild(this.lastRect.nodeRoot, "label", contextMenu.cleanUpLines);
 
 	gfxLookup[this.lastRect.gfxId].rebuild();
+	gfxLookup[this.lastRect.gfxId].drawCurves();
+	
 
 }
 
@@ -174,6 +178,7 @@ contextMenu.remove = function() {
 //	the main issue is that the gfx object from the node doesnt get rebuilt.. but the entire object
 //	the way i should do it is just recurse through the entire node
 	gfxLookup[this.lastRect.gfxId].rebuild();
+	gfxLookup[this.lastRect.gfxId].drawCurves();
 	// this code needs some fixing cuz the ptr link renderer should be tied to the gfx class
 
 	var idHash = {};
@@ -192,6 +197,7 @@ contextMenu.remove = function() {
 
 	for (var k in hash) {
 		gfxLookup[k].rebuild();
+		gfxLookup[k].drawCurves();
 	}
 
 
@@ -263,7 +269,7 @@ stageMenu.manageScreenClick = function(e) {
 
 stageMenu.mkNewNode = function(e) {
 	var graph = new Graph('ptr');
-	var json = ['tab'];
+	var json = ['label'];
 	graph.setFromJSON(json, true);
 	var pg = mkPtrGfx({"id":graph.id}); 
 	var p = getPos(e);
