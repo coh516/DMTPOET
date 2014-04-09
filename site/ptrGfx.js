@@ -27,6 +27,7 @@ PtrGfx.prototype.drawCurves = function() {
 	}
 
 PtrGfx.prototype.rebuild = function() {
+	// should modify with Object.getPrototypeOf(this).rebuild()
 	this.build();
 		this.reindex();
 		handlerData.offset = false;
@@ -35,7 +36,6 @@ PtrGfx.prototype.rebuild = function() {
 
 }
 PtrGfx.prototype._rebuild = function() {
-//	this.drawCurves();
 
 }
 PtrGfx.prototype._moveCanvas = function() {
