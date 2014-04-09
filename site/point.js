@@ -69,6 +69,9 @@ function Point(options){
 		this.programType = this.programName;
 	
 	tpg = programs[this.programType];
+	//instead of using 'mixin' should just extend the prototype object
+	//then call the getPrototypeOf to access the next area up on the 
+	//proto chain....  
 	mixin(tpg.prototype, this)	
 
 	var pp = copyArray(this.superGroup);
@@ -163,22 +166,18 @@ Point.prototype = {
 	},
 	
 	"_next":function() {
-		//alert("test from _");
-		console.log("yo this is the shit");
 		var o = pointLookup[this.id]
 		o.next();
 
 	},
 	
 	"next":function() {
-		console.log("----------9876");
 		for (var i =0; i < this.children.length; i++) {
 			pointLookup[this.children[i]].step();
 		}
 	},
 	"step":function() {
 		var rootPoint = pointLookup[this.rootPointID];
-		console.log("test.....");
 		if (this.programVar) {
 		
 		    	var pi = this.programVarIndex;
@@ -637,21 +636,17 @@ UniverseClass.prototype =  {
 
 	"cloneNodes":function(type) {
 	       	var arr = [];	
-		//console.log(type);
 		
 		var ga = typedGraphs[type];
 		for (var i = 0; i < ga.length; i++) {
 			var out = {};
 			var gai = ga[i];
-			//out[gai] = {};
-			//console.log(gai);
+		
 			out[gai] = Graph.prototype.cloneTo(gai); // this shouldn't be part of the graph object
 			console.log(out);	
-			//o[g.id] = graphLookup[g.id];	
 			arr.push(out);
 		}
 
-		//console.log(arr);
 		return arr;
 
 	},
@@ -659,7 +654,6 @@ UniverseClass.prototype =  {
 
 	"evaluate":function(){
 		var a = this.memberOf(['serializeUniverse']);
-		//console.log(a);
 		switch (a.val) {
 			case "serializeUniverse":
 	       
@@ -1030,20 +1024,15 @@ GraphRenderer.prototype =  {
 			//console.log(JSON.parse(o));
 			var o = graph[i];
 			var id = Object.keys(o)[0];
-			//console.log();
-		//	console.log(o[id].gfx.ptr.loc);
-		//	console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+	
 			var g = new Graph("ptr", id);
 		       	graphObjLookup[id] = g;
 			graphLookup[id] = o[id];
 			var gf = mkPtrGfx({"id":id});
-		//	console.log(o[id].gfx.ptr.loc);
 
 			gf.build();
 			
-		//	console.log(gf.rootGfxObj.loc);
 			
-		//	gf.moveCanvas();
 			ids.push(id);
 		}
 		for (var i=0; i < ids.length; i++) {

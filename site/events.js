@@ -784,6 +784,8 @@ nodeEventHandler.prototype["handleMouseClick"] = function(obj, e) {
 
 
 
+//todo: moveHandler should extend nodeEventHandler through Object.getPrototypeOf(this) rather than using a decorator .. 
+//moveHandler.prototype = new(nodeEventHandler());
 
 var nodeEvents = new moveHandler(new nodeEventHandler);
 
