@@ -44,7 +44,7 @@ Seth Tenenbaum
 
 License
 ===
-GPL V3
+MIT
 
 
 
