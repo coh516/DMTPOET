@@ -5,7 +5,7 @@ The DMTPOET system is a linked document graph framework for managing complex bus
 
 This is used for creating user interfaces and binding them to merge rules to generate documents whilst modeling and analysing data.
 
-Essentially this is a tool to build an application layer with modular route patches focusing on memory management and performance using an indexed database design. 
+Essentially this is a tool to build an application layer with modular route patches focusing on memory management and performance using an indexed database design...
 
 Testing
 ===
@@ -22,6 +22,7 @@ As of Jan 2, 2014, The two stage document graph model is completed.
 As of Feb 16, 2014, The Gui renderer and data modeler is completed.
 As of April 25, 2014, the tool is useable, but there are architectural errata that need to be addressed
   - most importantly, the vector reindexing needs to be properly handled from the graph.rebuild and gfx.render functions without additional measures taken from the individual editing commands 
+  - remove the unnessary function.prototype.bind calls, should use closures instead for performance reasoning ..
 
 - ~~necessary refactor required to separate the graph data from the graph instance function in the graphLookup object to serialize the typed set~~
 - the ui should be built from both node based partial template structures and point modules
