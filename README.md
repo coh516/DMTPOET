@@ -26,9 +26,9 @@ As of April 25, 2014, the tool is useable, but there are architectural errata th
 
 - ~~necessary refactor required to separate the graph data from the graph instance function in the graphLookup object to serialize the typed set~~
 - the ui should be built from both node based partial template structures and point modules
-- needs a simplified selector object interface
-  - modularize prototype layers from ptr graph locators
-  - requires an eventing system for instantiated objects
+- needs a public facing api 
+  - modularize application 
+  - requires an eventing system for instantiated objects, cached dictionary and chaining methods 
   - ~~point interface contains most of the helpers required to deal with the object array pointers~~
 - need to allow editing of multiple graph types
 - need to fix the rendering of the link node lines... it should be part of the htmlRenderer
