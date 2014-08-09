@@ -32,6 +32,7 @@ As of April 25, 2014, the tool is useable, but there are architectural errata th
   - ~~point interface contains most of the helpers required to deal with the object array pointers~~
 - need to allow editing of multiple graph types
 - need to fix the rendering of the link node lines... it should be part of the htmlRenderer
+- dom object movemement should be handled by css transforms, not left top
 - ~~need to fix the remove child/subchild relinking~~
 - need to enhance the deferment / promise fulfilment eventing methodology
 - ~~traverser is still not done~~
