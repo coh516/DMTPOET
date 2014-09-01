@@ -42,6 +42,7 @@ As of April 25, 2014, the tool is useable, but there are architectural errata th
     - ~~graphs should be typed also~~
 - need to move the graph to a seperate project that's completely decoupled from the graphics layer.
 - dictioanry caching required to link multiple graphs together efficiently
+
 =======
 
 Author
