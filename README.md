@@ -40,7 +40,6 @@ As of April 25, 2014, the tool is useable, but there are architectural errata th
   - ~~necessary refactor for the gfx layer to further abstract the coupling of the node pointer from the node itself~~
     - ~~removed universe, graphs are id'd and graphics are now typed~~
     - ~~graphs should be typed also~~
-    - 
 - need to move the graph to a seperate project that's completely decoupled from the graphics layer.
 - dictioanry caching required to link multiple graphs together efficiently
 =======
