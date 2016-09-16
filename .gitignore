@@ -3,5 +3,4 @@
 *.swp
 .*.sw?
 intro.html
-package.json
-.gitignore
+/node_modules
